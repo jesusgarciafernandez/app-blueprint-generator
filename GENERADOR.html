@@ -16,6 +16,8 @@
             --accent-1: #3D5AF1;
             --accent-2: #8093F1;
             --accent-3: #4CC9F0;
+            --accent-primary: #3D5AF1;
+            --accent-glow: rgba(61, 90, 241, 0.3);
             --accent-gradient: linear-gradient(135deg, #3D5AF1, #8093F1);
             --sidebar-active: #F0F4FF;
             --text-primary: #2D3142;
@@ -520,14 +522,15 @@
         }
 
         .checkbox-item.selected .check-icon {
-            background: var(--accent-primary);
-            border-color: var(--accent-primary);
+            background: var(--accent-1);
+            border-color: var(--accent-1);
         }
 
         .check-icon::after {
             content: '✓';
-            font-size: 0.7rem;
-            color: white;
+            font-size: 0.9rem;
+            color: #000000;
+            font-weight: 900;
             opacity: 0;
             transition: var(--transition);
         }
@@ -663,8 +666,9 @@
 
         .skill-check::after {
             content: '✓';
-            color: white;
-            font-size: 0.7rem;
+            color: #000000;
+            font-weight: 900;
+            font-size: 0.9rem;
             opacity: 0;
         }
 
@@ -3157,6 +3161,7 @@
     // ═══════════ GENERATE BLUEPRINT ═══════════
     async function generateBlueprint() {
         const data = collectFormData();
+        data.ui_lang = currentLang;
         data.selected_skill_ids = getSelectedSkillIds();
         data.missing_skills = window.missing_skills || [];
 

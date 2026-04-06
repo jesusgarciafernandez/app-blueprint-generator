@@ -14,7 +14,7 @@ El motor **App Blueprint Generator**, el corazón del ecosistema abierto **Antig
 
 ## 🌟 La Magia del Repositorio Antigravity
 
-A diferencia de otros generadores que se basan solo en prompts planos, esta herramienta busca y orquesta conocimiento proactivamente entre **+500 Skills profesionales y técnicas** ubicadas en su bóveda de `/REPOSITORIO/`. 
+A diferencia de otros generadores que se basan solo en prompts planos, esta herramienta busca y orquesta conocimiento proactivamente entre **585 Skills profesionales y técnicas** ubicadas en su bóveda de `/REPOSITORIO/`. 
 
 Utilizando un subalgoritmo TF-IDF de procesamiento natural propio **(100% Zero Dependencies)**, extrae el conocimiento experto exacto que tu desarrollo necesita —desde Arquitectura de Microservicios hasta automatizaciones en N8N o despliegues Cloud— e inyecta toda esa experiencia directamente al contexto de la IA constructora.
 
@@ -65,7 +65,7 @@ Dirígete a la interfaz o revisa las guías detalladas en su carpeta:
 
 Este repositorio no es un producto estático; es un ecosistema vivo que crece en capacidad y conocimiento. Estamos implementando el proyecto en **fases estratégicas** para asegurar la máxima calidad técnica:
 
-- **Fase 1 (Actual):** Motor estable de generación, interfaz multi-idioma y repositorio base de +500 Skills.
+- **Fase 1 (Actual):** Motor estable de generación, interfaz multi-idioma y repositorio base de 585 Skills.
 - **Fase 2 (Expansión de Conocimiento):** Incremento masivo del catálogo de Skills (objetivo: +1000) con intervención directa y curación técnica Senior.
 - **Fase 3 (Proactividad Inteligente):** Integración de capacidades de autogeneración de Skills para cubrir nichos tecnológicos emergentes.
 - **Fase 4 (Ecosistema Conectado):** Plugins y extensiones para integraciones directas con IDEs y plataformas de despliegue.
