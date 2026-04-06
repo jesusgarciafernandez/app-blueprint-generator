@@ -1,0 +1,3274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Blueprint Generator — Crea tu aplicación sin código</title>
+    <meta name="description" content="Genera el plano maestro de tu aplicación para que cualquier IA la construya por ti. Sin conocimientos técnicos.">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-deep: #F0F4FF;
+            --bg-surface: #FFFFFF;
+            --bg-card: #FFFFFF;
+            --card-border: #E5EBFB;
+            --accent-1: #3D5AF1;
+            --accent-2: #8093F1;
+            --accent-3: #4CC9F0;
+            --accent-gradient: linear-gradient(135deg, #3D5AF1, #8093F1);
+            --sidebar-active: #F0F4FF;
+            --text-primary: #2D3142;
+            --text-secondary: #6B7280;
+            --text-muted: #9CA3AF;
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --radius: 28px;
+            --shadow-sm: 0 4px 10px rgba(61, 90, 241, 0.05);
+            --shadow-md: 0 10px 30px rgba(61, 90, 241, 0.1);
+            --shadow-lg: 0 20px 50px rgba(61, 90, 241, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex; /* Sidebar and Content Area */
+        }
+
+        /* Fondo animado */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(6, 182, 212, 0.04) 0%, transparent 50%);
+            z-index: -1;
+            animation: bgPulse 15s ease-in-out infinite alternate;
+        }
+
+        @keyframes bgPulse {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        /* ═══════════ LAYOUT RENDER ═══════════ */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-surface);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            padding: 2.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--card-border);
+            z-index: 101;
+        }
+
+        .content-area {
+            margin-left: 280px;
+            flex: 1;
+            padding: 2rem 3rem;
+            min-height: 100vh;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { width: 80px; padding: 2.5rem 0.5rem; align-items: center; }
+            .sidebar .nav-label, .sidebar .logo-text, .sidebar .pro-card { display: none; }
+            .content-area { margin-left: 80px; padding: 1.5rem; }
+        }
+
+        /* ═══════════ SIDEBAR COMPONENTS ═══════════ */
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 3.5rem;
+            padding: 0 1rem;
+        }
+
+        .logo-icon {
+            width: 40px; height: 40px;
+            background: var(--accent-gradient);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; box-shadow: 0 8px 20px rgba(61, 90, 241, 0.3);
+        }
+
+        .logo-text { font-size: 1.1rem; font-weight: 800; color: var(--text-primary); }
+
+        .side-nav { display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .side-link {
+            display: flex; align-items: center; gap: 1rem;
+            padding: 1rem 1.25rem; border-radius: 16px;
+            color: var(--text-secondary); text-decoration: none;
+            font-weight: 600; font-size: 0.9rem; transition: var(--transition);
+            cursor: pointer; border: 1px solid transparent;
+        }
+
+        .side-link:hover { background: var(--bg-deep); color: var(--accent-1); }
+        .side-link.active {
+            background: var(--sidebar-active);
+            color: var(--accent-1);
+            border-color: rgba(61, 90, 241, 0.1);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .pro-card {
+            margin-top: auto;
+            background: var(--accent-gradient);
+            padding: 1.5rem; border-radius: 24px;
+            color: white; position: relative; overflow: hidden;
+            box-shadow: 0 15px 35px rgba(61, 90, 241, 0.3);
+        }
+
+        .pro-card::before {
+            content: ''; position: absolute; top: -50%; right: -50%;
+            width: 150px; height: 150px; background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .pro-card h4 { font-size: 0.95rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .pro-card p { font-size: 0.75rem; opacity: 0.9; margin-bottom: 1rem; line-height: 1.4; }
+        .pro-btn {
+            width: 100%; padding: 0.6rem; background: rgba(255,255,255,0.2);
+            border: none; border-radius: 12px; color: white;
+            font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: 0.3s;
+            backdrop-filter: blur(5px);
+        }
+        .pro-btn:hover { background: rgba(255,255,255,0.3); }
+
+        /* Banner Principal (Dashboard Style) */
+        .dashboard-banner {
+            background: var(--accent-gradient);
+            border-radius: var(--radius);
+            padding: 3.5rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .banner-content { max-width: 550px; position: relative; z-index: 2; }
+        .banner-content h2 { font-size: 2.2rem; font-weight: 900; margin-bottom: 1rem; line-height: 1.2; }
+        .banner-content p { font-size: 1rem; opacity: 0.95; line-height: 1.6; }
+        
+        .banner-img {
+            width: 240px; height: auto;
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.2));
+            animation: floating 4s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* Header Status y Lang Superior */
+        .top-bar {
+            display: flex; justify-content: flex-end; align-items: center;
+            gap: 2rem; margin-bottom: 2rem;
+        }
+
+        .status-pill {
+            display: flex; align-items: center; gap: 0.6rem;
+            padding: 0.6rem 1.2rem; background: white;
+            border-radius: 99px; border: 1px solid var(--card-border);
+            font-size: 0.8rem; font-weight: 700; color: var(--text-secondary);
+        }
+
+
+        /* ═══════════ INPUTS CONTRAST (Light Mode) ═══════════ */
+        input, textarea, select {
+            color: var(--text-primary) !important;
+            font-weight: 600;
+            background: #FFFFFF !important;
+            border: 1px solid var(--card-border) !important;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: var(--text-muted) !important;
+        }
+
+        select option {
+            background: #FFFFFF;
+            color: var(--text-primary);
+        }
+
+        /* ═══════════ MAIN CONTAINER ═══════════ */
+        .main-container {
+            max-width: 1200px;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ═══════════ HERO ═══════════ */
+        .hero {
+            text-align: center;
+            padding: 3rem 0 2.5rem;
+        }
+
+        .hero-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .hero h2 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* ═══════════ PROGRESS BAR ═══════════ */
+        .progress-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            margin: 2rem 0 3rem;
+            padding: 0 2rem;
+        }
+
+        .step-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            z-index: 1;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .step-circle {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 2px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .step-indicator.active .step-circle {
+            background: var(--accent-gradient);
+            border-color: var(--accent-1);
+            color: white;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .step-indicator.completed .step-circle {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+        }
+
+        .step-indicator.active .step-label { color: var(--accent-1); }
+        .step-indicator.completed .step-label { color: var(--success); }
+
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background: var(--glass-border);
+            margin: 0 -0.5rem;
+            margin-bottom: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .step-line.completed { background: var(--success); }
+
+        /* ═══════════ STEPS ═══════════ */
+        .step-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .step-content.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 3rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .step-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .step-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        /* ═══════════ FORM FIELDS ═══════════ */
+        .field-group {
+            margin-bottom: 1.8rem;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .field-hint {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            font-style: italic;
+        }
+
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--accent-primary);
+            background: #FFFFFF;
+            box-shadow: 0 0 0 4px var(--accent-glow);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1.2rem center;
+            padding-right: 3rem;
+        }
+
+        select option { background: #1a1a2e; color: white; }
+
+        /* Chips / Tags input */
+        .chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            min-height: 50px;
+            cursor: text;
+            transition: var(--transition);
+        }
+
+        .chips-container:focus-within {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .chip {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.4rem 0.8rem;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--accent-3);
+            animation: chipIn 0.2s ease;
+        }
+
+        @keyframes chipIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .chip-remove {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+            padding: 0;
+            transition: var(--transition);
+        }
+
+        .chip-remove:hover { color: var(--danger); }
+
+        .chip-input {
+            border: none !important;
+            background: none !important;
+            padding: 0.3rem !important;
+            min-width: 150px;
+            flex: 1;
+            box-shadow: none !important;
+            outline: none !important;
+            font-size: 0.9rem;
+        }
+
+        /* Checkbox grid */
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1rem 1.2rem;
+            background: #f1f5f9;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.88rem;
+            font-weight: 500;
+        }
+
+        .checkbox-item:hover { 
+            border-color: var(--accent-primary); 
+            background: #f8fafc;
+            transform: translateY(-2px);
+        }
+        
+        .checkbox-item.selected { 
+            border-color: var(--accent-primary); 
+            background: #eff6ff; 
+            box-shadow: 0 4px 12px rgba(61, 90, 241, 0.1);
+        }
+
+        .checkbox-item input[type="checkbox"] { display: none; }
+
+        .check-icon {
+            width: 22px;
+            height: 22px;
+            border: 2px solid #cbd5e1;
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            flex-shrink: 0;
+            background: white;
+        }
+
+        .checkbox-item.selected .check-icon {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .check-icon::after {
+            content: '✓';
+            font-size: 0.7rem;
+            color: white;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .checkbox-item.selected .check-icon::after { opacity: 1; }
+
+        /* Color picker */
+        .color-row {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .color-pick {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .color-pick input[type="color"] {
+            width: 44px;
+            height: 44px;
+            border: 2px solid var(--glass-border);
+            border-radius: 10px;
+            cursor: pointer;
+            background: none;
+            padding: 2px;
+        }
+
+        .color-pick label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Visual style selector */
+        .style-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .style-option {
+            padding: 1.5rem 1rem;
+            background: #f1f5f9;
+            border: 2px solid #e2e8f0;
+            border-radius: 18px;
+            cursor: pointer;
+            text-align: center;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .style-option:hover { 
+            border-color: var(--accent-primary);
+            background: white;
+            transform: translateY(-3px);
+        }
+        
+        .style-option.active { 
+            border-color: var(--accent-primary); 
+            background: #eff6ff;
+            box-shadow: 0 10px 20px rgba(61, 90, 241, 0.1);
+        }
+
+        .style-option i { 
+            width: 32px; 
+            height: 32px; 
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .style-option.active i {
+            color: var(--accent-primary);
+        }
+
+        .style-option span { 
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            color: var(--text-primary);
+        }
+
+        /* ═══════════ SKILL RESULTS ═══════════ */
+        .skills-results {
+            margin-top: 1.5rem;
+        }
+
+        .skill-result-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem;
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 16px;
+            margin-bottom: 0.8rem;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .skill-result-card:hover { 
+            border-color: var(--accent-primary); 
+            background: white;
+            transform: scale(1.005);
+        }
+        
+        .skill-result-card.selected { 
+            border-color: #22c55e; 
+            background: #f0fdf4; 
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.08);
+        }
+
+        .skill-check {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            flex-shrink: 0;
+            background: white;
+        }
+
+        .skill-result-card.selected .skill-check {
+            background: #22c55e;
+            border-color: #22c55e;
+        }
+
+        .skill-check::after {
+            content: '✓';
+            color: white;
+            font-size: 0.7rem;
+            opacity: 0;
+        }
+
+        .skill-result-card.selected .skill-check::after { opacity: 1; }
+
+        .skill-result-info { flex: 1; }
+        .skill-result-info h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.15rem; }
+        .skill-result-info p { font-size: 0.75rem; color: var(--text-muted); }
+        .skill-result-info .meta { font-size: 0.7rem; color: var(--accent-3); margin-top: 0.2rem; }
+
+        .relevance-badge {
+            padding: 0.25rem 0.6rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            border-radius: 20px;
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-1);
+            white-space: nowrap;
+        }
+
+        /* ═══════════ BUTTONS ═══════════ */
+        .btn-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.85rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: white;
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+
+        .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 25px var(--accent-glow); }
+        .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-secondary);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); color: white; }
+
+        .btn-success {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+            font-size: 1.05rem;
+            padding: 1rem 2.5rem;
+        }
+
+        .btn-success:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4); }
+
+        /* ═══════════ LOADING / GENERATING ═══════════ */
+        .generating-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 10, 24, 0.92);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .generating-overlay.active { display: flex; }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--glass-border);
+            border-top-color: var(--accent-1);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .generating-text {
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ═══════════ SUCCESS SCREEN ═══════════ */
+        .success-screen {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .success-screen.active { display: block; }
+
+        .success-icon { font-size: 4rem; margin-bottom: 1rem; }
+
+        .success-screen h2 {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 0.75rem;
+        }
+
+        .success-screen p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            padding: 1.2rem 3rem;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            text-decoration: none;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            box-shadow: 0 4px 20px rgba(34, 197, 94, 0.3);
+        }
+
+        .download-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(34, 197, 94, 0.4); }
+
+        /* ═══════════ OFFLINE NOTICE ═══════════ */
+        .offline-notice {
+            display: none;
+            background: rgba(239, 68, 68, 0.06);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            border-radius: var(--radius);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .offline-notice.active { display: block; }
+
+        .offline-notice h3 { color: var(--danger); margin-bottom: 0.5rem; font-size: 1.3rem; }
+        .offline-notice > p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; }
+
+        .offline-notice code {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            margin: 0.5rem 0;
+            color: var(--accent-3);
+        }
+
+        .launcher-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        @media (max-width: 600px) { .launcher-grid { grid-template-columns: 1fr; } }
+
+        .launcher-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 1.5rem 1rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 2px solid var(--glass-border);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .launcher-btn:hover {
+            border-color: var(--accent-1);
+            background: rgba(59, 130, 246, 0.06);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.1);
+        }
+
+        .launcher-btn .os-icon { font-size: 2.2rem; }
+        .launcher-btn .os-name { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); }
+        .launcher-btn .os-file {
+            font-size: 0.7rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-3);
+            background: rgba(6, 182, 212, 0.08);
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+        }
+        .launcher-btn .os-action {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 0.2rem;
+        }
+
+        .launcher-btn.copied .os-action {
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .copy-toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--success);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 2000;
+            pointer-events: none;
+        }
+
+        .copy-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ═══════════ FOOTER ═══════════ */
+        footer {
+            margin-top: 4rem;
+            padding: 2rem;
+            border-top: 1px solid var(--glass-border);
+            text-align: center;
+        }
+
+        .lang-selector select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .lang-selector select:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent-1);
+        }
+
+        .footer-author a {
+            color: var(--accent-1);
+            font-weight: 700;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-author a:hover { color: white; }
+
+        /* ═══════════ SUMMARY REVIEW ═══════════ */
+        .summary-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-section h4 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent-1);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .summary-value {
+            padding: 0.8rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .summary-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
+        .summary-chip {
+            padding: 0.3rem 0.7rem;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 20px;
+            font-size: 0.78rem;
+            color: var(--accent-3);
+        }
+
+        /* ═══════════ RESPONSIVE ═══════════ */
+        @media (max-width: 768px) {
+            .main-container { padding: 1rem; }
+            .hero h2 { font-size: 1.6rem; }
+            .step-card { padding: 1.5rem; }
+            .step-label { font-size: 0.6rem; }
+            .checkbox-grid { grid-template-columns: 1fr; }
+            .btn-row { flex-direction: column; }
+            .btn { width: 100%; justify-content: center; }
+        }
+    </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="logo-area">
+        <div class="logo-icon"><i data-lucide="sparkles"></i></div>
+        <h1 class="logo-text">App Blueprint Generator</h1>
+    </div>
+    <nav class="side-nav" id="sideNav">
+        <a class="side-link active" onclick="goToStep(1)" data-side-step="1">
+            <i data-lucide="layout"></i> <span data-i18n="step1_label">Visión</span>
+        </a>
+        <a class="side-link" onclick="goToStep(2)" data-side-step="2">
+            <i data-lucide="users"></i> <span data-i18n="step2_label">Audiencia</span>
+        </a>
+        <a class="side-link" onclick="goToStep(3)" data-side-step="3">
+            <i data-lucide="zap"></i> <span data-i18n="step3_label">Funciones</span>
+        </a>
+        <a class="side-link" onclick="goToStep(4)" data-side-step="4">
+            <i data-lucide="palette"></i> <span data-i18n="step4_label">Diseño</span>
+        </a>
+        <a class="side-link" onclick="goToStep(5)" data-side-step="5">
+            <i data-lucide="link"></i> <span data-i18n="step5_label">Generar</span>
+        </a>
+        <div style="height: 2rem;"></div>
+        <a href="EXPLORADOR.html" target="_blank" class="side-link">
+            <i data-lucide="library"></i> <span data-i18n="nav_view_skills">Ver Skills</span>
+        </a>
+    </nav>
+
+</aside>
+
+<main class="content-area">
+    <div class="top-bar">
+        <div class="status-pill">
+            <span class="status-dot" id="statusDot"></span>
+            <span id="statusText" data-i18n="status_connecting">Conectando...</span>
+        </div>
+        <div class="lang-selector">
+            <select id="langSelect" onchange="changeLanguage(this.value)">
+                <option value="es">🇪🇸 ES</option>
+                <option value="en">🇺🇸 EN</option>
+                <option value="fr">🇫🇷 FR</option>
+                <option value="de">🇩🇪 DE</option>
+                <option value="zh">🇨🇳 ZH</option>
+                <option value="ja">🇯🇵 JP</option>
+            </select>
+        </div>
+    </div>
+
+
+<div class="main-container">
+
+    <!-- HERO -->
+    <div class="dashboard-banner" id="heroSection">
+        <div class="banner-content">
+            <h2 data-i18n="hero_title">Convierte tu idea en una app real</h2>
+            <p data-i18n="hero_desc">Describe tu idea en 5 sencillos pasos. Nosotros generaremos un paquete profesional listo para construir tu app.</p>
+        </div>
+        <img src="https://cdn-icons-png.flaticon.com/512/3593/3593971.png" class="banner-img" alt="Rocket">
+    </div>
+
+    <!-- OFFLINE NOTICE -->
+    <div class="offline-notice" id="offlineNotice" style="background: white; border: none; box-shadow: var(--shadow-sm); margin-bottom: 2rem;">
+        <h3 data-i18n="offline_title" style="color: var(--danger); font-weight: 800;">⚠️ Servidor no detectado</h3>
+        <p data-i18n="offline_desc" style="color: var(--text-secondary);">Para generar Blueprints, necesitas arrancar el servidor local.</p>
+
+        <div class="launcher-grid">
+            <div class="launcher-btn" onclick="copyLaunchCmd('macos', this)">
+                <i data-lucide="apple" class="os-icon"></i>
+                <span class="os-name">macOS</span>
+                <span data-i18n="os_action_macos" class="os-action">Doble clic aquí</span>
+            </div>
+            <div class="launcher-btn" onclick="copyLaunchCmd('windows', this)">
+                <i data-lucide="monitor" class="os-icon"></i>
+                <span class="os-name">Windows</span>
+                <span data-i18n="os_action_windows" class="os-action">Doble clic aquí</span>
+            </div>
+            <div class="launcher-btn" onclick="copyLaunchCmd('linux', this)">
+                <i data-lucide="terminal" class="os-icon"></i>
+                <span class="os-name">Linux</span>
+                <span data-i18n="os_action_linux" class="os-action">Doble clic aquí</span>
+            </div>
+        </div>
+        <p style="margin-top: 1rem; font-size: 0.8rem;">
+            <strong style="color: var(--accent-1); cursor: pointer;" onclick="location.reload()" data-i18n="offline_reload_link">Recargar página</strong>.
+        </p>
+    </div>
+
+    <!-- COPY TOAST -->
+    <div class="copy-toast" id="copyToast" data-i18n="copy_toast" style="background: var(--accent-1); color: white; padding: 0.8rem 2rem; border-radius: 99px; box-shadow: var(--shadow-md);">✓ Comando copiado</div>
+
+
+    <!-- ═══════════ STEP 1: VISIÓN ═══════════ -->
+    <div class="step-content active" id="step1">
+        <div class="step-card">
+            <h3 class="step-title" data-i18n="step1_title">📌 ¿Qué quieres crear?</h3>
+            <p class="step-subtitle" data-i18n="step1_subtitle">Cuéntanos tu idea. No necesitas ser técnico, describe lo que imaginas con tus propias palabras.</p>
+
+            <div class="field-group">
+                <label class="field-label" for="appName" data-i18n="label_app_name">Nombre de tu aplicación</label>
+                <span class="field-hint" data-i18n="hint_app_name">Ej: "GastroBot", "MiTienda", "ControlStock"</span>
+                <input type="text" id="appName" data-i18n-placeholder="placeholder_app_name" placeholder="Dale un nombre a tu app...">
+            </div>
+
+            <div class="field-group">
+                <label class="field-label" for="appDesc" data-i18n="label_app_desc">Describe tu idea</label>
+                <span class="field-hint" data-i18n="hint_app_desc">Ej: "Quiero una app web para que los clientes de mi restaurante puedan hacer reservas, ver el menú y acumular puntos"</span>
+                <textarea id="appDesc" data-i18n-placeholder="placeholder_app_desc" placeholder="Explica aquí qué quieres que haga tu aplicación..."></textarea>
+            </div>
+
+            <div class="field-group">
+                <label class="field-label" for="appType" data-i18n="label_app_type">Tipo de aplicación</label>
+                <select id="appType" onchange="toggleAppTypeOther()">
+                    <option value="Web App" data-i18n="opt_web_app">Web App (se abre en navegador)</option>
+                    <option value="Mobile App" data-i18n="opt_mobile_app">Mobile App (para teléfonos)</option>
+                    <option value="Desktop App" data-i18n="opt_desktop_app">Desktop App (para ordenador)</option>
+                    <option value="API / Backend" data-i18n="opt_api">API / Backend (servicio sin interfaz)</option>
+                    <option value="Otro" data-i18n="opt_other">Otro (especificar...)</option>
+                </select>
+                <input type="text" id="appTypeOther" data-i18n-placeholder="opt_other" placeholder="Especifica el tipo de aplicación..." style="display: none; margin-top: 0.8rem;">
+            </div>
+
+            <div class="btn-row">
+                <div></div>
+                <button class="btn btn-primary" onclick="nextStep()" data-i18n="btn_next">Siguiente →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ STEP 2: AUDIENCIA ═══════════ -->
+    <div class="step-content" id="step2">
+        <div class="step-card">
+            <h3 class="step-title" data-i18n="step2_title">👥 ¿Para quién es?</h3>
+            <p class="step-subtitle" data-i18n="step2_subtitle">Conocer a tu usuario final nos ayuda a seleccionar las herramientas adecuadas.</p>
+
+            <div class="field-group">
+                <label class="field-label" for="userType" data-i18n="label_user_type">¿Quién usará la aplicación?</label>
+                <select id="userType">
+                    <option value="Clientes / Público general" data-i18n="opt_users_public">Clientes / Público general</option>
+                    <option value="Empleados / Equipo interno" data-i18n="opt_users_internal">Empleados / Equipo interno</option>
+                    <option value="Ambos (clientes y equipo)" data-i18n="opt_users_both">Ambos (clientes y equipo)</option>
+                    <option value="Desarrolladores / Técnicos" data-i18n="opt_users_tech">Desarrolladores / Técnicos</option>
+                    <option value="Personal (uso propio)" data-i18n="opt_users_personal">Personal (uso propio)</option>
+                </select>
+            </div>
+
+            <div class="field-group">
+                <label class="field-label" for="sector" data-i18n="label_sector">Sector o industria</label>
+                <input type="text" id="sector" data-i18n-placeholder="placeholder_sector" placeholder="Ej: Hostelería, Inmobiliaria, Salud...">
+            </div>
+
+            <div class="field-group">
+                <label class="field-label" for="language" data-i18n="label_language">Idioma principal de la app</label>
+                <select id="language">
+                    <option value="Español" data-i18n="opt_lang_es">Español</option>
+                    <option value="Inglés" data-i18n="opt_lang_en">Inglés</option>
+                    <option value="Multiidioma (Español + Inglés)" data-i18n="opt_lang_both">Multiidioma (Español + Inglés)</option>
+                    <option value="Otro" data-i18n="opt_other">Otro</option>
+                </select>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn btn-secondary" onclick="prevStep()" data-i18n="btn_prev">← Anterior</button>
+                <button class="btn btn-primary" onclick="nextStep()" data-i18n="btn_next">Siguiente →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ STEP 3: FUNCIONALIDADES ═══════════ -->
+    <div class="step-content" id="step3">
+        <div class="step-card">
+            <h3 class="step-title" data-i18n="step3_title">⚡ ¿Qué funciones necesita?</h3>
+            <p class="step-subtitle" data-i18n="step3_subtitle">Selecciona las funciones comunes que necesitas y añade las que falten.</p>
+
+            <div class="field-group">
+                <label class="field-label" data-i18n="label_common_features">Funciones comunes (selecciona las que apliquen)</label>
+                <div class="checkbox-grid" id="commonFeatures">
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-value="Registro e Inicio de sesión">
+                        <div class="check-icon"></div>
+                        <i data-lucide="shield-check" style="width:16px;height:16px;margin-right:8px;color:var(--accent-1);"></i>
+                        <span data-i18n="feat_login">Registro e Inicio de sesión</span>
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-value="Pagos y suscripciones">
+                        <div class="check-icon"></div>
+                        <i data-lucide="credit-card" style="width:16px;height:16px;margin-right:8px;color:var(--accent-1);"></i>
+                        <span data-i18n="feat_payments">Pagos y suscripciones</span>
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-value="Panel de administración">
+                        <div class="check-icon"></div>
+                        <i data-lucide="settings" style="width:16px;height:16px;margin-right:8px;color:var(--accent-1);"></i>
+                        <span data-i18n="feat_admin">Panel de administración</span>
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-value="Notificaciones">
+                        <div class="check-icon"></div>
+                        <i data-lucide="mail" style="width:16px;height:16px;margin-right:8px;color:var(--accent-1);"></i>
+                        <span data-i18n="feat_notifications">Notificaciones y alertas</span>
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-value="Base de datos y Cloud">
+                        <div class="check-icon"></div>
+                        <i data-lucide="hard-drive" style="width:16px;height:16px;margin-right:8px;color:var(--accent-1);"></i>
+                        <span data-i18n="feat_database">Base de datos y Cloud</span>
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-value="Inteligencia Artificial">
+                        <div class="check-icon"></div>
+                        <i data-lucide="sparkles" style="width:16px;height:16px;margin-right:8px;color:var(--accent-1);"></i>
+                        <span data-i18n="feat_ia">Inteligencia Artificial</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label class="field-label" data-i18n="label_custom_features">Otras funciones específicas</label>
+                <span class="field-hint" data-i18n="hint_custom_features">Añade aquí cualquier función especial que no esté en la lista anterior...</span>
+                <div class="chips-container" id="customFeatures" onclick="document.getElementById('featureInput').focus()">
+                    <input class="chip-input" id="featureInput" data-i18n-placeholder="placeholder_custom_features" placeholder="Ej: Sistema de puntos..." onkeydown="addChip(event, 'customFeatures', 'featureInput')">
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label class="field-label" data-i18n="label_integrations">Integraciones externas</label>
+                <span class="field-hint" data-i18n="hint_integrations">Escribe una integración y pulsa Enter</span>
+                <div class="chips-container" id="integrations" onclick="document.getElementById('integrationInput').focus()">
+                    <input class="chip-input" id="integrationInput" data-i18n-placeholder="placeholder_integrations" placeholder="Ej: Stripe, Google Maps, WhatsApp..." onkeydown="addChip(event, 'integrations', 'integrationInput')">
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn btn-secondary" onclick="prevStep()" data-i18n="btn_prev">← Anterior</button>
+                <button class="btn btn-primary" onclick="nextStep()" data-i18n="btn_next">Siguiente →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ STEP 4: DISEÑO ═══════════ -->
+    <div class="step-content" id="step4">
+        <div class="step-card">
+            <h3 class="step-title" data-i18n="step4_title">🎨 ¿Cómo quieres que se vea?</h3>
+            <p class="step-subtitle" data-i18n="step4_subtitle">El estilo define la personalidad de tu aplicación.</p>
+
+            <div class="field-group">
+                <label class="field-label" data-i18n="label_visual_style">Estilo visual</label>
+                <div class="style-grid">
+                    <div class="style-option active" onclick="selectStyle(this)" data-value="Minimalista y limpio">
+                        <i data-lucide="layout" style="margin-bottom:8px;"></i>
+                        <span data-i18n="opt_style_minimal">Minimalista y limpio</span>
+                    </div>
+                    <div class="style-option" onclick="selectStyle(this)" data-value="Moderno y vibrante">
+                        <i data-lucide="sparkles" style="margin-bottom:8px;"></i>
+                        <span data-i18n="opt_style_modern">Moderno y vibrante</span>
+                    </div>
+                    <div class="style-option" onclick="selectStyle(this)" data-value="Corporativo y serio">
+                        <i data-lucide="briefcase" style="margin-bottom:8px;"></i>
+                        <span data-i18n="opt_style_corp">Corporativo y serio</span>
+                    </div>
+                    <div class="style-option" onclick="selectStyle(this)" data-value="Estilo Gaming / Oscuro">
+                        <i data-lucide="gamepad-2" style="margin-bottom:8px;"></i>
+                        <span data-i18n="opt_style_gaming">Estilo 'Gaming' / Oscuro</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label class="field-label" data-i18n="label_primary_color">Color principal</label>
+                <div class="color-row">
+                    <div class="color-pick">
+                        <input type="color" id="primaryColor" value="#3b82f6">
+                        <label data-i18n="opt_primary">Primario</label>
+                    </div>
+                    <div class="color-pick">
+                        <input type="color" id="secondaryColor" value="#8b5cf6">
+                        <label data-i18n="opt_secondary">Secundario</label>
+                    </div>
+                    <div class="color-pick">
+                        <input type="color" id="bgColor" value="#ffffff">
+                        <label data-i18n="opt_background">Fondo</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label class="field-label" data-i18n="label_visual_reference">Referencia visual / Notas de diseño</label>
+                <span class="field-hint" data-i18n="hint_visual_ref">Menciona alguna web o App que te guste como referencia...</span>
+                <textarea id="visualRef" data-i18n-placeholder="placeholder_visual_ref" placeholder="Ej: Me gustaría un acabado tipo vidrio, o algo similar a..."></textarea>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn btn-secondary" onclick="prevStep()" data-i18n="btn_prev">← Anterior</button>
+                <button class="btn btn-primary" onclick="analyzeAndGoStep5()" data-i18n="btn_analyze_skills">Analizar Skills y Continuar →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ STEP 5: REVISAR Y GENERAR ═══════════ -->
+    <div class="step-content" id="step5">
+        <div class="step-card">
+            <h3 class="step-title" data-i18n="step5_title">🚀 Revisa y Generar</h3>
+            <p class="step-subtitle" data-i18n="step5_subtitle">Todo listo. Revisa tu resumen y pulsa el botón para crear tu Blueprint.</p>
+
+            <!-- Summary -->
+            <div id="summaryContainer"></div>
+
+            <!-- Matched Skills -->
+            <div class="field-group">
+                <label class="field-label" data-i18n="label_matched_skills">📚 Skills seleccionadas del repositorio</label>
+                <span class="field-hint" data-i18n="hint_matched_skills">Estas son las habilidades técnicas que se incluirán en tu Blueprint.</span>
+                <div class="skills-results" id="skillsResults">
+                    <p style="color: var(--text-muted); font-size: 0.85rem;" data-i18n="analyzing_skills">Analizando skills...</p>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn btn-secondary" onclick="prevStep()" data-i18n="btn_prev">← Anterior</button>
+                <button class="btn btn-success" onclick="generateBlueprint()" id="generateBtn">
+                    <i data-lucide="zap" style="width:18px;height:18px;margin-right:8px;"></i>
+                    <span data-i18n="btn_generate_blueprint">Generar Mi Blueprint</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ SUCCESS ═══════════ -->
+    <div class="success-screen" id="successScreen">
+        <div class="step-card" style="padding: 3rem;">
+            <div class="success-icon">
+                <i data-lucide="party-popper" style="width: 64px; height: 64px; margin: 0 auto 1.5rem; color: #22c55e;"></i>
+            </div>
+            <h2 data-i18n="success_title">¡Tu Blueprint está listo!</h2>
+            <p data-i18n="success_desc">Tu paquete se ha generado correctamente y está guardado en la carpeta <strong>APPS-CREADAS</strong>.<br>
+               Descárgalo y sigue las instrucciones del archivo <code>LEEME_PRIMERO.md</code> para empezar.</p>
+            <a href="#" class="download-btn" id="downloadLink" data-i18n="btn_download">
+                <i data-lucide="download"></i> Descargar Blueprint
+            </a>
+            <br><br>
+            <button class="btn btn-secondary" onclick="resetWizard()" style="margin-top: 1.5rem;" data-i18n="btn_reset">
+                Crear otro Blueprint
+            </button>
+        </div>
+    </div>
+
+    </div> <!-- end .main-container -->
+
+    <footer style="margin-top: 5rem; padding: 2.5rem 0; text-align: center; border-top: 1px solid var(--card-border);">
+        <p style="color: var(--text-muted); font-size: 0.85rem; font-weight: 500;">
+            <span data-i18n="footer_text">Ecosistema Antigravity</span> &nbsp;·&nbsp; 
+            <span data-i18n="footer_author">Diseñado por</span> <a href="https://jesusgarciafernandez.com" target="_blank" style="color: var(--accent-1); text-decoration: none; font-weight: 700;">Jesús García Fernández</a>
+        </p>
+    </footer>
+</main>
+
+<!-- GENERATING OVERLAY -->
+<div class="generating-overlay" id="generatingOverlay">
+    <div class="spinner"></div>
+    <div class="generating-text" data-i18n="generating_blueprint">Generando tu Blueprint...</div>
+    <p style="color: var(--text-muted); font-size: 0.85rem;" data-i18n="generating_hint">Analizando skills, componiendo documentos y empaquetando el ZIP</p>
+</div>
+
+<script>
+    // ═══════════ STATE ═══════════
+    const API_BASE = window.location.protocol === 'file:' ? 'http://localhost:5500' : window.location.origin;
+    let currentStep = 1;
+    let totalSteps = 5;
+    let serverOnline = false;
+    let matchedSkills = [];
+    let currentLang = localStorage.getItem('antigravity_lang') || 'es';
+
+    // ═══════════ i18n DICTIONARY ═══════════
+    const translations = {
+        es: {
+            header_subtitle: "v1.0 — by Jesús García Fernández",
+            nav_view_skills: "Ver Skills",
+            status_connecting: "Conectando...",
+            status_offline: "Servidor offline",
+            status_online: "{count} skills disponibles",
+            hero_title: "Convierte tu idea en una app real",
+            hero_desc: "Describe tu idea en 5 sencillos pasos. Nosotros generaremos un paquete profesional listo para que cualquier IA construya tu aplicación.",
+            offline_title: "⚠️ Servidor no detectado",
+            offline_desc: "Para generar Blueprints, necesitas arrancar el servidor local.<br>Elige tu sistema operativo y sigue las instrucciones:",
+            os_action_macos: "Haz doble clic en el archivo ↑",
+            os_action_windows: "Haz doble clic en el archivo ↑",
+            os_action_linux: "Haz doble clic en el archivo ↑",
+            offline_terminal_hint: "¿Prefieres usar la terminal? Haz clic en tu SO para copiar el comando.",
+            offline_reload: "Después de arrancar el servidor,",
+            offline_reload_link: "recarga esta página",
+            step1_label: "Visión",
+            step2_label: "Audiencia",
+            step3_label: "Funciones",
+            step4_label: "Diseño",
+            step5_label: "Generar",
+            step1_title: "📌 ¿Qué quieres crear?",
+            step1_subtitle: "Cuéntanos tu idea. No necesitas ser técnico, describe lo que imaginas con tus propias palabras.",
+            label_app_name: "Nombre de tu aplicación",
+            hint_app_name: "Ej: 'GastroBot', 'MiTienda', 'ControlStock'",
+            label_app_desc: "Describe tu idea",
+            hint_app_desc: "Ej: 'Quiero una app web para que los clientes de mi restaurante puedan hacer reservas...'",
+            label_app_type: "Tipo de aplicación",
+            step2_title: "👥 ¿Para quién es?",
+            step2_subtitle: "Conocer a tu usuario final nos ayuda a seleccionar las herramientas adecuadas.",
+            label_user_type: "¿Quién usará la aplicación?",
+            label_sector: "Sector o industria",
+            label_language: "Idioma principal de la app",
+            step3_title: "⚡ ¿Qué funciones necesita?",
+            step3_subtitle: "Selecciona las funciones comunes que necesitas y añade las que falten.",
+            label_common_features: "Funciones comunes",
+            label_custom_features: "Funciones adicionales",
+            hint_custom_features: "Escribe una función y pulsa Enter",
+            label_integrations: "Integraciones externas",
+            hint_integrations: "Escribe una integración y pulsa Enter",
+            step4_title: "🎨 ¿Cómo quieres que se vea?",
+            step4_subtitle: "Define el aspecto visual. Las opciones por defecto son profesionales.",
+            label_visual_style: "Estilo visual",
+            step5_title: "🚀 Revisar y Generar",
+            step5_subtitle: "Casi listo. Revisa tu resumen y generaremos el Blueprint.",
+            summary_vision: "Visión",
+            summary_project: "Proyecto",
+            summary_audience: "Audiencia",
+            summary_features: "Funcionalidades",
+            summary_design: "Diseño",
+            analyzing_skills: "Analizando skills...",
+            btn_next: "Siguiente →",
+            btn_prev: "← Anterior",
+            btn_generate: "🚀 Generar Mi Blueprint",
+            success_title: "¡Tu Blueprint está listo!",
+            success_desc: "Tu paquete se ha generado correctamente en APPS-CREADAS.",
+            btn_download: "📥 Descargar Blueprint",
+            btn_reset: "Crear otro Blueprint",
+            placeholder_app_name: "Dale un nombre a tu app...",
+            placeholder_app_desc: "Explica aquí qué quieres que haga tu aplicación...",
+            placeholder_sector: "Ej: Hostelería, Inmobiliaria, Salud...",
+            placeholder_custom_features: "Ej: Sistema de puntos...",
+            placeholder_integrations: "Ej: Stripe, Google Maps, WhatsApp...",
+            opt_web_app: "Web App (se abre en navegador)",
+            opt_mobile_app: "Mobile App (para teléfonos)",
+            opt_desktop_app: "Desktop App (para ordenador)",
+            opt_api: "API / Backend (servicio sin interfaz)",
+            opt_other: "Otro (especificar...)",
+            opt_users_public: "Clientes / Público general",
+            opt_users_internal: "Empleados / Equipo interno",
+            opt_users_both: "Ambos (clientes y equipo)",
+            opt_users_tech: "Desarrolladores / Técnicos",
+            opt_users_personal: "Personal (uso propio)",
+            opt_lang_es: "Español",
+            opt_lang_en: "Inglés",
+            opt_lang_both: "Multiidioma (Español + Inglés)",
+            feat_login: "Registro e Inicio de sesión",
+            feat_payments: "Pagos y suscripciones",
+            feat_admin: "Panel de administración",
+            feat_notifications: "Notificaciones y alertas",
+            feat_database: "Base de datos y Cloud",
+            feat_ia: "Inteligencia Artificial",
+            opt_style_minimal: "Minimalista y limpio",
+            opt_style_modern: "Moderno y vibrante",
+            opt_style_corp: "Corporativo y serio",
+            opt_style_gaming: "Estilo 'Gaming' / Oscuro",
+            label_primary_color: "Colores de marca",
+            opt_primary: "Primario",
+            opt_secondary: "Secundario",
+            opt_background: "Fondo",
+            btn_analyze_skills: "Analizar Skills y Continuar →",
+            label_matched_skills: "📚 Skills seleccionadas del repositorio",
+            hint_matched_skills: "Estas son las habilidades técnicas que se incluirán en tu Blueprint.",
+            btn_generate_blueprint: "Generar Mi Blueprint",
+            generating_blueprint: "Generando tu Blueprint...",
+            generating_hint: "Analizando skills, componiendo documentos y empaquetando el ZIP",
+            no_skills_found: "No se encontraron skills relevantes.",
+            footer_text: "Diseñado y desarrollado por",
+            footer_ecosystem: "Ecosistema Antigravity",
+            alert_name_required: "Por favor, dale un nombre a tu aplicación.",
+            alert_desc_required: "Por favor, describe tu idea.",
+            alert_type_required: "Por favor, especifica el tipo de aplicación.",
+            alert_generate_error: "Error al generar el Blueprint. Inténtalo de nuevo.",
+            alert_connection_error: "Error de conexión con el servidor.",
+            toast_copied: "✓ Comando copiado: ",
+            toast_copied_short: "✓ ¡Copiado!",
+            prompt_copy_fallback: "Copia este comando y pégalo en tu terminal:",
+            copy_toast: "✓ Comando copiado al portapapeles",
+            categories: {
+                "Sistema": "Sistema",
+                "Marketing Digital": "Marketing Digital",
+                "Generación de Contenido": "Generación de Contenido",
+                "Gestión de Leads y CRM": "Gestión de Leads y CRM",
+                "Ventas y Comercio Electrónico": "Ventas y Comercio Electrónico",
+                "Atención al Cliente": "Atención al Cliente",
+                "Datos y Analítica": "Datos y Analítica",
+                "Inteligencia Artificial": "Inteligencia Artificial",
+                "Productividad y Operaciones": "Productividad y Operaciones",
+                "Comunicación y Mensajería": "Comunicación y Mensajería",
+                "Recursos Humanos": "Recursos Humanos",
+                "Finanzas y Contabilidad": "Finanzas y Contabilidad",
+                "Proyectos y Colaboración": "Proyectos y Colaboración",
+                "Desarrollo y Tecnología": "Desarrollo y Tecnología",
+                "Legal y Cumplimiento": "Legal y Cumplimiento",
+                "Educación y Formación": "Educación y Formación",
+                "Eventos y Webinars": "Eventos y Webinars",
+                "Salud y Bienestar": "Salud y Bienestar",
+                "Inmobiliario y Gestión de Activos": "Inmobiliario y Gestión de Activos",
+                "Logística y Operaciones Físicas": "Logística y Operaciones Físicas",
+                "Investigación e Inteligencia de Negocio": "Investigación e Inteligencia de Negocio",
+                "Comunicación y Marca Digital": "Comunicación y Marca Digital",
+                "Desarrollo de Software": "Desarrollo de Software",
+                "Productividad y Gestión del Tiempo": "Productividad y Gestión del Tiempo",
+                "Diseño y Creatividad": "Diseño y Creatividad",
+                "Estrategia y Operaciones": "Estrategia y Operaciones"
+            }
+        },
+        en: {
+            header_subtitle: "v1.0 — by Jesús García Fernández",
+            nav_view_skills: "View Skills",
+            status_connecting: "Connecting...",
+            status_offline: "Server offline",
+            status_online: "{count} skills available",
+            hero_title: "Turn your idea into a real app",
+            hero_desc: "Describe your idea in 5 easy steps. We will generate a professional package ready for any AI to build your application.",
+            offline_title: "⚠️ Server not detected",
+            offline_desc: "To generate Blueprints, you need to start the local server.<br>Choose your OS and follow the instructions:",
+            os_action_macos: "Double-click the file ↑",
+            os_action_windows: "Double-click the file ↑",
+            os_action_linux: "Double-click the file ↑",
+            offline_terminal_hint: "Prefer the terminal? Click your OS to copy the command.",
+            offline_reload: "After starting the server,",
+            offline_reload_link: "reload this page",
+            step1_label: "Vision",
+            step2_label: "Audience",
+            step3_label: "Features",
+            step4_label: "Design",
+            step5_label: "Generate",
+            step1_title: "📌 What do you want to create?",
+            step1_subtitle: "Tell us your idea. You don't need to be technical, describe what you imagine in your own words.",
+            label_app_name: "Application Name",
+            hint_app_name: "Ex: 'GastroBot', 'MyStore', 'InventoryControl'",
+            label_app_desc: "Describe your idea",
+            hint_app_desc: "Ex: 'I want a web app for my restaurant customers to make reservations...'",
+            label_app_type: "Application Type",
+            step2_title: "👥 Who is it for?",
+            step2_subtitle: "Knowing your final user helps us select the right tools.",
+            label_user_type: "Who will use the application?",
+            label_sector: "Sector or industry",
+            label_language: "Main app language",
+            step3_title: "⚡ What features does it need?",
+            step3_subtitle: "Select common features and add any missing ones.",
+            label_common_features: "Common features",
+            label_custom_features: "Additional features",
+            hint_custom_features: "Type a feature and press Enter",
+            label_integrations: "External integrations",
+            hint_integrations: "Type an integration and press Enter",
+            step4_title: "🎨 How should it look?",
+            step4_subtitle: "Define the visual style. Default options are professional.",
+            label_visual_style: "Visual style",
+            step5_title: "🚀 Review and Generate",
+            step5_subtitle: "Almost ready. Review your summary and we'll generate the Blueprint.",
+            summary_vision: "Vision",
+            summary_project: "Project",
+            summary_audience: "Audience",
+            summary_features: "Features",
+            summary_design: "Design",
+            analyzing_skills: "Analyzing skills...",
+            btn_next: "Next →",
+            btn_prev: "← Previous",
+            btn_generate: "🚀 Generate My Blueprint",
+            success_title: "Your Blueprint is ready!",
+            success_desc: "Your package has been correctly generated in APPS-CREADAS.",
+            btn_download: "📥 Download Blueprint",
+            btn_reset: "Create another Blueprint",
+            placeholder_app_name: "Give your app a name...",
+            placeholder_app_desc: "Explain here what you want your app to do...",
+            placeholder_sector: "Ex: Hospitality, Real Estate, Health...",
+            placeholder_custom_features: "Ex: Points system...",
+            placeholder_integrations: "Ex: Stripe, Google Maps, WhatsApp...",
+            opt_web_app: "Web App (opens in browser)",
+            opt_mobile_app: "Mobile App (for phones)",
+            opt_desktop_app: "Desktop App (for computer)",
+            opt_api: "API / Backend (headless service)",
+            opt_other: "Other (specify...)",
+            opt_users_public: "Customers / General public",
+            opt_users_internal: "Employees / Internal team",
+            opt_users_both: "Both (customers and team)",
+            opt_users_tech: "Developers / Technical staff",
+            opt_users_personal: "Personal (own use)",
+            opt_lang_es: "Spanish",
+            opt_lang_en: "English",
+            opt_lang_both: "Multi-language (Spanish + English)",
+            feat_login: "Sign up & Login",
+            feat_payments: "Payments & Subscriptions",
+            feat_admin: "Admin Panel",
+            feat_notifications: "Notifications & Alerts",
+            feat_database: "Database & Cloud",
+            feat_ia: "Artificial Intelligence",
+            opt_style_minimal: "Minimalist & Clean",
+            opt_style_modern: "Modern & Vibrant",
+            opt_style_corp: "Corporate & Serious",
+            opt_style_gaming: "Gaming Style / Dark",
+            label_primary_color: "Brand Colors",
+            opt_primary: "Primary",
+            opt_secondary: "Secondary",
+            opt_background: "Background",
+            btn_analyze_skills: "Analyze Skills & Continue →",
+            label_matched_skills: "📚 Selected skills from the repository",
+            hint_matched_skills: "These are the technical skills that will be included in your Blueprint.",
+            btn_generate_blueprint: "Generate My Blueprint",
+            generating_blueprint: "Generating your Blueprint...",
+            generating_hint: "Analyzing skills, composing documents and packaging the ZIP",
+            no_skills_found: "No relevant skills found.",
+            footer_text: "Designed and developed by",
+            footer_ecosystem: "Antigravity Ecosystem",
+            alert_name_required: "Please give your application a name.",
+            alert_desc_required: "Please describe your idea.",
+            alert_type_required: "Please specify the application type.",
+            alert_generate_error: "Error generating the Blueprint. Please try again.",
+            alert_connection_error: "Server connection error.",
+            toast_copied: "✓ Command copied: ",
+            toast_copied_short: "✓ Copied!",
+            prompt_copy_fallback: "Copy this command and paste it in your terminal:",
+            copy_toast: "✓ Command copied to clipboard",
+            categories: {
+                "Sistema": "System",
+                "Marketing Digital": "Digital Marketing",
+                "Generación de Contenido": "Content Generation",
+                "Gestión de Leads y CRM": "Lead & CRM Management",
+                "Ventas y Comercio Electrónico": "Sales & E-commerce",
+                "Atención al Cliente": "Customer Support",
+                "Datos y Analítica": "Data & Analytics",
+                "Inteligencia Artificial": "Artificial Intelligence",
+                "Productividad y Operaciones": "Productivity & Operations",
+                "Comunicación y Mensajería": "Communication & Messaging",
+                "Recursos Humanos": "Human Resources",
+                "Finanzas y Contabilidad": "Finance & Accounting",
+                "Proyectos y Colaboración": "Project & Collaboration",
+                "Desarrollo y Tecnología": "Development & Technology",
+                "Legal y Cumplimiento": "Legal & Compliance",
+                "Educación y Formación": "Education & Training",
+                "Eventos y Webinars": "Events & Webinars",
+                "Salud y Bienestar": "Health & Wellness",
+                "Inmobiliario y Gestión de Activos": "Real Estate & Asset Management",
+                "Logística y Operaciones Físicas": "Logistics & Physical Operations",
+                "Investigación e Inteligencia de Negocio": "Business Research & BI",
+                "Comunicación y Marca Digital": "Communication & Digital Brand",
+                "Desarrollo de Software": "Software Development",
+                "Productividad y Gestión del Tiempo": "Productivity & Time Management",
+                "Diseño y Creatividad": "Design & Creativity",
+                "Estrategia y Operaciones": "Strategy & Operations"
+            }
+        ,
+            subcategories: {
+          "Agentes Autónomos": "Autonomous Agents",
+          "Almacén y Stock": "Warehouse & Stock",
+          "Analisis Estratégico": "Strategic Analysis",
+          "Análisis de Mercado": "Market Analysis",
+          "Análisis de Tendencias": "Trend Analysis",
+          "Aprendizaje Continuo": "Continuous Learning",
+          "Aprobaciones y Flujos Internos": "Approvals & Internal Flows",
+          "Arquitectura de Software": "Software Architecture",
+          "Asesoría Jurídica": "Legal Advising",
+          "Atención al Cliente": "Customer Service",
+          "Auditoría de Seguridad": "Security Audit",
+          "Auditorías y Logs": "Audits & Logs",
+          "Automatización Agéntica": "Agentic Automation",
+          "Automatización de Reuniones": "Meeting Automation",
+          "Backend": "Backend",
+          "Bases de Datos": "Databases",
+          "Bienestar Corporativo": "Corporate Wellness",
+          "Blockchain y Web3": "Blockchain & Web3",
+          "CI": "CI/CD",
+          "CRM y Automatización": "CRM & Automation",
+          "Captación de Propiedades": "Property Acquisition",
+          "Captura de Leads": "Lead Capture",
+          "Chatbots y Asistentes": "Chatbots & Assistants",
+          "Ciencia de Datos": "Data Science",
+          "Clasificación y Extracción": "Classification & Extraction",
+          "Comunicación Multicanal": "Multichannel Communication",
+          "Comunicación Preevento": "Pre-Event Communication",
+          "Consultoría y Asesoramiento": "Consulting & Advising",
+          "Control de Gastos": "Expense Control",
+          "Control de Versiones": "Version Control",
+          "Creación de Cursos": "Course Creation",
+          "Cualificación y Scoring": "Lead Scoring & Qualification",
+          "Cultura Organizacional": "Organizational Culture",
+          "Cumplimiento Normativo (GDPR)": "Regulatory Compliance (GDPR)",
+          "Desarrollo Mobile": "Mobile Development",
+          "Desarrollo Web": "Web Development",
+          "Devoluciones y Reclamaciones": "Returns & Complaints",
+          "Discovery": "Discovery",
+          "Diseño UI": "UI Design",
+          "Documentación Colaborativa": "Collaborative Documentation",
+          "Email Marketing": "Email Marketing",
+          "Email Transaccional": "Transactional Email",
+          "Encuestas y Feedback": "Surveys & Feedback",
+          "Estrategia de Contenidos": "Content Strategy",
+          "Estrategia de Crecimiento": "Growth Strategy",
+          "Estrategia de Datos": "Data Strategy",
+          "Estrategia de Marca": "Brand Strategy",
+          "Estrategia de Ventas": "Sales Strategy",
+          "Evaluación de Desempeño": "Performance Evaluation",
+          "Ética y Responsabilidad": "Ethics & Responsibility",
+          "Facturación Automática": "Automated Billing",
+          "Fine-tuning y Evaluación": "Fine-Tuning & Evaluation",
+          "Fintech y Criptoactivos": "Fintech & Cryptoassets",
+          "Formación y E-learning": "Training & E-learning",
+          "Generación de Contenido con IA": "AI Content Generation",
+          "Gestion Documental": "Document Management",
+          "Gestión Documental": "Document Management",
+          "Gestión de APIs": "API Management",
+          "Gestión de Almacenes": "Warehouse Management",
+          "Gestión de Calidad": "Quality Management",
+          "Gestión de Contratos": "Contract Management",
+          "Gestión de Crisis en Redes": "Social Media Crisis Management",
+          "Gestión de Inventario": "Inventory Management",
+          "Gestión de Pedidos": "Order Management",
+          "Gestión de Productos": "Product Management",
+          "Gestión de Proyectos": "Project Management",
+          "Gestión de Tareas": "Task Management",
+          "Gestión de Ventas": "Sales Management",
+          "Growth Hacking y CRO": "Growth Hacking & CRO",
+          "Growth Marketing": "Growth Marketing",
+          "Hardware e IoT": "Hardware & IoT",
+          "Herramientas de Productividad": "Productivity Tools",
+          "Historiales Clínicos": "Medical Records",
+          "Identidad Visual": "Visual Identity",
+          "Imágenes y Visuales": "Images & Visuals",
+          "Indexación": "Indexing",
+          "Infraestructura Cloud": "Cloud Infrastructure",
+          "Infraestructura y DevOps": "Infrastructure & DevOps",
+          "Ingeniería de Prompts": "Prompt Engineering",
+          "Investigación Técnica": "Technical Research",
+          "Investigación de Mercado": "Market Research",
+          "Liderazgo y Mentoring": "Leadership & Mentoring",
+          "Mantenimiento y Incidencias": "Maintenance & Incidents",
+          "Marca Personal": "Personal Branding",
+          "Marketing de Afiliados": "Affiliate Marketing",
+          "Monitorización de Competencia": "Competitor Monitoring",
+          "Monitorización de IA": "AI Monitoring",
+          "Monitorización de Sistemas": "System Monitoring",
+          "Networking Virtual": "Virtual Networking",
+          "Operaciones Financieras (FinOps)": "Financial Operations (FinOps)",
+          "Optimización de Modelos": "Model Optimization",
+          "Paradigmas de Programación": "Programming Paradigms",
+          "Podcasts y Audio": "Podcasts & Audio",
+          "Postventa y Fidelización": "After-Sales & Loyalty",
+          "Power Skills": "Power Skills",
+          "Procesos y Metodologías": "Processes & Methodologies",
+          "Prompting y Chains": "Prompting & Chains",
+          "Protección de Datos": "Data Protection",
+          "Proveedores y Compras": "Suppliers & Purchasing",
+          "Publicidad de Pago (Ads)": "Paid Advertising (Ads)",
+          "RAG y Bases de Conocimiento": "RAG & Knowledge Bases",
+          "Reclutamiento y Selección": "Recruiting & Selection",
+          "Recordatorios y Notificaciones": "Reminders & Notifications",
+          "Redacción con IA": "AI Writing",
+          "Redacción y Copywriting": "Writing & Copywriting",
+          "Redes Sociales": "Social Media",
+          "Registro e Inscripciones": "Registration & Sign-ups",
+          "Reportes Automáticos": "Automated Reports",
+          "Reportes Financieros": "Financial Reports",
+          "Reportes de Cartera": "Portfolio Reports",
+          "Reportes de Pipeline": "Pipeline Reports",
+          "Respuestas Automáticas": "Automated Replies",
+          "SEO (Optimización de Buscadores)": "SEO (Search Engine Optimization)",
+          "SEO y Posicionamiento": "SEO & Positioning",
+          "Seguimiento de Envíos": "Shipment Tracking",
+          "Seguimiento de Sprints": "Sprint Tracking",
+          "Seguridad y Accesos": "Security & Access",
+          "Sincronización con CRM": "CRM Synchronization",
+          "Sincronización entre Herramientas": "Tool Synchronization",
+          "Sintesis de Noticias e Informes": "News & Report Synthesis",
+          "Síntesis de Noticias e Informes": "News & Report Synthesis",
+          "Slack y Teams": "Slack & Teams",
+          "Social Selling": "Social Selling",
+          "Sostenibilidad": "Sustainability",
+          "Storytelling Corporativo": "Corporate Storytelling",
+          "Telemedicina": "Telemedicine",
+          "Transformación y Limpieza": "Data Transformation & Cleaning",
+          "Upselling y Cross-selling": "Upselling & Cross-selling",
+          "Video y Multimedia": "Video & Multimedia",
+          "Visión por Computadora": "Computer Vision",
+          "Visualización de Datos": "Data Visualization",
+          "Visualización y Dashboards": "Visualization & Dashboards",
+          "Web3 y Blockchain": "Web3 & Blockchain",
+          "WhatsApp y Telegram": "WhatsApp & Telegram"
+            }},
+        fr: {
+            header_subtitle: "v1.0 — par Jesús García Fernández",
+            nav_view_skills: "Voir Skills",
+            status_connecting: "Connexion...",
+            status_offline: "Serveur hors ligne",
+            status_online: "{count} skills disponibles",
+            hero_title: "Transformez votre idée en application",
+            hero_desc: "Décrivez votre idée en 5 étapes. Nous générerons un pack professionnel prêt pour qu'une IA construise votre application.",
+            offline_title: "⚠️ Serveur non détecté",
+            offline_desc: "Pour générer des Blueprints, vous devez lancer le serveur local.<br>Choisissez votre OS et suivez les instructions :",
+            os_action_macos: "Double-cliquez sur le fichier ↑",
+            os_action_windows: "Double-cliquez sur le fichier ↑",
+            os_action_linux: "Double-cliquez sur le fichier ↑",
+            offline_terminal_hint: "Préférez-vous le terminal ? Cliquez sur votre OS pour copier la commande.",
+            offline_reload: "Après avoir démarré le serveur,",
+            offline_reload_link: "rechargez cette page",
+            step1_label: "Vision",
+            step2_label: "Public",
+            step3_label: "Fonctions",
+            step4_label: "Design",
+            step5_label: "Générer",
+            step1_title: "📌 Que voulez-vous créer ?",
+            step1_subtitle: "Dites-nous votre idée. Pas besoin d'être technique, décrivez ce que vous imaginez.",
+            label_app_name: "Nom de l'application",
+            hint_app_name: "Ex: 'GastroBot', 'MaBoutique', 'ControleStock'",
+            placeholder_app_name: "Donnez un nom à votre app...",
+            label_app_desc: "Décrivez votre idée",
+            hint_app_desc: "Ex: 'Je veux une web app pour que les clients de mon restaurant puissent réserver...'",
+            placeholder_app_desc: "Expliquez ici ce que vous voulez que l'app fasse...",
+            label_app_type: "Type d'application",
+            opt_web_app: "Web App (fenêtre de navigation)",
+            opt_mobile_app: "Mobile App (pour téléphones)",
+            opt_desktop_app: "Desktop App (ordinateur)",
+            opt_api: "API / Backend (service sans interface)",
+            opt_other: "Autre (préciser...)",
+            step2_title: "👥 Pour qui est-ce ?",
+            step2_subtitle: "Connaître l'utilisateur final nous aide à choisir les bons outils.",
+            label_user_type: "Qui utilisera l'application ?",
+            opt_users_public: "Clients / Public général",
+            opt_users_internal: "Employés / Équipe interne",
+            opt_users_both: "Les deux (clients et équipe)",
+            opt_users_tech: "Développeurs / Techniciens",
+            opt_users_personal: "Personnel (utilisation propre)",
+            label_sector: "Secteur ou industrie",
+            placeholder_sector: "Ex: Hôtellerie, Immobilier, Santé...",
+            label_language: "Langue principale de l'app",
+            opt_lang_es: "Espagnol",
+            opt_lang_en: "Anglais",
+            opt_lang_both: "Multi-langues (Espagnol + Anglais)",
+            step3_title: "⚡ Quelles fonctions ?",
+            step3_subtitle: "Sélectionnez les fonctions et ajoutez celles qui manquent.",
+            label_common_features: "Fonctions communes",
+            feat_login: "Connexion & Inscription",
+            feat_payments: "Paiements & Abonnements",
+            feat_admin: "Panneau d'administration",
+            feat_notifications: "Notifications & Alertes",
+            feat_database: "Base de données & Cloud",
+            feat_ia: "Intelligence Artificielle",
+            label_custom_features: "Fonctions additionnelles",
+            hint_custom_features: "Tapez une fonction et Entrée",
+            placeholder_custom_features: "Ex: Système de points...",
+            label_integrations: "Intégrations externes",
+            hint_integrations: "Tapez une intégration et Entrée",
+            placeholder_integrations: "Ex: Stripe, Google Maps, WhatsApp...",
+            step4_title: "🎨 Quel aspect ?",
+            step4_subtitle: "Définissez le style visuel. Les options par défaut sont pro.",
+            label_visual_style: "Style visuel",
+            opt_style_minimal: "Minimaliste et propre",
+            opt_style_modern: "Moderne et vibrant",
+            opt_style_corp: "Corporatif et sérieux",
+            opt_style_gaming: "Style 'Gaming' / Sombre",
+            label_primary_color: "Couleurs de marque",
+            opt_primary: "Primaire",
+            opt_secondary: "Secondaire",
+            opt_background: "Fond",
+            btn_analyze_skills: "Analyser Skills et Continuer →",
+            step5_title: "🚀 Réviser et Générer",
+            step5_subtitle: "Presque fini. Révisez votre résumé et nous générerons le Blueprint.",
+            summary_vision: "Vision",
+            summary_project: "Projet",
+            summary_audience: "Public",
+            summary_features: "Fonctionnalités",
+            summary_design: "Design",
+            label_matched_skills: "📚 Skills sélectionnées",
+            hint_matched_skills: "Compétences techniques dans votre Blueprint.",
+            analyzing_skills: "Analyse des skills...",
+            btn_next: "Suivant →",
+            btn_prev: "← Précédent",
+            btn_generate_blueprint: "Générer Mon Blueprint",
+            success_title: "Votre Blueprint est prêt !",
+            success_desc: "Votre pack a été généré avec succès dans APPS-CREADAS.",
+            btn_download: "📥 Télécharger Blueprint",
+            btn_reset: "Créer un autre Blueprint",
+            generating_blueprint: "Générant votre Blueprint...",
+            generating_hint: "Analyse des skills et emballage du ZIP",
+            no_skills_found: "Aucun skill pertinent trouvé.",
+            footer_text: "Conçu et développé par",
+            footer_ecosystem: "Écosystème Antigravity",
+            alert_name_required: "Veuillez donner un nom à votre application.",
+            alert_desc_required: "Veuillez décrire votre idée.",
+            alert_type_required: "Veuillez préciser le type d'application.",
+            alert_generate_error: "Erreur lors de la génération. Réessayez.",
+            alert_connection_error: "Erreur de connexion au serveur.",
+            toast_copied: "✓ Commande copiée : ",
+            toast_copied_short: "✓ Copié !",
+            prompt_copy_fallback: "Copiez cette commande et collez-la dans votre terminal :",
+            copy_toast: "✓ Commande copiée dans le presse-papiers",
+            categories: {
+                "Sistema": "Système",
+                "Marketing Digital": "Marketing Numérique",
+                "Generación de Contenido": "Génération de Contenu",
+                "Gestión de Leads y CRM": "Gestion des Leads & CRM",
+                "Ventas y Comercio Electrónico": "Ventes & E-commerce",
+                "Atención al Cliente": "Service Client",
+                "Datos y Analítica": "Données & Analytique",
+                "Inteligencia Artificial": "Intelligence Artificielle",
+                "Productividad y Operaciones": "Productivité & Opérations",
+                "Comunicación y Mensajería": "Communication & Messagerie",
+                "Recursos Humanos": "Ressources Humaines",
+                "Finanzas y Contabilidad": "Finance & Comptabilité",
+                "Proyectos y Colaboración": "Projets & Collaboration",
+                "Desarrollo y Tecnología": "Développement & Tech",
+                "Legal y Cumplimiento": "Juridique & Conformité",
+                "Educación y Formación": "Éducation & Formation",
+                "Eventos y Webinars": "Événements & Webinaires",
+                "Salud y Bienestar": "Santé & Bien-être",
+                "Inmobiliario y Gestión de Activos": "Immobilier & Actifs",
+                "Logística y Operaciones Físicas": "Logistique & Opérations",
+                "Investigación e Inteligencia de Negocio": "Recherche & BI",
+                "Comunicación y Marca Digital": "Marque & Comms",
+                "Desarrollo de Software": "Développement Logiciel",
+                "Productividad y Gestión del Tiempo": "Gestion du Temps",
+                "Diseño y Creatividad": "Design & Créativité",
+                "Estrategia y Operaciones": "Stratégie & Opérations"
+            }
+        ,
+            subcategories: {
+          "Agentes Autónomos": "Agents Autonomes",
+          "Almacén y Stock": "Entrepôt et Stock",
+          "Analisis Estratégico": "Analyse Stratégique",
+          "Análisis de Mercado": "Analyse de Marché",
+          "Análisis de Tendencias": "Analyse des Tendances",
+          "Aprendizaje Continuo": "Apprentissage Continu",
+          "Aprobaciones y Flujos Internos": "Approbations et Flux Internes",
+          "Arquitectura de Software": "Architecture Logicielle",
+          "Asesoría Jurídica": "Conseil Juridique",
+          "Atención al Cliente": "Service Client",
+          "Auditoría de Seguridad": "Audit de Sécurité",
+          "Auditorías y Logs": "Audits et Journaux",
+          "Automatización Agéntica": "Automatisation d'Agents",
+          "Automatización de Reuniones": "Automatisation de Réunions",
+          "Backend": "Backend",
+          "Bases de Datos": "Bases de Données",
+          "Bienestar Corporativo": "Bien-être en Entreprise",
+          "Blockchain y Web3": "Blockchain et Web3",
+          "CI": "CI/CD",
+          "CRM y Automatización": "CRM et Automatisation",
+          "Captación de Propiedades": "Acquisition Immobilière",
+          "Captura de Leads": "Capture de Leads",
+          "Chatbots y Asistentes": "Chatbots et Assistants",
+          "Ciencia de Datos": "Science des Données",
+          "Clasificación y Extracción": "Classification et Extraction",
+          "Comunicación Multicanal": "Communication Multicanal",
+          "Comunicación Preevento": "Communication Pré-événement",
+          "Consultoría y Asesoramiento": "Conseil et Orientation",
+          "Control de Gastos": "Contrôle des Dépenses",
+          "Control de Versiones": "Contrôle de Version",
+          "Creación de Cursos": "Création de Cours",
+          "Cualificación y Scoring": "Qualification de Leads",
+          "Cultura Organizacional": "Culture Organisationnelle",
+          "Cumplimiento Normativo (GDPR)": "Conformité Réglementaire (RGPD)",
+          "Desarrollo Mobile": "Développement Mobile",
+          "Desarrollo Web": "Développement Web",
+          "Devoluciones y Reclamaciones": "Retours et Réclamations",
+          "Discovery": "Découverte",
+          "Diseño UI": "Design UI",
+          "Documentación Colaborativa": "Documentation Collaborative",
+          "Email Marketing": "Email Marketing",
+          "Email Transaccional": "Email Transactionnel",
+          "Encuestas y Feedback": "Sondages et Retours",
+          "Estrategia de Contenidos": "Stratégie de Contenu",
+          "Estrategia de Crecimiento": "Stratégie de Croissance",
+          "Estrategia de Datos": "Stratégie de Données",
+          "Estrategia de Marca": "Stratégie de Marque",
+          "Estrategia de Ventas": "Stratégie de Ventes",
+          "Evaluación de Desempeño": "Évaluation des Performances",
+          "Ética y Responsabilidad": "Éthique et Responsabilité",
+          "Facturación Automática": "Facturation Automatisée",
+          "Fine-tuning y Evaluación": "Fine-Tuning et Évaluation",
+          "Fintech y Criptoactivos": "Fintech et Crypto-actifs",
+          "Formación y E-learning": "Formation et E-learning",
+          "Generación de Contenido con IA": "Génération de Contenu IA",
+          "Gestion Documental": "Gestion Documentaire",
+          "Gestión Documental": "Gestion Documentaire",
+          "Gestión de APIs": "Gestion des API",
+          "Gestión de Almacenes": "Gestion d'Entrepôt",
+          "Gestión de Calidad": "Gestion de Qualité",
+          "Gestión de Contratos": "Gestion de Contrats",
+          "Gestión de Crisis en Redes": "Gestion de Crise sur Réseaux Sociaux",
+          "Gestión de Inventario": "Gestion d'Inventaire",
+          "Gestión de Pedidos": "Gestion de Commandes",
+          "Gestión de Productos": "Gestion de Produits",
+          "Gestión de Proyectos": "Gestion de Projets",
+          "Gestión de Tareas": "Gestion des Tâches",
+          "Gestión de Ventas": "Gestion des Ventes",
+          "Growth Hacking y CRO": "Growth Hacking et CRO",
+          "Growth Marketing": "Growth Marketing",
+          "Hardware e IoT": "Hardware et IoT",
+          "Herramientas de Productividad": "Outils de Productivité",
+          "Historiales Clínicos": "Dossiers Médicaux",
+          "Identidad Visual": "Identité Visuelle",
+          "Imágenes y Visuales": "Images et Visuels",
+          "Indexación": "Indexation",
+          "Infraestructura Cloud": "Infrastructure Cloud",
+          "Infraestructura y DevOps": "Infrastructure et DevOps",
+          "Ingeniería de Prompts": "Ingénierie de Prompts",
+          "Investigación Técnica": "Recherche Technique",
+          "Investigación de Mercado": "Étude de Marché",
+          "Liderazgo y Mentoring": "Leadership et Mentorat",
+          "Mantenimiento y Incidencias": "Maintenance et Incidents",
+          "Marca Personal": "Marque Personnelle",
+          "Marketing de Afiliados": "Marketing d'Affiliation",
+          "Monitorización de Competencia": "Surveillance de la Concurrence",
+          "Monitorización de IA": "Surveillance de l'IA",
+          "Monitorización de Sistemas": "Surveillance des Systèmes",
+          "Networking Virtual": "Réseautage Virtuel",
+          "Operaciones Financieras (FinOps)": "Opérations Financières (FinOps)",
+          "Optimización de Modelos": "Optimisation des Modèles",
+          "Paradigmas de Programación": "Paradigmes de Programmation",
+          "Podcasts y Audio": "Podcasts et Audio",
+          "Postventa y Fidelización": "Service Après-vente et Fidélisation",
+          "Power Skills": "Power Skills",
+          "Procesos y Metodologías": "Processus et Méthodologies",
+          "Prompting y Chains": "Prompting et Chaînes",
+          "Protección de Datos": "Protection des Données",
+          "Proveedores y Compras": "Fournisseurs et Achats",
+          "Publicidad de Pago (Ads)": "Publicité Payante (Ads)",
+          "RAG y Bases de Conocimiento": "RAG et Bases de Connaissances",
+          "Reclutamiento y Selección": "Recrutement et Sélection",
+          "Recordatorios y Notificaciones": "Rappels et Notifications",
+          "Redacción con IA": "Rédaction IA",
+          "Redacción y Copywriting": "Rédaction et Copywriting",
+          "Redes Sociales": "Réseaux Sociaux",
+          "Registro e Inscripciones": "Inscriptions et Enregistrements",
+          "Reportes Automáticos": "Rapports Automatisés",
+          "Reportes Financieros": "Rapports Financiers",
+          "Reportes de Cartera": "Rapports de Portefeuille",
+          "Reportes de Pipeline": "Rapports de Pipeline",
+          "Respuestas Automáticas": "Réponses Automatisées",
+          "SEO (Optimización de Buscadores)": "SEO (Optimisation pour Moteurs de Recherche)",
+          "SEO y Posicionamiento": "SEO et Positionnement",
+          "Seguimiento de Envíos": "Suivi des Expéditions",
+          "Seguimiento de Sprints": "Suivi des Sprints",
+          "Seguridad y Accesos": "Sécurité et Accès",
+          "Sincronización con CRM": "Synchronisation CRM",
+          "Sincronización entre Herramientas": "Synchronisation d'Outils",
+          "Sintesis de Noticias e Informes": "Synthèse d'Actualités et Rapports",
+          "Síntesis de Noticias e Informes": "Synthèse d'Actualités et Rapports",
+          "Slack y Teams": "Slack et Teams",
+          "Social Selling": "Social Selling",
+          "Sostenibilidad": "Durabilité",
+          "Storytelling Corporativo": "Storytelling d'Entreprise",
+          "Telemedicina": "Télémédecine",
+          "Transformación y Limpieza": "Transformation et Nettoyage des Données",
+          "Upselling y Cross-selling": "Ventes Incitatives et Croisées",
+          "Video y Multimedia": "Vidéo et Multimédia",
+          "Visión por Computadora": "Vision par Ordinateur",
+          "Visualización de Datos": "Visualisation des Données",
+          "Visualización y Dashboards": "Visualisation et Tableaux de Bord",
+          "Web3 y Blockchain": "Web3 et Blockchain",
+          "WhatsApp y Telegram": "WhatsApp et Telegram"
+            }},
+        de: {
+            header_subtitle: "v1.0 — von Jesús García Fernández",
+            nav_view_skills: "Skills ansehen",
+            status_connecting: "Verbinde...",
+            status_offline: "Server offline",
+            status_online: "{count} Skills verfügbar",
+            hero_title: "Verwandeln Sie Ihre Idee in eine App",
+            hero_desc: "Beschreiben Sie Ihre Idee in 5 Schritten. Wir erstellen ein professionelles Paket, damit jede KI Ihre App bauen kann.",
+            offline_title: "⚠️ Server nicht gefunden",
+            offline_desc: "Um Blueprints zu erstellen, müssen Sie den lokalen Server starten.<br>Wählen Sie Ihr Betriebssystem und folgen Sie den Anweisungen:",
+            os_action_macos: "Doppelklicken Sie auf die Datei ↑",
+            os_action_windows: "Doppelklicken Sie auf die Datei ↑",
+            os_action_linux: "Doppelklicken Sie auf die Datei ↑",
+            offline_terminal_hint: "Lieber das Terminal? Klicken Sie auf Ihr OS, um den Befehl zu kopieren.",
+            offline_reload: "Nach dem Starten des Servers,",
+            offline_reload_link: "laden Sie diese Seite neu",
+            step1_label: "Vision",
+            step2_label: "Zielgruppe",
+            step3_label: "Funktionen",
+            step4_label: "Design",
+            step5_label: "Generieren",
+            step1_title: "📌 Was möchten Sie erstellen?",
+            step1_subtitle: "Erzählen Sie uns Ihre Idee. Sie müssen kein Techniker sein, beschreiben Sie es einfach.",
+            label_app_name: "Name der Anwendung",
+            hint_app_name: "Z.B.: 'GastroBot', 'MeinShop', 'LagerKontrolle'",
+            placeholder_app_name: "Geben Sie Ihrer App einen Namen...",
+            label_app_desc: "Beschreiben Sie Ihre Idee",
+            hint_app_desc: "Z.B.: 'Ich möchte eine Web-App für Restaurantreservierungen...'",
+            placeholder_app_desc: "Erklären Sie hier, was Ihre App tun soll...",
+            label_app_type: "Art der Anwendung",
+            opt_web_app: "Web App (öffnet im Browser)",
+            opt_mobile_app: "Mobile App (für Telefone)",
+            opt_desktop_app: "Desktop App (für Computer)",
+            opt_api: "API / Backend (Dienst ohne Interface)",
+            opt_other: "Andere (bitte angeben...)",
+            step2_title: "👥 Für wen ist es?",
+            step2_subtitle: "Ihre Zielgruppe zu kennen hilft uns, die richtigen Tools zu wählen.",
+            label_user_type: "Wer wird die App nutzen?",
+            opt_users_public: "Kunden / Öffentlichkeit",
+            opt_users_internal: "Mitarbeiter / Intern",
+            opt_users_both: "Beide (Kunden und Team)",
+            opt_users_tech: "Entwickler / Techniker",
+            opt_users_personal: "Persönlich (Eigennutzung)",
+            label_sector: "Branche",
+            placeholder_sector: "Z.B.: Gastgewerbe, Immobilien, Gesundheit...",
+            label_language: "Hauptsprache der App",
+            opt_lang_es: "Spanisch",
+            opt_lang_en: "Englisch",
+            opt_lang_both: "Mehrsprachig (Spanisch + Englisch)",
+            step3_title: "⚡ Welche Funktionen ?",
+            step3_subtitle: "Wählen Sie Funktionen aus oder fügen Sie eigene hinzu.",
+            label_common_features: "Häufige Funktionen",
+            feat_login: "Anmeldung & Registrierung",
+            feat_payments: "Zahlungen & Abonnements",
+            feat_admin: "Admin-Bereich",
+            feat_notifications: "Benachrichtigungen & Alarme",
+            feat_database: "Datenbank & Cloud",
+            feat_ia: "Künstliche Intelligenz",
+            label_custom_features: "Zusätzliche Funktionen",
+            hint_custom_features: "Funktion eingeben und Enter",
+            placeholder_custom_features: "Z.B.: Punktesystem...",
+            label_integrations: "Externe Integrationen",
+            hint_integrations: "Integration eingeben und Enter",
+            placeholder_integrations: "Z.B.: Stripe, Google Maps, WhatsApp...",
+            step4_title: "🎨 Wie soll es aussehen ?",
+            step4_subtitle: "Definieren Sie den Stil. Standardoptionen sind professionell.",
+            label_visual_style: "Visueller Stil",
+            opt_style_minimal: "Minimalistisch und sauber",
+            opt_style_modern: "Modern und lebendig",
+            opt_style_corp: "Sachlich und seriös",
+            opt_style_gaming: "Gaming-Stil / Dunkel",
+            label_primary_color: "Markenfarben",
+            opt_primary: "Primär",
+            opt_secondary: "Sekundär",
+            opt_background: "Hintergrund",
+            btn_analyze_skills: "Skills analysieren & Weiter →",
+            step5_title: "🚀 Prüfen und Generieren",
+            step5_subtitle: "Fast fertig. Zusammenfassung prüfen und Blueprint generieren.",
+            summary_vision: "Vision",
+            summary_project: "Projekt",
+            summary_audience: "Zielgruppe",
+            summary_features: "Funktionen",
+            summary_design: "Design",
+            label_matched_skills: "📚 Ausgewählte Skills",
+            hint_matched_skills: "Technische Fähigkeiten in Ihrem Blueprint.",
+            analyzing_skills: "Skills werden analysiert...",
+            btn_next: "Weiter →",
+            btn_prev: "← Zurück",
+            btn_generate_blueprint: "Blueprint generieren",
+            success_title: "Blueprint ist fertig!",
+            success_desc: "Ihr Paket wurde in APPS-CREADAS erfolgreich erstellt.",
+            btn_download: "📥 Blueprint herunterladen",
+            btn_reset: "Weiteren Blueprint erstellen",
+            generating_blueprint: "Blueprint wird generiert...",
+            generating_hint: "Analysiere Skills und erstelle ZIP-Archiv",
+            no_skills_found: "Keine relevanten Skills gefunden.",
+            footer_text: "Entworfen und entwickelt von",
+            footer_ecosystem: "Antigravity Ökosystem",
+            alert_name_required: "Bitte geben Sie Ihrer Anwendung einen Namen.",
+            alert_desc_required: "Bitte beschreiben Sie Ihre Idee.",
+            alert_type_required: "Bitte geben Sie die Art der Anwendung an.",
+            alert_generate_error: "Fehler beim Generieren. Bitte versuchen Sie es erneut.",
+            alert_connection_error: "Serververbindungsfehler.",
+            toast_copied: "✓ Befehl kopiert: ",
+            toast_copied_short: "✓ Kopiert!",
+            prompt_copy_fallback: "Kopieren Sie diesen Befehl und fügen Sie ihn in Ihr Terminal ein:",
+            copy_toast: "✓ Befehl in die Zwischenablage kopiert",
+            categories: {
+                "Sistema": "System",
+                "Marketing Digital": "Digitales Marketing",
+                "Generación de Contenido": "Content-Generierung",
+                "Gestión de Leads y CRM": "Lead- & CRM-Management",
+                "Ventas y Comercio Electrónico": "Vertrieb & E-Commerce",
+                "Atención al Cliente": "Kundenservice",
+                "Datos y Analítica": "Daten & Analytik",
+                "Inteligencia Artificial": "Künstliche Intelligenz",
+                "Productividad y Operaciones": "Produktivität & Abläufe",
+                "Comunicación y Mensajería": "Kommunikation & Messaging",
+                "Recursos Humanos": "Personalwesen",
+                "Finanzas y Contabilidad": "Finanzen & Buchhaltung",
+                "Proyectos y Colaboración": "Projekte & Zusammenarbeit",
+                "Desarrollo y Tecnología": "Entwicklung & Tech",
+                "Legal y Cumplimiento": "Recht & Compliance",
+                "Educación y Formación": "Bildung & Ausbildung",
+                "Eventos y Webinars": "Events & Webinare",
+                "Salud y Bienestar": "Gesundheit & Wellness",
+                "Inmobiliario y Gestión de Activos": "Immobilien & Vermögen",
+                "Logística y Operaciones Físicas": "Logistik & Abläufe",
+                "Investigación e Inteligencia de Negocio": "Wirtschaftsforschung & BI",
+                "Comunicación y Marca Digital": "Digitale Marke & Komms",
+                "Desarrollo de Software": "Softwareentwicklung",
+                "Productividad y Gestión del Tiempo": "Zeitmanagement",
+                "Diseño y Creatividad": "Design & Kreativität",
+                "Estrategia y Operaciones": "Strategie & Betrieb"
+            }
+        ,
+            subcategories: {
+          "Agentes Autónomos": "Autonome Agenten",
+          "Almacén y Stock": "Lager & Bestand",
+          "Analisis Estratégico": "Strategische Analyse",
+          "Análisis de Mercado": "Marktanalyse",
+          "Análisis de Tendencias": "Trendanalyse",
+          "Aprendizaje Continuo": "Kontinuierliches Lernen",
+          "Aprobaciones y Flujos Internos": "Genehmigungen & Interne Abläufe",
+          "Arquitectura de Software": "Softwarearchitektur",
+          "Asesoría Jurídica": "Rechtsberatung",
+          "Atención al Cliente": "Kundenservice",
+          "Auditoría de Seguridad": "Sicherheitsaudit",
+          "Auditorías y Logs": "Audits & Protokolle",
+          "Automatización Agéntica": "Agenten-Automatisierung",
+          "Automatización de Reuniones": "Meeting-Automatisierung",
+          "Backend": "Backend",
+          "Bases de Datos": "Datenbanken",
+          "Bienestar Corporativo": "Betriebliches Gesundheitsmanagement",
+          "Blockchain y Web3": "Blockchain & Web3",
+          "CI": "CI/CD",
+          "CRM y Automatización": "CRM & Automatisierung",
+          "Captación de Propiedades": "Immobiliengewinnung",
+          "Captura de Leads": "Lead-Erfassung",
+          "Chatbots y Asistentes": "Chatbots & Assistenten",
+          "Ciencia de Datos": "Data Science",
+          "Clasificación y Extracción": "Klassifizierung & Extraktion",
+          "Comunicación Multicanal": "Multichannel-Kommunikation",
+          "Comunicación Preevento": "Pre-Event-Kommunikation",
+          "Consultoría y Asesoramiento": "Beratung & Betreuung",
+          "Control de Gastos": "Kostenkontrolle",
+          "Control de Versiones": "Versionskontrolle",
+          "Creación de Cursos": "Kurserstellung",
+          "Cualificación y Scoring": "Lead-Scoring & Qualifikation",
+          "Cultura Organizacional": "Unternehmenskultur",
+          "Cumplimiento Normativo (GDPR)": "Compliance & DSGVO",
+          "Desarrollo Mobile": "Mobile Entwicklung",
+          "Desarrollo Web": "Web-Entwicklung",
+          "Devoluciones y Reclamaciones": "Retouren & Reklamationen",
+          "Discovery": "Discovery",
+          "Diseño UI": "UI-Design",
+          "Documentación Colaborativa": "Kollaborative Dokumentation",
+          "Email Marketing": "E-Mail-Marketing",
+          "Email Transaccional": "Transaktions-E-Mails",
+          "Encuestas y Feedback": "Umfragen & Feedback",
+          "Estrategia de Contenidos": "Content-Strategie",
+          "Estrategia de Crecimiento": "Wachstumsstrategie",
+          "Estrategia de Datos": "Datenstrategie",
+          "Estrategia de Marca": "Markenstrategie",
+          "Estrategia de Ventas": "Vertriebsstrategie",
+          "Evaluación de Desempeño": "Leistungsbewertung",
+          "Ética y Responsabilidad": "Ethik & Verantwortung",
+          "Facturación Automática": "Automatisierte Abrechnung",
+          "Fine-tuning y Evaluación": "Fine-Tuning & Evaluierung",
+          "Fintech y Criptoactivos": "Fintech & Krypto-Assets",
+          "Formación y E-learning": "Training & E-Learning",
+          "Generación de Contenido con IA": "KI-Inhaltsgenerierung",
+          "Gestion Documental": "Dokumentenmanagement",
+          "Gestión Documental": "Dokumentenmanagement",
+          "Gestión de APIs": "API-Management",
+          "Gestión de Almacenes": "Lagermanagement",
+          "Gestión de Calidad": "Qualitätsmanagement",
+          "Gestión de Contratos": "Vertragsmanagement",
+          "Gestión de Crisis en Redes": "Social-Media-Krisenmanagement",
+          "Gestión de Inventario": "Bestandsmanagement",
+          "Gestión de Pedidos": "Auftragsverwaltung",
+          "Gestión de Productos": "Produktmanagement",
+          "Gestión de Proyectos": "Projektmanagement",
+          "Gestión de Tareas": "Aufgabenmanagement",
+          "Gestión de Ventas": "Vertriebsmanagement",
+          "Growth Hacking y CRO": "Growth Hacking & CRO",
+          "Growth Marketing": "Growth Marketing",
+          "Hardware e IoT": "Hardware & IoT",
+          "Herramientas de Productividad": "Produktivitätstools",
+          "Historiales Clínicos": "Medizinische Akten",
+          "Identidad Visual": "Visuelle Identität",
+          "Imágenes y Visuales": "Bilder & Visuals",
+          "Indexación": "Indexierung",
+          "Infraestructura Cloud": "Cloud-Infrastruktur",
+          "Infraestructura y DevOps": "Infrastruktur & DevOps",
+          "Ingeniería de Prompts": "Prompt Engineering",
+          "Investigación Técnica": "Technische Forschung",
+          "Investigación de Mercado": "Marktforschung",
+          "Liderazgo y Mentoring": "Führung & Mentoring",
+          "Mantenimiento y Incidencias": "Wartung & Vorfälle",
+          "Marca Personal": "Personal Branding",
+          "Marketing de Afiliados": "Affiliate-Marketing",
+          "Monitorización de Competencia": "Wettbewerberbeobachtung",
+          "Monitorización de IA": "KI-Überwachung",
+          "Monitorización de Sistemas": "Systemüberwachung",
+          "Networking Virtual": "Virtuelles Networking",
+          "Operaciones Financieras (FinOps)": "Finanzoperationen (FinOps)",
+          "Optimización de Modelos": "Modell-Optimierung",
+          "Paradigmas de Programación": "Programmierparadigmen",
+          "Podcasts y Audio": "Podcasts & Audio",
+          "Postventa y Fidelización": "After-Sales & Kundentreue",
+          "Power Skills": "Power Skills",
+          "Procesos y Metodologías": "Prozesse & Methoden",
+          "Prompting y Chains": "Prompting & Chains",
+          "Protección de Datos": "Datenschutz",
+          "Proveedores y Compras": "Lieferanten & Einkauf",
+          "Publicidad de Pago (Ads)": "Bezahlte Werbung (Ads)",
+          "RAG y Bases de Conocimiento": "RAG & Wissensdatenbanken",
+          "Reclutamiento y Selección": "Rekrutierung & Auswahl",
+          "Recordatorios y Notificaciones": "Erinnerungen & Benachrichtigungen",
+          "Redacción con IA": "KI-Texten",
+          "Redacción y Copywriting": "Texten & Copywriting",
+          "Redes Sociales": "Social Media",
+          "Registro e Inscripciones": "Anmeldungen & Registrierungen",
+          "Reportes Automáticos": "Automatisierte Berichte",
+          "Reportes Financieros": "Finanzberichte",
+          "Reportes de Cartera": "Portfolio-Berichte",
+          "Reportes de Pipeline": "Pipeline-Berichte",
+          "Respuestas Automáticas": "Automatisierte Antworten",
+          "SEO (Optimización de Buscadores)": "SEO (Suchmaschinenoptimierung)",
+          "SEO y Posicionamiento": "SEO & Positionierung",
+          "Seguimiento de Envíos": "Sendungsverfolgung",
+          "Seguimiento de Sprints": "Sprint-Tracking",
+          "Seguridad y Accesos": "Sicherheit & Zugang",
+          "Sincronización con CRM": "CRM-Synchronisierung",
+          "Sincronización entre Herramientas": "Tool-Synchronisierung",
+          "Sintesis de Noticias e Informes": "Nachrichten- & Berichtsynthese",
+          "Síntesis de Noticias e Informes": "Nachrichten- & Berichtsynthese",
+          "Slack y Teams": "Slack & Teams",
+          "Social Selling": "Social Selling",
+          "Sostenibilidad": "Nachhaltigkeit",
+          "Storytelling Corporativo": "Corporate Storytelling",
+          "Telemedicina": "Telemedizin",
+          "Transformación y Limpieza": "Datentransformation & -bereinigung",
+          "Upselling y Cross-selling": "Upselling & Cross-Selling",
+          "Video y Multimedia": "Video & Multimedia",
+          "Visión por Computadora": "Computer Vision",
+          "Visualización de Datos": "Datenvisualisierung",
+          "Visualización y Dashboards": "Visualisierung & Dashboards",
+          "Web3 y Blockchain": "Web3 & Blockchain",
+          "WhatsApp y Telegram": "WhatsApp & Telegram"
+            }},
+        zh: {
+            header_subtitle: "v1.0 — 由 Jesús García Fernández 设计",
+            nav_view_skills: "查看技能",
+            status_connecting: "正在连接...",
+            status_offline: "服务器离线",
+            status_online: "{count} 个可用技能",
+            hero_title: "将您的创意变为现实应用",
+            hero_desc: "只需5个简单步骤即可描述您的创意。我们将为您生成专业的数据包，让任何AI都能为您构建应用。",
+            offline_title: "⚠️ 未检测到服务器",
+            offline_desc: "要生成蓝图，您需要启动本地服务器。<br>选择您的操作系统并按照说明进行操作：",
+            os_action_macos: "双击文件 ↑",
+            os_action_windows: "双击文件 ↑",
+            os_action_linux: "双击文件 ↑",
+            offline_terminal_hint: "喜欢使用终端？点击您的操作系统复制命令。",
+            offline_reload: "启动服务器后，",
+            offline_reload_link: "重新加载此页面",
+            step1_label: "愿景",
+            step2_label: "受众",
+            step3_label: "功能",
+            step4_label: "设计",
+            step5_label: "生成",
+            step1_title: "📌 您想创建什么？",
+            step1_subtitle: "告诉我们您的想法。您不需要具备技术背景，只需用您自己的话描述您所构思的内容。",
+            label_app_name: "应用名称",
+            hint_app_name: "例：'GastroBot'、'我的店铺'",
+            label_app_desc: "描述您的想法",
+            hint_app_desc: "例：'我想要一个餐厅预订网页应用...'",
+            label_app_type: "应用类型",
+            step2_title: "👥 它的受众是谁？",
+            step2_subtitle: "了解您的最终用户有助于我们选择合适的工具。",
+            label_user_type: "谁将使用该应用程序？",
+            label_sector: "行业领域",
+            label_language: "应用主要语言",
+            step3_title: "⚡ 它需要什么功能？",
+            step3_subtitle: "选择常用功能并添加缺失的功能。",
+            label_common_features: "常用功能",
+            label_custom_features: "其他功能",
+            hint_custom_features: "输入功能并按回车",
+            label_integrations: "外部集成",
+            hint_integrations: "输入集成并按回车",
+            step4_title: "🎨 它的外观如何？",
+            step4_subtitle: "定义视觉风格。默认选项非常专业。",
+            label_visual_style: "视觉风格",
+            step5_title: "🚀 审查并生成",
+            step5_subtitle: "快准备好了。查看您的摘要，我们将生成蓝图。",
+            summary_vision: "愿景",
+            summary_project: "项目",
+            summary_audience: "受众",
+            summary_features: "功能",
+            summary_design: "设计",
+            analyzing_skills: "正在分析技能...",
+            btn_next: "下一步 →",
+            btn_prev: "← 上一步",
+            btn_generate: "🚀 生成我的蓝图",
+            success_title: "您的蓝图已准备就绪！",
+            success_desc: "您的数据包已在 APPS-CREADAS 中成功生成。",
+            btn_download: "📥 下载蓝图",
+            btn_reset: "创建另一个蓝图",
+            placeholder_app_name: "为您的应用命名...",
+            placeholder_app_desc: "在此说明您希望应用实现的功能...",
+            placeholder_sector: "例如：餐饮、房地产、医疗...",
+            placeholder_custom_features: "例如：积分系统...",
+            placeholder_integrations: "例如：Stripe、Google地图、WhatsApp...",
+            opt_web_app: "网页应用（在浏览器中打开）",
+            opt_mobile_app: "移动应用（手机版）",
+            opt_desktop_app: "桌面应用（电脑版）",
+            opt_api: "API / 后端（无界面服务）",
+            opt_other: "其他（请注明...）",
+            opt_users_public: "客户 / 普通公众",
+            opt_users_internal: "员工 / 内部团队",
+            opt_users_both: "两者（客户和团队）",
+            opt_users_tech: "开发人员 / 技术人员",
+            opt_users_personal: "个人（供自己使用）",
+            opt_lang_es: "西班牙语",
+            opt_lang_en: "英语",
+            opt_lang_both: "多语言（西班牙语 + 英语）",
+            feat_login: "注册与登录",
+            feat_payments: "支付与订阅",
+            feat_admin: "管理面板",
+            feat_notifications: "通知与提醒",
+            feat_database: "数据库与云",
+            feat_ia: "人工智能",
+            opt_style_minimal: "极简干净",
+            opt_style_modern: "现代活力",
+            opt_style_corp: "企业商务",
+            opt_style_gaming: "游戏风格 / 暗黑",
+            label_primary_color: "品牌颜色",
+            opt_primary: "主要色",
+            opt_secondary: "次要色",
+            opt_background: "背景",
+            btn_analyze_skills: "分析技能并继续 →",
+            label_matched_skills: "📚 从仓库中选择的技能",
+            hint_matched_skills: "这些是将包含在您的蓝图中的技术技能。",
+            btn_generate_blueprint: "生成我的蓝图",
+            generating_blueprint: "正在生成您的蓝图...",
+            generating_hint: "分析技能、编写文档并打包ZIP",
+            no_skills_found: "未找到相关的技能。",
+            footer_text: "设计与开发",
+            footer_ecosystem: "Antigravity 生态系统",
+            alert_name_required: "请给您的应用起个名字。",
+            alert_desc_required: "请描述您的想法。",
+            alert_type_required: "请指定应用程序类型。",
+            alert_generate_error: "生成蓝图时出错，请重试。",
+            alert_connection_error: "服务器连接错误。",
+            toast_copied: "✓ 命令已复制: ",
+            toast_copied_short: "✓ 已复制！",
+            prompt_copy_fallback: "复制此命令并将其粘贴到您的终端中:",
+            copy_toast: "✓ 命令已复制到剪贴板",
+            categories: {
+                "Sistema": "系统",
+                "Marketing Digital": "数字营销",
+                "Generación de Contenido": "内容生成",
+                "Gestión de Leads y CRM": "线索与CRM管理",
+                "Ventas y Comercio Electrónico": "销售与电子商务",
+                "Atención al Cliente": "客户服务",
+                "Datos y Analítica": "数据与分析",
+                "Inteligencia Artificial": "人工智能",
+                "Productividad y Operaciones": "生产力与运营",
+                "Comunicación y Mensajería": "通信与消息",
+                "Recursos Humanos": "人力资源",
+                "Finanzas y Contabilidad": "财务与会计",
+                "Proyectos y Colaboración": "项目与协作",
+                "Desarrollo y Tecnología": "开发与技术",
+                "Legal y Cumplimiento": "法律与合规",
+                "Educación y Formación": "教育与培训",
+                "Eventos y Webinars": "活动与研讨会",
+                "Salud y Bienestar": "健康与保健",
+                "Inmobiliario y Gestión de Activos": "房地产与资产管理",
+                "Logística y Operaciones Físicas": "物流与运营",
+                "Investigación e Inteligencia de Negocio": "商务研究与BI",
+                "Comunicación y Marca Digital": "品牌与数字通信",
+                "Desarrollo de Software": "软件开发",
+                "Productividad y Gestión del Tiempo": "时间管理",
+                "Diseño y Creatividad": "设计与创意",
+                "Estrategia y Operaciones": "战略与运营"
+            }
+        ,
+            subcategories: {
+          "Agentes Autónomos": "自治代理",
+          "Almacén y Stock": "仓储与库存",
+          "Analisis Estratégico": "战略分析",
+          "Análisis de Mercado": "市场分析",
+          "Análisis de Tendencias": "趋势分析",
+          "Aprendizaje Continuo": "持续学习",
+          "Aprobaciones y Flujos Internos": "审批与内部流程",
+          "Arquitectura de Software": "软件架构",
+          "Asesoría Jurídica": "法律咨询",
+          "Atención al Cliente": "客户服务",
+          "Auditoría de Seguridad": "安全审计",
+          "Auditorías y Logs": "审计和日志",
+          "Automatización Agéntica": "代理自动化",
+          "Automatización de Reuniones": "会议自动化",
+          "Backend": "后端开发",
+          "Bases de Datos": "数据库",
+          "Bienestar Corporativo": "企业福祉",
+          "Blockchain y Web3": "区块链和 Web3",
+          "CI": "CI/CD",
+          "CRM y Automatización": "CRM与自动化",
+          "Captación de Propiedades": "房产获取",
+          "Captura de Leads": "潜在客户捕获",
+          "Chatbots y Asistentes": "聊天机器人和助手",
+          "Ciencia de Datos": "数据科学",
+          "Clasificación y Extracción": "分类和提取",
+          "Comunicación Multicanal": "多渠道通信",
+          "Comunicación Preevento": "活动前通信",
+          "Consultoría y Asesoramiento": "咨询和建议",
+          "Control de Gastos": "费用控制",
+          "Control de Versiones": "版本控制",
+          "Creación de Cursos": "课程创建",
+          "Cualificación y Scoring": "潜在客户评分和资格审查",
+          "Cultura Organizacional": "组织文化",
+          "Cumplimiento Normativo (GDPR)": "合规性(GDPR)",
+          "Desarrollo Mobile": "移动开发",
+          "Desarrollo Web": "Web 开发",
+          "Devoluciones y Reclamaciones": "退货和投诉",
+          "Discovery": "发现",
+          "Diseño UI": "UI 设计",
+          "Documentación Colaborativa": "协作文档",
+          "Email Marketing": "电子邮件营销",
+          "Email Transaccional": "交易电子邮件",
+          "Encuestas y Feedback": "调查和反馈",
+          "Estrategia de Contenidos": "内容策略",
+          "Estrategia de Crecimiento": "增长策略",
+          "Estrategia de Datos": "数据策略",
+          "Estrategia de Marca": "品牌策略",
+          "Estrategia de Ventas": "销售策略",
+          "Evaluación de Desempeño": "绩效评估",
+          "Ética y Responsabilidad": "道德与责任",
+          "Facturación Automática": "自动计费",
+          "Fine-tuning y Evaluación": "微调和评估",
+          "Fintech y Criptoactivos": "金融科技与加密资产",
+          "Formación y E-learning": "培训和在线学习",
+          "Generación de Contenido con IA": "AI内容生成",
+          "Gestion Documental": "文件管理",
+          "Gestión Documental": "文件管理",
+          "Gestión de APIs": "API 管理",
+          "Gestión de Almacenes": "仓库管理",
+          "Gestión de Calidad": "质量管理",
+          "Gestión de Contratos": "合同管理",
+          "Gestión de Crisis en Redes": "社交媒体危机管理",
+          "Gestión de Inventario": "库存管理",
+          "Gestión de Pedidos": "订单管理",
+          "Gestión de Productos": "产品管理",
+          "Gestión de Proyectos": "项目管理",
+          "Gestión de Tareas": "任务管理",
+          "Gestión de Ventas": "销售管理",
+          "Growth Hacking y CRO": "增长黑客和 CRO",
+          "Growth Marketing": "增长营销",
+          "Hardware e IoT": "硬件和物联网",
+          "Herramientas de Productividad": "生产力工具",
+          "Historiales Clínicos": "医疗记录",
+          "Identidad Visual": "视觉识别",
+          "Imágenes y Visuales": "图像和视觉",
+          "Indexación": "索引",
+          "Infraestructura Cloud": "云基础设施",
+          "Infraestructura y DevOps": "基础架构和 DevOps",
+          "Ingeniería de Prompts": "提示工程",
+          "Investigación Técnica": "技术研究",
+          "Investigación de Mercado": "市场调查",
+          "Liderazgo y Mentoring": "领导力和指导",
+          "Mantenimiento y Incidencias": "维护和事件",
+          "Marca Personal": "个人品牌",
+          "Marketing de Afiliados": "联盟营销",
+          "Monitorización de Competencia": "竞争对手监控",
+          "Monitorización de IA": "AI监控",
+          "Monitorización de Sistemas": "系统监控",
+          "Networking Virtual": "虚拟网络",
+          "Operaciones Financieras (FinOps)": "财务运营 (FinOps)",
+          "Optimización de Modelos": "模型优化",
+          "Paradigmas de Programación": "编程范式",
+          "Podcasts y Audio": "播客和音频",
+          "Postventa y Fidelización": "售后和忠诚度",
+          "Power Skills": "Power Skills",
+          "Procesos y Metodologías": "流程和方法",
+          "Prompting y Chains": "Prompting 和 Chains",
+          "Protección de Datos": "数据保护",
+          "Proveedores y Compras": "供应商和采购",
+          "Publicidad de Pago (Ads)": "付费广告(Ads)",
+          "RAG y Bases de Conocimiento": "RAG & 知识库",
+          "Reclutamiento y Selección": "招聘和选拔",
+          "Recordatorios y Notificaciones": "提醒和通知",
+          "Redacción con IA": "AI 写作",
+          "Redacción y Copywriting": "写作和文案",
+          "Redes Sociales": "社交媒体",
+          "Registro e Inscripciones": "注册和报名",
+          "Reportes Automáticos": "自动报告",
+          "Reportes Financieros": "财务报告",
+          "Reportes de Cartera": "投资组合报告",
+          "Reportes de Pipeline": "管道报告",
+          "Respuestas Automáticas": "自动回复",
+          "SEO (Optimización de Buscadores)": "SEO（搜索引擎优化）",
+          "SEO y Posicionamiento": "SEO与定位",
+          "Seguimiento de Envíos": "货件追踪",
+          "Seguimiento de Sprints": "Sprint 跟踪",
+          "Seguridad y Accesos": "安全和访问",
+          "Sincronización con CRM": "CRM 同步",
+          "Sincronización entre Herramientas": "工具同步",
+          "Sintesis de Noticias e Informes": "新闻和报告综合",
+          "Síntesis de Noticias e Informes": "新闻和报告综合",
+          "Slack y Teams": "Slack & Teams",
+          "Social Selling": "社交销售",
+          "Sostenibilidad": "可持续性",
+          "Storytelling Corporativo": "企业故事",
+          "Telemedicina": "远程医疗",
+          "Transformación y Limpieza": "数据转换和清理",
+          "Upselling y Cross-selling": "向上销售和交叉销售",
+          "Video y Multimedia": "视频和多媒体",
+          "Visión por Computadora": "计算机视觉",
+          "Visualización de Datos": "数据可视化",
+          "Visualización y Dashboards": "可视化和仪表板",
+          "Web3 y Blockchain": "Web3与区块链",
+          "WhatsApp y Telegram": "WhatsApp和Telegram"
+            }},
+        ja: {
+            header_subtitle: "v1.0 — Jesús García Fernández による",
+            nav_view_skills: "スキルを見る",
+            status_connecting: "接続中...",
+            status_offline: "サーバーオフライン",
+            status_online: "{count} 個のスキルが利用可能",
+            hero_title: "あなたのアイデアを形に",
+            hero_desc: "5つの簡単なステップでアイデアを説明してください。AIがアプリを構築できるプロフェッショナルなパッケージを生成します。",
+            offline_title: "⚠️ サーバーが検出されません",
+            offline_desc: "ブループリントを生成するには、ローカルサーバーを起動する必要があります。<br>OSを選択し、指示に従ってください：",
+            os_action_macos: "ファイルをダブルクリック ↑",
+            os_action_windows: "ファイルをダブルクリック ↑",
+            os_action_linux: "ファイルをダブルクリック ↑",
+            offline_terminal_hint: "ターミナルを使いますか？OSをクリックしてコマンドをコピーしてください。",
+            offline_reload: "サーバーを起動したら、",
+            offline_reload_link: "このページをリロード",
+            step1_label: "ビジョン",
+            step2_label: "対象",
+            step3_label: "機能",
+            step4_label: "デザイン",
+            step5_label: "生成",
+            step1_title: "📌 何を作りたいですか？",
+            step1_subtitle: "あなたのアイデアを教えてください。技術的な知識は必要ありません。あなたの言葉で説明してください。",
+            label_app_name: "アプリ名",
+            hint_app_name: "例：'GastroBot'、'マイストア'",
+            label_app_desc: "アイデアを説明する",
+            hint_app_desc: "例：'レストランの予約ができるウェブアプリが欲しい...'",
+            label_app_type: "アプリの種類",
+            step2_title: "👥 誰が使いますか？",
+            step2_subtitle: "最終ユーザーを知ることで、適切なツールを選択できます。",
+            label_user_type: "誰がアプリを使用しますか？",
+            label_sector: "業界・セクター",
+            label_language: "アプリの主な言語",
+            step3_title: "⚡ 必要な機能は？",
+            step3_subtitle: "必要な機能を選択し、足りないものを追加してください。",
+            label_common_features: "共通機能",
+            label_custom_features: "追加機能",
+            hint_custom_features: "機能を入力してEnter",
+            label_integrations: "外部連携",
+            hint_integrations: "連携サービスを入力してEnter",
+            step4_title: "🎨 どんな見た目がいいですか？",
+            step4_subtitle: "ビジュアルスタイルを定義します。デフォルトでプロ仕様です。",
+            label_visual_style: "ビジュアルスタイル",
+            step5_title: "🚀 確認して生成",
+            step5_subtitle: "準備完了です。概要を確認してブループリントを生成しましょう。",
+            summary_vision: "ビジョン",
+            summary_project: "プロジェクト",
+            summary_audience: "対象ユーザー",
+            summary_features: "機能",
+            summary_design: "デザイン",
+            analyzing_skills: "スキルを分析中...",
+            btn_next: "次へ →",
+            btn_prev: "← 戻る",
+            btn_generate: "🚀 ブループリントを生成",
+            success_title: "ブループリントの準備ができました！",
+            success_desc: "パッケージは APPS-CREADAS に正常に生成されました。",
+            btn_download: "📥 ブループリントをダウンロード",
+            btn_reset: "別のブループリントを作成",
+            placeholder_app_name: "アプリに名前を付けてください...",
+            placeholder_app_desc: "アプリで何をしたいか、ここで説明してください...",
+            placeholder_sector: "例：飲食、不動産、ヘルスケア...",
+            placeholder_custom_features: "例：ポイントシステム...",
+            placeholder_integrations: "例：Stripe、Googleマップ、WhatsApp...",
+            opt_web_app: "Webアプリ（ブラウザで開く）",
+            opt_mobile_app: "モバイルアプリ（スマホ用）",
+            opt_desktop_app: "デスクトップアプリ（PC用）",
+            opt_api: "API / バックエンド（インターフェースなし）",
+            opt_other: "その他（指定してください...）",
+            opt_users_public: "顧客 / 一般公開",
+            opt_users_internal: "従業員 / 内部チーム",
+            opt_users_both: "両方（顧客とチーム）",
+            opt_users_tech: "開発者 / 技術スタッフ",
+            opt_users_personal: "個人（自己使用）",
+            opt_lang_es: "スペイン語",
+            opt_lang_en: "英語",
+            opt_lang_both: "多言語（スペイン語＋英語）",
+            feat_login: "登録とログイン",
+            feat_payments: "支払いとサブスクリプション",
+            feat_admin: "管理パネル",
+            feat_notifications: "通知とアラート",
+            feat_database: "データベースとクラウド",
+            feat_ia: "人工知能",
+            opt_style_minimal: "ミニマルでクリーン",
+            opt_style_modern: "モダンで鮮やか",
+            opt_style_corp: "企業の真面目な",
+            opt_style_gaming: "ゲームスタイル / ダーク",
+            label_primary_color: "ブランドカラー",
+            opt_primary: "プライマリ",
+            opt_secondary: "セカンダリ",
+            opt_background: "背景",
+            btn_analyze_skills: "スキルを分析して続行 →",
+            label_matched_skills: "📚 リポジトリから選択されたスキル",
+            hint_matched_skills: "これらはブループリントに含まれる技術的スキルです。",
+            btn_generate_blueprint: "ブループリントを生成",
+            generating_blueprint: "ブループリントを生成しています...",
+            generating_hint: "スキルを分析し、ドキュメントを作成し、ZIPにパッケージ化しています",
+            no_skills_found: "関連するスキルは見つかりませんでした。",
+            footer_text: "デザインおよび開発",
+            footer_ecosystem: "Antigravity エコシステム",
+            alert_name_required: "アプリケーションに名前を付けてください。",
+            alert_desc_required: "アイデアを説明してください。",
+            alert_type_required: "アプリケーションの種類を指定してください。",
+            alert_generate_error: "ブループリントの生成中にエラーが発生しました。もう一度お試しください。",
+            alert_connection_error: "サーバー接続エラー。",
+            toast_copied: "✓ コマンドをコピーしました: ",
+            toast_copied_short: "✓ コピーしました！",
+            prompt_copy_fallback: "このコマンドをコピーしてターミナルに貼り付けてください:",
+            copy_toast: "✓ コマンドをクリップボードにコピーしました",
+            categories: {
+                "Sistema": "システム",
+                "Marketing Digital": "デジタルマーケティング",
+                "Generación de Contenido": "コンテンツ生成",
+                "Gestión de Leads y CRM": "リード・CRM管理",
+                "Ventas y Comercio Electrónico": "販売・Eコマース",
+                "Atención al Cliente": "カスタマーサポート",
+                "Datos y Analítica": "データ・分析",
+                "Inteligencia Artificial": "人工知能",
+                "Productividad y Operaciones": "生産性・オペレーション",
+                "Comunicación y Mensajería": "通信・メッセージング",
+                "Recursos Humanos": "人事・HR",
+                "Finanzas y Contabilidad": "財務・会計",
+                "Proyectos y Colaboración": "プロジェクト・コラボレーション",
+                "Desarrollo y Tecnología": "開発・テクノロジー",
+                "Legal y Cumplimiento": "法務・コンプライアンス",
+                "Educación y Formación": "教育・トレーニング",
+                "Eventos y Webinars": "イベント・ウェビナー",
+                "Salud y Bienestar": "ヘルス＆ウェルネス",
+                "Inmobiliario y Gestión de Activos": "不動産・資産管理",
+                "Logística y Operaciones Físicas": "物流・オペレーション",
+                "Investigación e Inteligencia de Negocio": "ビジネス調査・BI",
+                "Comunicación y Marca Digital": "デジタルブランド・通信",
+                "Desarrollo de Software": "ソフトウェア開発",
+                "Productividad y Gestión del Tiempo": "時間管理",
+                "Diseño y Creatividad": "デザイン・クリエイティビティ",
+                "Estrategia y Operaciones": "戦略・オペレーション"
+            }
+        ,
+            subcategories: {
+          "Agentes Autónomos": "自律型エージェント",
+          "Almacén y Stock": "倉庫と在庫",
+          "Analisis Estratégico": "戦略分析",
+          "Análisis de Mercado": "市場分析",
+          "Análisis de Tendencias": "トレンド分析",
+          "Aprendizaje Continuo": "継続的学習",
+          "Aprobaciones y Flujos Internos": "承認と内部フロー",
+          "Arquitectura de Software": "ソフトウェアアーキテクチャ",
+          "Asesoría Jurídica": "法務アドバイス",
+          "Atención al Cliente": "カスタマーサービス",
+          "Auditoría de Seguridad": "セキュリティ監査",
+          "Auditorías y Logs": "監査とログ",
+          "Automatización Agéntica": "エージェント自動化",
+          "Automatización de Reuniones": "会議自動化",
+          "Backend": "バックエンド",
+          "Bases de Datos": "データベース",
+          "Bienestar Corporativo": "企業の福利厚生",
+          "Blockchain y Web3": "ブロックチェーンとWeb3",
+          "CI": "CI/CD",
+          "CRM y Automatización": "CRMと自動化",
+          "Captación de Propiedades": "不動産取得",
+          "Captura de Leads": "リードの獲得",
+          "Chatbots y Asistentes": "チャットボットとアシスタント",
+          "Ciencia de Datos": "データサイエンス",
+          "Clasificación y Extracción": "分類と抽出",
+          "Comunicación Multicanal": "オムニチャネル対応",
+          "Comunicación Preevento": "イベント前コミュニケーション",
+          "Consultoría y Asesoramiento": "コンサルティングと助言",
+          "Control de Gastos": "経費管理",
+          "Control de Versiones": "バージョン管理",
+          "Creación de Cursos": "コース作成",
+          "Cualificación y Scoring": "リードスコアリングと資格確認",
+          "Cultura Organizacional": "組織文化",
+          "Cumplimiento Normativo (GDPR)": "コンプライアンス（GDPR）",
+          "Desarrollo Mobile": "モバイル開発",
+          "Desarrollo Web": "Web開発",
+          "Devoluciones y Reclamaciones": "返品とクレーム",
+          "Discovery": "ディスカバリー",
+          "Diseño UI": "UIデザイン",
+          "Documentación Colaborativa": "共同ドキュメント",
+          "Email Marketing": "メールマーケティング",
+          "Email Transaccional": "トランザクションメール",
+          "Encuestas y Feedback": "アンケートとフィードバック",
+          "Estrategia de Contenidos": "コンテンツ戦略",
+          "Estrategia de Crecimiento": "成長戦略",
+          "Estrategia de Datos": "データ戦略",
+          "Estrategia de Marca": "ブランド戦略",
+          "Estrategia de Ventas": "販売戦略",
+          "Evaluación de Desempeño": "パフォーマンス評価",
+          "Ética y Responsabilidad": "倫理と責任",
+          "Facturación Automática": "自動請求",
+          "Fine-tuning y Evaluación": "ファインチューニングと評価",
+          "Fintech y Criptoactivos": "フィンテックと暗号資産",
+          "Formación y E-learning": "トレーニングとEラーニング",
+          "Generación de Contenido con IA": "AIコンテンツ生成",
+          "Gestion Documental": "ドキュメント管理",
+          "Gestión Documental": "ドキュメント管理",
+          "Gestión de APIs": "API管理",
+          "Gestión de Almacenes": "倉庫管理",
+          "Gestión de Calidad": "品質管理",
+          "Gestión de Contratos": "契約管理",
+          "Gestión de Crisis en Redes": "SNS危機管理",
+          "Gestión de Inventario": "在庫管理",
+          "Gestión de Pedidos": "注文管理",
+          "Gestión de Productos": "製品管理",
+          "Gestión de Proyectos": "プロジェクト管理",
+          "Gestión de Tareas": "タスク管理",
+          "Gestión de Ventas": "販売管理",
+          "Growth Hacking y CRO": "グロースハックとCRO",
+          "Growth Marketing": "グロースマーケティング",
+          "Hardware e IoT": "ハードウェアとIoT",
+          "Herramientas de Productividad": "生産性ツール",
+          "Historiales Clínicos": "医療記録",
+          "Identidad Visual": "ビジュアルアイデンティティ",
+          "Imágenes y Visuales": "画像とビジュアル",
+          "Indexación": "インデックス作成",
+          "Infraestructura Cloud": "クラウドインフラ",
+          "Infraestructura y DevOps": "インフラとDevOps",
+          "Ingeniería de Prompts": "プロンプトエンジニアリング",
+          "Investigación Técnica": "技術調査",
+          "Investigación de Mercado": "市場調査",
+          "Liderazgo y Mentoring": "リーダーシップとメンタリング",
+          "Mantenimiento y Incidencias": "メンテナンスとインシデント",
+          "Marca Personal": "パーソナルブランディング",
+          "Marketing de Afiliados": "アフィリエイトマーケティング",
+          "Monitorización de Competencia": "競合他社の監視",
+          "Monitorización de IA": "AI監視",
+          "Monitorización de Sistemas": "システム監視",
+          "Networking Virtual": "仮想ネットワーキング",
+          "Operaciones Financieras (FinOps)": "財務オペレーション（FinOps）",
+          "Optimización de Modelos": "モデル最適化",
+          "Paradigmas de Programación": "プログラミングパラダイム",
+          "Podcasts y Audio": "ポッドキャストとオーディオ",
+          "Postventa y Fidelización": "アフターセールスとロイヤルティ",
+          "Power Skills": "パワースキル",
+          "Procesos y Metodologías": "プロセスと方法論",
+          "Prompting y Chains": "プロンプティングとチェーン",
+          "Protección de Datos": "データ保護",
+          "Proveedores y Compras": "サプライヤーと購買",
+          "Publicidad de Pago (Ads)": "有料広告",
+          "RAG y Bases de Conocimiento": "RAGとナレッジベース",
+          "Reclutamiento y Selección": "採用と選考",
+          "Recordatorios y Notificaciones": "リマインダーと通知",
+          "Redacción con IA": "AIによる執筆",
+          "Redacción y Copywriting": "執筆とコピーライティング",
+          "Redes Sociales": "ソーシャルメディア",
+          "Registro e Inscripciones": "登録と申し込み",
+          "Reportes Automáticos": "自動レポート",
+          "Reportes Financieros": "財務レポート",
+          "Reportes de Cartera": "ポートフォリオレポート",
+          "Reportes de Pipeline": "パイプラインレポート",
+          "Respuestas Automáticas": "自動返信",
+          "SEO (Optimización de Buscadores)": "SEO（検索エンジン最適化）",
+          "SEO y Posicionamiento": "SEOとポジショニング",
+          "Seguimiento de Envíos": "配送追跡",
+          "Seguimiento de Sprints": "スプリント計測",
+          "Seguridad y Accesos": "セキュリティとアクセス",
+          "Sincronización con CRM": "CRM同期",
+          "Sincronización entre Herramientas": "ツールの同期",
+          "Sintesis de Noticias e Informes": "ニュースとレポートの統合",
+          "Síntesis de Noticias e Informes": "ニュースとレポートの統合",
+          "Slack y Teams": "SlackとTeams",
+          "Social Selling": "ソーシャルセリング",
+          "Sostenibilidad": "サステナビリティ",
+          "Storytelling Corporativo": "企業ストーリーテリング",
+          "Telemedicina": "遠隔医療",
+          "Transformación y Limpieza": "データの変換とクリーニング",
+          "Upselling y Cross-selling": "アップセルとクロスセル",
+          "Video y Multimedia": "ビデオとマルチメディア",
+          "Visión por Computadora": "コンピュータビジョン",
+          "Visualización de Datos": "データ可視化",
+          "Visualización y Dashboards": "可視化とダッシュボード",
+          "Web3 y Blockchain": "Web3とブロックチェーン",
+          "WhatsApp y Telegram": "WhatsAppとTelegram"
+            }}
+    };
+
+    function updateUI(lang) {
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.dataset.i18n;
+            if (translations[lang] && translations[lang][key]) {
+                if (el.tagName === 'INPUT' && (el.type === 'button' || el.type === 'submit')) {
+                    el.value = translations[lang][key];
+                } else {
+                    el.innerHTML = translations[lang][key];
+                }
+            }
+        });
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.dataset.i18nPlaceholder;
+            if (translations[lang] && translations[lang][key]) {
+                el.placeholder = translations[lang][key];
+            }
+        });
+        document.getElementById('langSelect').value = lang;
+        document.documentElement.lang = lang;
+        if (window.lucide) lucide.createIcons({
+            attrs: {
+                'stroke-width': 2.8,
+                'stroke-linecap': 'round',
+                'stroke-linejoin': 'round'
+            }
+        });
+    }
+
+    function changeLanguage(lang) {
+        currentLang = lang;
+        localStorage.setItem('antigravity_lang', lang);
+        updateUI(lang);
+        checkServer(); // Update status text
+    }
+
+    // Initialize UI on load
+    updateUI(currentLang);
+
+    // ═══════════ SERVER CHECK ═══════════
+    async function checkServer() {
+        try {
+            const res = await fetch(`${API_BASE}/api/status`);
+            if (!res.ok) throw new Error("Server not responding");
+            const data = await res.json();
+            
+            serverOnline = true;
+            const statusOnlineTemplate = translations[currentLang].status_online || '{count} skills disponibles';
+            document.getElementById('statusText').textContent = statusOnlineTemplate.replace('{count}', data.skills_count);
+            document.getElementById('statusDot').classList.add('online');
+            
+            document.getElementById('offlineNotice').style.display = 'none';
+            document.getElementById('heroSection').style.display = 'flex';
+            
+            // Si estamos en el primer paso y offline, activarlo al conectar
+            const activeStep = document.querySelector('.step-content.active');
+            if (!activeStep && currentStep === 1) goToStep(1);
+            
+        } catch (e) {
+            console.warn("[!] Servidor no detectado:", e.message);
+            serverOnline = false;
+            document.getElementById('statusDot').classList.remove('online');
+            document.getElementById('statusText').textContent = translations[currentLang].status_offline || 'Servidor offline';
+            document.getElementById('offlineNotice').style.display = 'block';
+            document.getElementById('heroSection').style.display = 'none';
+            document.querySelectorAll('.step-content').forEach(s => s.classList.remove('active'));
+        }
+    }
+
+    // ═══════════ WIZARD NAVIGATION ═══════════
+    function goToStep(step) {
+        if (step < 1 || step > totalSteps) return;
+
+        document.querySelectorAll('.step-content').forEach(s => s.classList.remove('active'));
+        document.getElementById(`step${step}`).classList.add('active');
+
+        // Sincronizar Sidebar
+        document.querySelectorAll('.side-link').forEach(l => {
+            l.classList.remove('active');
+            if(l.getAttribute('data-side-step') == step) l.classList.add('active');
+        });
+
+        currentStep = step;
+        if (window.lucide) lucide.createIcons({
+            attrs: {
+                'stroke-width': 2.8,
+                'stroke-linecap': 'round',
+                'stroke-linejoin': 'round'
+            }
+        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function nextStep() {
+        if (currentStep === 1) {
+            const name = document.getElementById('appName').value.trim();
+            const desc = document.getElementById('appDesc').value.trim();
+            if (!name) { alert(translations[currentLang].alert_name_required || 'Por favor, dale un nombre a tu aplicación.'); return; }
+            if (!desc) { alert(translations[currentLang].alert_desc_required || 'Por favor, describe tu idea.'); return; }
+            
+            if (document.getElementById('appType').value === 'Otro') {
+                const otherVal = document.getElementById('appTypeOther').value.trim();
+                if (!otherVal) { alert(translations[currentLang].alert_type_required || 'Por favor, especifica el tipo de aplicación.'); return; }
+            }
+        }
+        goToStep(currentStep + 1);
+    }
+
+    function prevStep() { goToStep(currentStep - 1); }
+
+    // ═══════════ APP TYPE TOGGLE ═══════════
+    function toggleAppTypeOther() {
+        const select = document.getElementById('appType');
+        const otherInput = document.getElementById('appTypeOther');
+        otherInput.style.display = (select.value === 'Otro') ? 'block' : 'none';
+        if (select.value === 'Otro') otherInput.focus();
+    }
+
+    // ═══════════ CHECKBOX TOGGLES ═══════════
+    function toggleCheckbox(el) {
+        el.classList.toggle('selected');
+    }
+
+    function getSelectedCheckboxes() {
+        return Array.from(document.querySelectorAll('#commonFeatures .checkbox-item.selected'))
+            .map(el => el.dataset.value);
+    }
+
+    // ═══════════ CHIPS (TAGS) ═══════════
+    function addChip(e, containerId, inputId) {
+        if (e.key !== 'Enter') return;
+        e.preventDefault();
+        const input = document.getElementById(inputId);
+        const val = input.value.trim();
+        if (!val) return;
+
+        const container = document.getElementById(containerId);
+        const chip = document.createElement('div');
+        chip.className = 'chip';
+        chip.innerHTML = `${val} <button class="chip-remove" onclick="this.parentElement.remove()">×</button>`;
+        container.insertBefore(chip, input);
+        input.value = '';
+    }
+
+    function getChips(containerId) {
+        return Array.from(document.querySelectorAll(`#${containerId} .chip`))
+            .map(c => c.textContent.replace('×', '').trim());
+    }
+
+    // ═══════════ STYLE SELECTOR ═══════════
+    function selectStyle(el) {
+        document.querySelectorAll('.style-option').forEach(o => o.classList.remove('active'));
+        el.classList.add('active');
+    }
+
+    // ═══════════ COLLECT ALL DATA ═══════════
+    function collectFormData() {
+        const selectedFeatures = getSelectedCheckboxes();
+        const customFeatures = getChips('customFeatures');
+        const allFeatures = [...selectedFeatures, ...customFeatures];
+
+        return {
+            app_name: document.getElementById('appName').value.trim(),
+            app_desc: document.getElementById('appDesc').value.trim(),
+            app_type: document.getElementById('appType').value === 'Otro' ? 
+                      document.getElementById('appTypeOther').value.trim() : 
+                      document.getElementById('appType').value,
+            user_type: document.getElementById('userType').value,
+            sector: document.getElementById('sector').value,
+            language: document.getElementById('language').value,
+            features: allFeatures,
+            integrations: getChips('integrations'),
+            visual_style: document.querySelector('.style-option.active')?.dataset.value || 'Moderno y limpio',
+            primary_color: document.getElementById('primaryColor').value,
+            secondary_color: document.getElementById('secondaryColor').value,
+            bg_color: document.getElementById('bgColor').value,
+            visual_reference: document.getElementById('visualRef').value.trim(),
+            selected_skill_ids: []
+        };
+    }
+
+    // ═══════════ STEP 5: ANALYZE ═══════════
+    async function analyzeAndGoStep5() {
+        const data = collectFormData();
+
+        goToStep(5);
+
+        const summaryHTML = `
+            <div class="summary-section"><h4 data-i18n="summary_vision">${translations[currentLang].summary_vision}</h4>
+                <div class="summary-value"><strong>${data.app_name}</strong> — ${data.app_type}<br>${data.app_desc}</div></div>
+            <div class="summary-section"><h4 data-i18n="summary_audience">${translations[currentLang].summary_audience}</h4>
+                <div class="summary-value">${data.user_type} · ${data.sector} · ${data.language}</div></div>
+            <div class="summary-section"><h4><span data-i18n="summary_features">${translations[currentLang].summary_features}</span> (${data.features.length})</h4>
+                <div class="summary-chips">${data.features.map(f => `<span class="summary-chip">${f}</span>`).join('')}</div></div>
+            <div class="summary-section"><h4 data-i18n="summary_design">${translations[currentLang].summary_design}</h4>
+                <div class="summary-value" style="display:flex;align-items:center;gap:1.5rem;">
+                    ${data.visual_style}
+                    <div style="display:flex;gap:0.5rem;">
+                        <span style="display:inline-block;width:24px;height:24px;border-radius:6px;background:${data.primary_color};border:2px solid rgba(255,255,255,0.15);box-shadow:0 0 10px ${data.primary_color}40;"></span>
+                        <span style="display:inline-block;width:24px;height:24px;border-radius:6px;background:${data.secondary_color};border:2px solid rgba(255,255,255,0.15);box-shadow:0 0 10px ${data.secondary_color}40;"></span>
+                    </div>
+                </div></div>
+        `;
+        document.getElementById('summaryContainer').innerHTML = summaryHTML;
+
+        // Analyze skills
+        if (!serverOnline) {
+            const offlineMsg = translations[currentLang].status_offline || 'Servidor offline';
+            document.getElementById('skillsResults').innerHTML = `<p style="color:var(--danger)">${offlineMsg}</p>`;
+            return;
+        }
+
+        const analyzingMsg = translations[currentLang].analyzing_skills || 'Analizando skills...';
+        document.getElementById('skillsResults').innerHTML = `<p style="color:var(--text-muted)">🔍 ${analyzingMsg}</p>`;
+
+        try {
+            const res = await fetch(`${API_BASE}/api/analyze`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await res.json();
+            matchedSkills = result.matched_skills || [];
+            
+            // Detect missing skills: features that don't appear in the top skills text
+            let missingCandidates = [];
+            let allSkillsText = matchedSkills.map(s => (s.name + " " + s.description).toLowerCase()).join(" ");
+            data.features.forEach(f => {
+                if (f.length > 4 && !allSkillsText.includes(f.toLowerCase().substring(0, 5))) {
+                    missingCandidates.push(f);
+                }
+            });
+            data.integrations.forEach(i => {
+                if (i.length > 3 && !allSkillsText.includes(i.toLowerCase().substring(0, 4))) {
+                    missingCandidates.push(i);
+                }
+            });
+            
+            window.missing_skills = [...new Set(missingCandidates)];
+            
+            renderSkillResults(matchedSkills);
+        } catch (e) {
+            const errorMsg = translations[currentLang].status_offline || "Error de conexión";
+            document.getElementById('skillsResults').innerHTML = `<p style="color:var(--danger)">${errorMsg}</p>`;
+        }
+    }
+
+    function renderSkillResults(skills) {
+        const container = document.getElementById('skillsResults');
+        if (skills.length === 0) {
+            container.innerHTML = `<p style="color:var(--text-muted)">${translations[currentLang].no_skills_found || "No se encontraron skills relevantes."}</p>`;
+            return;
+        }
+
+        container.innerHTML = skills.map((s, i) => {
+            const catLabel = translations[currentLang].categories[s.category] || s.category;
+            const subLabel = translations[currentLang].subcategories ? (translations[currentLang].subcategories[s.subcategory] || s.subcategory) : s.subcategory;
+            const hasWf = s.has_workflow ? ` · <i data-lucide="git-branch" style="width:12px;height:12px;vertical-align:middle;"></i> Workflow` : '';
+
+            return `
+                <div class="skill-result-card selected" onclick="toggleSkillSelection(this)" data-id="${s.id}">
+                    <div class="skill-check"><i data-lucide="check" style="width:14px;height:14px;color:white;"></i></div>
+                    <div class="skill-result-info">
+                        <h4>${s.name}</h4>
+                        <p>${s.description || ''}</p>
+                        <div class="meta">${catLabel} › ${subLabel}${hasWf}</div>
+                    </div>
+                    <span class="relevance-badge">${s.relevance}%</span>
+                </div>
+            `;
+        }).join('');
+        if (window.lucide) lucide.createIcons({
+            attrs: {
+                'stroke-width': 2.8,
+                'stroke-linecap': 'round',
+                'stroke-linejoin': 'round'
+            }
+        });
+    }
+
+    function toggleSkillSelection(el) {
+        el.classList.toggle('selected');
+    }
+
+    function getSelectedSkillIds() {
+        return Array.from(document.querySelectorAll('.skill-result-card.selected'))
+            .map(el => parseInt(el.dataset.id));
+    }
+
+    // ═══════════ GENERATE BLUEPRINT ═══════════
+    async function generateBlueprint() {
+        const data = collectFormData();
+        data.selected_skill_ids = getSelectedSkillIds();
+        data.missing_skills = window.missing_skills || [];
+
+        console.log('[Blueprint] Enviando datos:', JSON.stringify(data, null, 2));
+
+        const overlay = document.getElementById('generatingOverlay');
+        overlay.classList.add('active');
+
+        try {
+            const res = await fetch(`${API_BASE}/api/generate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            
+            console.log('[Blueprint] Respuesta HTTP:', res.status, res.statusText);
+            
+            const result = await res.json();
+            console.log('[Blueprint] Resultado:', result);
+
+            overlay.classList.remove('active');
+
+            if (result.success) {
+                // Hide all steps and show success screen
+                document.querySelectorAll('.step-content').forEach(s => s.classList.remove('active'));
+                
+                // Hide UI elements (using ?. for safety in case elements don't exist)
+                const progressBar = document.getElementById('progressBar');
+                if (progressBar) progressBar.style.display = 'none';
+                
+                const heroSection = document.getElementById('heroSection');
+                if (heroSection) heroSection.style.display = 'none';
+                
+                const sideNav = document.getElementById('sideNav');
+                if (sideNav) sideNav.style.opacity = '0.3';
+
+                const successScreen = document.getElementById('successScreen');
+                successScreen.classList.add('active');
+
+                const downloadLink = document.getElementById('downloadLink');
+                downloadLink.href = `${API_BASE}${result.download_url}`;
+                downloadLink.setAttribute('download', result.filename);
+                const icon = (translations[currentLang].btn_download || '📥 ').trim().split(' ')[0] || '📥';
+                downloadLink.textContent = `${icon} ${result.filename}`;
+            } else {
+                console.error('[Blueprint] Error del servidor:', result);
+                alert(translations[currentLang].alert_generate_error || 'Error al generar el Blueprint. Inténtalo de nuevo.');
+            }
+        } catch (e) {
+            console.error('[Blueprint] Error de conexión:', e);
+            overlay.classList.remove('active');
+            alert(translations[currentLang].alert_connection_error || 'Error de conexión con el servidor.');
+        }
+    }
+
+    // ═══════════ RESET ═══════════
+    function resetWizard() {
+        document.getElementById('successScreen').classList.remove('active');
+        
+        // Restore UI elements safely
+        const progressBar = document.getElementById('progressBar');
+        if (progressBar) progressBar.style.display = 'flex';
+        
+        const heroSection = document.getElementById('heroSection');
+        if (heroSection) heroSection.style.display = 'flex';
+        
+        const sideNav = document.getElementById('sideNav');
+        if (sideNav) sideNav.style.opacity = '1';
+
+        // Reset form
+        document.getElementById('appName').value = '';
+        document.getElementById('appDesc').value = '';
+        document.querySelectorAll('.checkbox-item').forEach(el => el.classList.remove('selected'));
+        document.querySelectorAll('.chip').forEach(el => el.remove());
+
+        goToStep(1);
+    }
+
+    // ═══════════ LAUNCHER COPY COMMANDS ═══════════
+    function copyLaunchCmd(os, btnEl) {
+        const commands = {
+            macos: 'open CREAR_APP.command',
+            windows: 'start CREAR_APP.bat',
+            linux: 'bash CREAR_APP.sh'
+        };
+        const cmd = commands[os] || '';
+        navigator.clipboard.writeText(cmd).then(() => {
+            // Visual feedback on button
+            const actionSpan = btnEl.querySelector('.os-action');
+            const originalText = actionSpan.textContent;
+            actionSpan.textContent = translations[currentLang].toast_copied_short || '✓ ¡Copiado!';
+            btnEl.classList.add('copied');
+            setTimeout(() => {
+                actionSpan.textContent = originalText;
+                btnEl.classList.remove('copied');
+            }, 2500);
+
+            // Toast notification
+            const toast = document.getElementById('copyToast');
+            toast.textContent = (translations[currentLang].toast_copied || '✓ Comando copiado: ') + cmd;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }).catch(() => {
+            // Fallback: show the command in a prompt for manual copy
+            prompt(translations[currentLang].prompt_copy_fallback || 'Copia este comando y pégalo en tu terminal:', cmd);
+        });
+    }
+
+    // ═══════════ INIT ═══════════
+    checkServer();
+    setInterval(checkServer, 10000);
+</script>
+
+</body>
+</html>

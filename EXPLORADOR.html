@@ -1,0 +1,2122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorador de Skills | Jesús García Fernández</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Marked.js para renderizado de Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #F0F4FF;
+            --accent-primary: #3D5AF1;
+            --accent-secondary: #8093F1;
+            --text-primary: #2D3142;
+            --text-secondary: #6B7280;
+            --text-muted: #9CA3AF;
+            --card-bg: #FFFFFF;
+            --card-border: #E5EBFB;
+            --sidebar-width: 280px;
+            --radius: 24px;
+            --shadow-md: 0 10px 30px rgba(61, 90, 241, 0.08);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.05) 0%, transparent 40%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--card-border);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .main-logo {
+            height: 45px;
+            width: auto;
+            transition: var(--transition);
+        }
+
+        .main-logo:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.4));
+        }
+
+        .header-left h1 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+        }
+
+        .header-left .v-tag {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 0.2rem;
+        }
+
+        .header-left a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .header-left a:hover { color: white; }
+
+        .search-container {
+            position: relative;
+            width: 400px;
+        }
+
+        #skillSearch {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            padding: 0.8rem 1.2rem;
+            border-radius: 99px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            outline: none;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        #skillSearch:focus {
+            border-color: var(--accent-primary);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: 310px 1fr;
+            gap: 2rem;
+            padding: 2rem;
+            flex-grow: 1;
+        }
+
+        #sidebar {
+            width: var(--sidebar-width);
+            background: white;
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            padding: 2rem 1.5rem;
+            border-right: 1px solid var(--card-border);
+            display: flex; flex-direction: column;
+            z-index: 100;
+        }
+
+        .filter-title {
+            font-size: 0.75rem; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 0.1em;
+            margin: 2rem 0 1rem; font-weight: 700;
+        }
+
+        .category-list {
+            list-style: none; display: flex; flex-direction: column; gap: 0.5rem;
+            overflow-y: auto; padding-right: 5px;
+        }
+
+        .category-item {
+            padding: 0.85rem 1.25rem; border-radius: 16px;
+            cursor: pointer; font-size: 0.9rem;
+            color: var(--text-secondary); transition: var(--transition);
+            display: flex; justify-content: space-between; align-items: center;
+            border: 1px solid transparent; font-weight: 500;
+        }
+
+        .category-item:hover { background: var(--bg-color); color: var(--accent-primary); }
+
+        .category-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border-color: var(--card-border);
+        }
+
+        .category-item.active {
+            background: var(--bg-color);
+            color: var(--accent-primary);
+            font-weight: 700;
+            border-color: rgba(61, 90, 241, 0.1);
+        }
+
+        .skill-count {
+            font-size: 0.7rem;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.15rem 0.5rem;
+            border-radius: 6px;
+            font-weight: 400;
+        }
+
+        /* Subcategorías */
+        .subcat-list {
+            margin-bottom: 0.8rem;
+            list-style: none;
+            padding-left: 1.2rem;
+            border-left: 1px dashed rgba(255, 255, 255, 0.1);
+            margin-left: 0.8rem;
+            display: none;
+        }
+
+        .category-item.expanded + .subcat-list {
+            display: block;
+        }
+
+        .subcat-item {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            border-radius: 6px;
+            margin-bottom: 2px;
+        }
+
+        .subcat-item:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .subcat-item.active {
+            color: var(--accent-primary);
+            font-weight: 600;
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .content-area {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 2rem 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .grid-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 1rem;
+        }
+
+        #activeFilterTitle {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .skill-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .skill-card {
+            background: #FFFFFF;
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .skill-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 20px 50px rgba(61, 90, 241, 0.12);
+        }
+
+        .skill-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: linear-gradient(to bottom, var(--accent-primary), var(--accent-secondary));
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .skill-card:hover::after {
+            opacity: 1;
+        }
+
+        .skill-meta {
+            font-size: 0.75rem;
+            color: var(--accent-primary);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            color: var(--text-primary);
+        }
+
+        .skill-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            flex-grow: 1;
+        }
+
+        .skill-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-open {
+            padding: 0.65rem 1.25rem;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-open:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.6);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-workflow {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            color: #f8fafc;
+        }
+
+        .btn-workflow:hover:not(:disabled) {
+            background: rgba(30, 41, 59, 1);
+            border-color: rgba(251, 191, 36, 0.8);
+            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.15);
+        }
+
+        .btn-workflow:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            filter: grayscale(1);
+        }
+
+        .skill-id {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-weight: 500;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 4rem 2rem;
+            border-top: 1px solid var(--card-border);
+            text-align: center;
+            background: transparent;
+        }
+
+        .branding-text {
+            color: #334155; /* Slate 700 - Gris oscuro */
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
+        }
+
+        .branding-link {
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-weight: 700;
+            transition: var(--transition);
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            background: rgba(59, 130, 246, 0.05);
+            margin-left: 0.3rem;
+        }
+
+        .branding-link:hover {
+            background: var(--accent-primary);
+            color: white;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Modal / Visor de Skill */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-container {
+            width: 90%;
+            max-width: 1000px;
+            height: 90vh;
+            background: #FFFFFF;
+            border: none;
+            border-radius: 32px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 1.5rem 2.5rem;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .btn-close-modal {
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .btn-close-modal:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(90deg);
+        }
+
+        .modal-content {
+            padding: 3rem;
+            overflow-y: auto;
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 14pt; /* Tamaño solicitado de 14pt */
+        }
+
+        /* Estilos Markdown dentro del modal */
+        .markdown-body { font-size: 14pt; }
+        .markdown-body h1 { font-size: 2.2rem; margin-bottom: 1.5rem; color: white; border-bottom: 1px solid var(--card-border); padding-bottom: 0.5rem; }
+        .markdown-body h2 { font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-primary); }
+        .markdown-body h3 { font-size: 1.3rem; margin-top: 1.5rem; color: white; }
+        .markdown-body p { margin-bottom: 1.2rem; font-size: 14pt; }
+        .markdown-body p:has(strong), .markdown-body p strong { 
+            font-size: 11pt !important;
+            color: #3b82f6 !important; /* Un azul más suave y elegante */
+        }
+        .markdown-body ul, .markdown-body ol { margin-bottom: 1.5rem; padding-left: 1.5rem; font-size: 14pt; }
+        .markdown-body li { margin-bottom: 0.5rem; font-size: 14pt; }
+        .markdown-body strong { font-weight: 700; }
+        .markdown-body blockquote { 
+            border-left: 4px solid var(--accent-primary);
+            background: rgba(59, 130, 246, 0.05);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+            border-radius: 0 12px 12px 0;
+        }
+        .markdown-body code {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+        }
+        .markdown-body pre {
+            background: #0d1117;
+            padding: 1.5rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border: 1px solid var(--card-border);
+            color: #ffffff !important; /* Texto en blanco para el código */
+        }
+        .markdown-body pre code {
+            color: #ffffff !important;
+            background: transparent;
+            padding: 0;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
+
+        @media (max-width: 1024px) {
+            main { grid-template-columns: 1fr; }
+            aside { display: none; }
+            .search-container { width: 100%; max-width: 300px; }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .skill-card {
+            animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+
+<aside id="sidebar">
+    <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:2rem; padding:0 0.5rem;">
+        <div style="width:36px; height:36px; background:var(--accent-primary); border-radius:10px; display:flex; align-items:center; justify-content:center; color:white; box-shadow:0 8px 15px rgba(61, 90, 241, 0.25);">
+            <i data-lucide="library"></i>
+        </div>
+        <h1 style="font-size:1.1rem; font-weight:800; color:var(--text-primary);">Explorador</h1>
+    </div>
+    
+    <h3 class="filter-title" id="sideFilterTitle" data-i18n="filter_title">Sistemas y Categorías</h3>
+    <ul class="category-list" id="categoryList">
+        <li class="category-item active" data-category="all" onclick="selectCategory('all')">
+            <span id="allSystemsText" data-i18n="all_systems">Todos los Sistemas</span>
+        </li>
+    </ul>
+    
+    <div style="margin-top:auto; padding:1.5rem; background:rgba(61, 90, 241, 0.05); border-radius:20px; border:1px solid rgba(61, 90, 241, 0.1);">
+        <p style="font-size:0.7rem; color:var(--text-muted); line-height:1.4;">
+            <span data-i18n="v_tag">V1 by</span> <a href="https://jesusgarciafernandez.com" target="_blank" style="color:var(--accent-primary); text-decoration:none; font-weight:700;">Jesús García Fernández</a>
+        </p>
+    </div>
+</aside>
+
+<main class="content-area">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+        <div style="position:relative; width:450px;">
+            <i data-lucide="search" style="position:absolute; left:1.25rem; top:50%; transform:translateY(-50%); color:var(--text-muted); width:18px;"></i>
+            <input type="text" id="skillSearch" data-i18n-placeholder="search_placeholder" placeholder="Buscar habilidades..." onkeyup="handleSearch(event)" 
+                   style="width:100%; background:white; border:1px solid var(--card-border); padding:1rem 1.5rem 1rem 3.5rem; border-radius:18px; outline:none; box-shadow:var(--shadow-md); font-weight:600;">
+        </div>
+        
+        <div style="display:flex; align-items:center; gap:1.5rem;">
+            <div class="lang-selector">
+                <select id="langSelect" onchange="changeLanguage(this.value)" style="background:white; border:1px solid var(--card-border); color:var(--text-primary); padding:0.6rem 1rem; border-radius:12px; font-size:0.85rem; cursor:pointer; font-weight:600; box-shadow:var(--shadow-sm);">
+                    <option value="es">🇪🇸 ES</option>
+                    <option value="en">🇺🇸 EN</option>
+                    <option value="fr">🇫🇷 FR</option>
+                    <option value="de">🇩🇪 DE</option>
+                    <option value="zh">🇨🇳 ZH</option>
+                    <option value="ja">🇯🇵 JP</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-header">
+        <div>
+            <span style="font-size: 0.75rem; color: var(--accent-primary); font-weight: 700; text-transform: uppercase; margin-bottom: 0.2rem; display: block;" data-i18n="master_repo">Repositorio Maestro</span>
+            <h2 id="activeFilterTitle" data-i18n="all_systems">Todos los Sistemas</h2>
+        </div>
+        <p class="branding-text" style="font-weight: 600;" id="resultsCount" data-i18n="loading">Cargando...</p>
+    </div>
+    
+    <div class="skill-grid" id="skillGrid"></div>
+
+    <footer style="margin-top:auto; padding:2rem 0; color:var(--text-muted); font-size:0.85rem; text-align:center; border-top:1px solid var(--card-border);">
+        <span data-i18n="footer_text">Ingeniería de Conocimiento por</span>
+        <a href="https://jesusgarciafernandez.com" target="_blank" style="color:var(--accent-primary); text-decoration:none; font-weight:700;">Jesús García Fernández</a>
+    </footer>
+</main>
+
+<!-- Modal / Visor de Contenido -->
+<div class="modal-overlay" id="skillModal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <span class="modal-title" id="modalTitle" data-i18n="modal_detail">Detalle de Skill</span>
+            <button class="btn-close-modal" onclick="closeSkill()">✕</button>
+        </div>
+        <div class="modal-content markdown-body" id="modalBody">
+            <!-- El contenido Markdown se inyectará aquí -->
+        </div>
+    </div>
+</div>
+
+<!-- Carga de datos externos (Evita errores de CORS en local) -->
+<script src="INDEX.js"></script>
+
+<script>
+    let categories = {};
+    let currentLang = localStorage.getItem('antigravity_lang') || 'es';
+
+    const translations = {
+        es: {
+            header_title: "Explorador de Skills",
+            search_placeholder: "Buscar habilidades...",
+            filter_title: "Sistemas y Categorías",
+            all_systems: "Todos los Sistemas",
+            units_available: "Unidades Disponibles",
+            master_repo: "Repositorio Maestro",
+            loading: "Cargando unidades de conocimiento...",
+            btn_open_skill: "SKILL.md",
+            btn_open_workflow: "WORKFLOW.md",
+            no_content: "*No hay contenido disponible para esta vista.*",
+            id_prefix: "ID-",
+            footer_text: "Ingeniería de Conocimiento y Desarrollo por",
+            modal_detail: "Detalle de Skill",
+            error_load_title: "Error de Carga de Datos",
+            error_load_desc: "No se pudo encontrar el archivo INDEX.js o está dañado. Ejecuta ACTUALIZAR_EXPLORADOR.py para regenerarlo.",
+            categories: {
+                "Sistema": "Sistema",
+                "Marketing Digital": "Marketing Digital",
+                "Generación de Contenido": "Generación de Contenido",
+                "Gestión de Leads y CRM": "Gestión de Leads y CRM",
+                "Ventas y Comercio Electrónico": "Ventas y Comercio Electrónico",
+                "Atención al Cliente": "Atención al Cliente",
+                "Datos y Analítica": "Datos y Analítica",
+                "Inteligencia Artificial": "Inteligencia Artificial",
+                "Productividad y Operaciones": "Productividad y Operaciones",
+                "Comunicación y Mensajería": "Comunicación y Mensajería",
+                "Recursos Humanos": "Recursos Humanos",
+                "Finanzas y Contabilidad": "Finanzas y Contabilidad",
+                "Proyectos y Colaboración": "Proyectos y Colaboración",
+                "Desarrollo y Tecnología": "Desarrollo y Tecnología",
+                "Legal y Cumplimiento": "Legal y Cumplimiento",
+                "Educación y Formación": "Educación y Formación",
+                "Eventos y Webinars": "Eventos y Webinars",
+                "Salud y Bienestar": "Salud y Bienestar",
+                "Inmobiliario y Gestión de Activos": "Inmobiliario y Gestión de Activos",
+                "Logística y Operaciones Físicas": "Logística y Operaciones Físicas",
+                "Investigación e Inteligencia de Negocio": "Investigación e Inteligencia de Negocio",
+                "Desarrollo de Software": "Desarrollo de Software",
+                "Productividad y Gestión del Tiempo": "Productividad y Gestión del Tiempo",
+                "Diseño y Creatividad": "Diseño y Creatividad",
+                "Estrategia y Operaciones": "Estrategia y Operaciones"
+            },
+            subcategories: {
+                "Email Marketing": "Email Marketing",
+                "Redes Sociales": "Redes Sociales",
+                "Publicidad de Pago (Ads)": "Publicidad de Pago (Ads)",
+                "SEO (Optimización de Buscadores)": "SEO (Optimización de Buscadores)",
+                "Marketing de Afiliados": "Marketing de Afiliados",
+                "Estrategia de Contenidos": "Estrategia de Contenidos",
+                "Growth Marketing": "Growth Marketing",
+                "Estrategia de Marca": "Estrategia de Marca",
+                "Redacción con IA": "Redacción con IA",
+                "Imágenes y Visuales": "Imágenes y Visuales",
+                "Video y Multimedia": "Video y Multimedia",
+                "Podcasts y Audio": "Podcasts y Audio",
+                "Traducción y Localización": "Traducción y Localización",
+                "Diseño UI": "Diseño UI",
+                "Captura de Leads": "Captura de Leads",
+                "Cualificación y Scoring": "Cualificación y Scoring",
+                "Nurturing y Seguimiento": "Nurturing y Seguimiento",
+                "Sincronización con CRM": "Sincronización con CRM",
+                "Reportes de Pipeline": "Reportes de Pipeline",
+                "Gestión de Pedidos": "Gestión de Pedidos",
+                "Desarrollo Web": "Desarrollo Web",
+                "Agentes Autónomos": "Agentes Autónomos",
+                "Automatización de Marketing": "Automatización de Marketing",
+                "CRM y Automatización": "CRM y Automatización",
+                "Bases de Datos": "Bases de Datos",
+                "Infraestructura Cloud": "Infraestructura Cloud",
+                "Ingeniería de Prompts": "Ingeniería de Prompts",
+                "RAG y Bases de Conocimiento": "RAG y Bases de Conocimiento",
+                "Automatización Agéntica": "Automatización Agéntica",
+                "Síntesis de Noticias e Informes": "Síntesis de Noticias e Informes",
+                "WhatsApp y Telegram": "WhatsApp y Telegram"
+            }
+        },
+        en: {
+            header_title: "Skill Explorer",
+            search_placeholder: "Search skills...",
+            filter_title: "Systems & Categories",
+            all_systems: "All Systems",
+            units_available: "Units Available",
+            master_repo: "Master Repository",
+            loading: "Loading knowledge units...",
+            btn_open_skill: "SKILL.md",
+            btn_open_workflow: "WORKFLOW.md",
+            no_content: "*No content available for this view.*",
+            id_prefix: "ID-",
+            footer_text: "Knowledge Engineering and Development by",
+            modal_detail: "Skill Detail",
+            error_load_title: "Data Loading Error",
+            error_load_desc: "Could not find INDEX.js or it is corrupted. Run ACTUALIZAR_EXPLORADOR.py to regenerate it.",
+            categories: {
+                "Sistema": "System",
+                "Marketing Digital": "Digital Marketing",
+                "Generación de Contenido": "Content Generation",
+                "Gestión de Leads y CRM": "Lead & CRM Management",
+                "Ventas y Comercio Electrónico": "Sales & E-commerce",
+                "Atención al Cliente": "Customer Support",
+                "Datos y Analítica": "Data & Analytics",
+                "Inteligencia Artificial": "Artificial Intelligence",
+                "Productividad y Operaciones": "Productivity & Operations",
+                "Comunicación y Mensajería": "Communication & Messaging",
+                "Recursos Humanos": "Human Resources",
+                "Finanzas y Contabilidad": "Finance & Accounting",
+                "Proyectos y Colaboración": "Project & Collaboration",
+                "Desarrollo y Tecnología": "Development & Technology",
+                "Legal y Cumplimiento": "Legal & Compliance",
+                "Educación y Formación": "Education & Training",
+                "Eventos y Webinars": "Events & Webinars",
+                "Salud y Bienestar": "Health & Wellness",
+                "Inmobiliario y Gestión de Activos": "Real Estate & Assets",
+                "Logística y Operaciones Físicas": "Logistics & Operations",
+                "Investigación e Inteligencia de Negocio": "Business Research & BI",
+                "Comunicación y Marca Digital": "Digital Brand & Comms",
+                "Desarrollo de Software": "Software Development",
+                "Productividad y Gestión del Tiempo": "Productivity & Time Management",
+                "Diseño y Creatividad": "Design & Creativity",
+                "Estrategia y Operaciones": "Strategy & Operations"
+            },
+            subcategories: {
+          "Agentes Autónomos": "Autonomous Agents",
+          "Almacén y Stock": "Warehouse & Stock",
+          "Analisis Estratégico": "Strategic Analysis",
+          "Análisis de Mercado": "Market Analysis",
+          "Análisis de Tendencias": "Trend Analysis",
+          "Aprendizaje Continuo": "Continuous Learning",
+          "Aprobaciones y Flujos Internos": "Approvals & Internal Flows",
+          "Arquitectura de Software": "Software Architecture",
+          "Asesoría Jurídica": "Legal Advising",
+          "Atención al Cliente": "Customer Service",
+          "Auditoría de Seguridad": "Security Audit",
+          "Auditorías y Logs": "Audits & Logs",
+          "Automatización Agéntica": "Agentic Automation",
+          "Automatización de Reuniones": "Meeting Automation",
+          "Backend": "Backend",
+          "Bases de Datos": "Databases",
+          "Bienestar Corporativo": "Corporate Wellness",
+          "Blockchain y Web3": "Blockchain & Web3",
+          "CI": "CI/CD",
+          "CRM y Automatización": "CRM & Automation",
+          "Captación de Propiedades": "Property Acquisition",
+          "Captura de Leads": "Lead Capture",
+          "Chatbots y Asistentes": "Chatbots & Assistants",
+          "Ciencia de Datos": "Data Science",
+          "Clasificación y Extracción": "Classification & Extraction",
+          "Comunicación Multicanal": "Multichannel Communication",
+          "Comunicación Preevento": "Pre-Event Communication",
+          "Consultoría y Asesoramiento": "Consulting & Advising",
+          "Control de Gastos": "Expense Control",
+          "Control de Versiones": "Version Control",
+          "Creación de Cursos": "Course Creation",
+          "Cualificación y Scoring": "Lead Scoring & Qualification",
+          "Cultura Organizacional": "Organizational Culture",
+          "Cumplimiento Normativo (GDPR)": "Regulatory Compliance (GDPR)",
+          "Desarrollo Mobile": "Mobile Development",
+          "Desarrollo Web": "Web Development",
+          "Devoluciones y Reclamaciones": "Returns & Complaints",
+          "Discovery": "Discovery",
+          "Diseño UI": "UI Design",
+          "Documentación Colaborativa": "Collaborative Documentation",
+          "Email Marketing": "Email Marketing",
+          "Email Transaccional": "Transactional Email",
+          "Encuestas y Feedback": "Surveys & Feedback",
+          "Estrategia de Contenidos": "Content Strategy",
+          "Estrategia de Crecimiento": "Growth Strategy",
+          "Estrategia de Datos": "Data Strategy",
+          "Estrategia de Marca": "Brand Strategy",
+          "Estrategia de Ventas": "Sales Strategy",
+          "Evaluación de Desempeño": "Performance Evaluation",
+          "Ética y Responsabilidad": "Ethics & Responsibility",
+          "Facturación Automática": "Automated Billing",
+          "Fine-tuning y Evaluación": "Fine-Tuning & Evaluation",
+          "Fintech y Criptoactivos": "Fintech & Cryptoassets",
+          "Formación y E-learning": "Training & E-learning",
+          "Generación de Contenido con IA": "AI Content Generation",
+          "Gestion Documental": "Document Management",
+          "Gestión Documental": "Document Management",
+          "Gestión de APIs": "API Management",
+          "Gestión de Almacenes": "Warehouse Management",
+          "Gestión de Calidad": "Quality Management",
+          "Gestión de Contratos": "Contract Management",
+          "Gestión de Crisis en Redes": "Social Media Crisis Management",
+          "Gestión de Inventario": "Inventory Management",
+          "Gestión de Pedidos": "Order Management",
+          "Gestión de Productos": "Product Management",
+          "Gestión de Proyectos": "Project Management",
+          "Gestión de Tareas": "Task Management",
+          "Gestión de Ventas": "Sales Management",
+          "Growth Hacking y CRO": "Growth Hacking & CRO",
+          "Growth Marketing": "Growth Marketing",
+          "Hardware e IoT": "Hardware & IoT",
+          "Herramientas de Productividad": "Productivity Tools",
+          "Historiales Clínicos": "Medical Records",
+          "Identidad Visual": "Visual Identity",
+          "Imágenes y Visuales": "Images & Visuals",
+          "Indexación": "Indexing",
+          "Infraestructura Cloud": "Cloud Infrastructure",
+          "Infraestructura y DevOps": "Infrastructure & DevOps",
+          "Ingeniería de Prompts": "Prompt Engineering",
+          "Investigación Técnica": "Technical Research",
+          "Investigación de Mercado": "Market Research",
+          "Liderazgo y Mentoring": "Leadership & Mentoring",
+          "Mantenimiento y Incidencias": "Maintenance & Incidents",
+          "Marca Personal": "Personal Branding",
+          "Marketing de Afiliados": "Affiliate Marketing",
+          "Monitorización de Competencia": "Competitor Monitoring",
+          "Monitorización de IA": "AI Monitoring",
+          "Monitorización de Sistemas": "System Monitoring",
+          "Networking Virtual": "Virtual Networking",
+          "Operaciones Financieras (FinOps)": "Financial Operations (FinOps)",
+          "Optimización de Modelos": "Model Optimization",
+          "Paradigmas de Programación": "Programming Paradigms",
+          "Podcasts y Audio": "Podcasts & Audio",
+          "Postventa y Fidelización": "After-Sales & Loyalty",
+          "Power Skills": "Power Skills",
+          "Procesos y Metodologías": "Processes & Methodologies",
+          "Prompting y Chains": "Prompting & Chains",
+          "Protección de Datos": "Data Protection",
+          "Proveedores y Compras": "Suppliers & Purchasing",
+          "Publicidad de Pago (Ads)": "Paid Advertising (Ads)",
+          "RAG y Bases de Conocimiento": "RAG & Knowledge Bases",
+          "Reclutamiento y Selección": "Recruiting & Selection",
+          "Recordatorios y Notificaciones": "Reminders & Notifications",
+          "Redacción con IA": "AI Writing",
+          "Redacción y Copywriting": "Writing & Copywriting",
+          "Redes Sociales": "Social Media",
+          "Registro e Inscripciones": "Registration & Sign-ups",
+          "Reportes Automáticos": "Automated Reports",
+          "Reportes Financieros": "Financial Reports",
+          "Reportes de Cartera": "Portfolio Reports",
+          "Reportes de Pipeline": "Pipeline Reports",
+          "Respuestas Automáticas": "Automated Replies",
+          "SEO (Optimización de Buscadores)": "SEO (Search Engine Optimization)",
+          "SEO y Posicionamiento": "SEO & Positioning",
+          "Seguimiento de Envíos": "Shipment Tracking",
+          "Seguimiento de Sprints": "Sprint Tracking",
+          "Seguridad y Accesos": "Security & Access",
+          "Sincronización con CRM": "CRM Synchronization",
+          "Sincronización entre Herramientas": "Tool Synchronization",
+          "Sintesis de Noticias e Informes": "News & Report Synthesis",
+          "Síntesis de Noticias e Informes": "News & Report Synthesis",
+          "Slack y Teams": "Slack & Teams",
+          "Social Selling": "Social Selling",
+          "Sostenibilidad": "Sustainability",
+          "Storytelling Corporativo": "Corporate Storytelling",
+          "Telemedicina": "Telemedicine",
+          "Transformación y Limpieza": "Data Transformation & Cleaning",
+          "Upselling y Cross-selling": "Upselling & Cross-selling",
+          "Video y Multimedia": "Video & Multimedia",
+          "Visión por Computadora": "Computer Vision",
+          "Visualización de Datos": "Data Visualization",
+          "Visualización y Dashboards": "Visualization & Dashboards",
+          "Web3 y Blockchain": "Web3 & Blockchain",
+          "WhatsApp y Telegram": "WhatsApp & Telegram"
+            },
+            subcategories: {
+                "Email Marketing": "Email Marketing",
+                "Redes Sociales": "Social Media",
+                "Publicidad de Pago (Ads)": "Paid Ads",
+                "SEO (Optimización de Buscadores)": "SEO (Search Engine Optimization)",
+                "Marketing de Afiliados": "Affiliate Marketing",
+                "Estrategia de Contenidos": "Content Strategy",
+                "Growth Marketing": "Growth Marketing",
+                "Estrategia de Marca": "Brand Strategy",
+                "Redacción con IA": "AI Writing",
+                "Imágenes y Visuales": "Images & Visuals",
+                "Video y Multimedia": "Video & Multimedia",
+                "Podcasts y Audio": "Podcasts & Audio",
+                "Traducción y Localización": "Translation & Localization",
+                "Diseño UI": "UI Design",
+                "Captura de Leads": "Lead Capture",
+                "Cualificación y Scoring": "Qualification & Scoring",
+                "Nurturing y Seguimiento": "Nurturing & Follow-up",
+                "Sincronización con CRM": "CRM Sync",
+                "Reportes de Pipeline": "Pipeline Reports",
+                "Gestión de Pedidos": "Order Management",
+                "Desarrollo Web": "Web Development",
+                "Agentes Autónomos": "Autonomous Agents",
+                "Automatización de Marketing": "Marketing Automation",
+                "CRM y Automatización": "CRM & Automation",
+                "Bases de Datos": "Databases",
+                "Infraestructura Cloud": "Cloud Infrastructure",
+                "Arquitectura de Software": "Software Architecture",
+                "CI": "CI/CD",
+                "Desarrollo Mobile": "Mobile Development",
+                "Estrategia de Crecimiento": "Growth Strategy",
+                "Gestión de APIs": "API Management",
+                "Hardware e IoT": "Hardware & IoT",
+                "Monitorización de Sistemas": "System Monitoring",
+                "Paradigmas de Programación": "Programming Paradigms",
+                "Seguridad y Accesos": "Security & Access",
+                "Web3 y Blockchain": "Web3 & Blockchain",
+                "Ingeniería de Prompts": "Prompt Engineering",
+                "RAG y Bases de Conocimiento": "RAG & Knowledge Bases",
+                "Automatización Agéntica": "Agentic Automation",
+                "Síntesis de Noticias e Informes": "News Synthesis",
+                "WhatsApp y Telegram": "Messaging"
+            }
+        },
+        fr: {
+            header_title: "Explorateur de Skills",
+            search_placeholder: "Rechercher...",
+            filter_title: "Systèmes & Catégories",
+            all_systems: "Tous les Systèmes",
+            units_available: "Unités Disponibles",
+            master_repo: "Répertoire Maître",
+            loading: "Chargement des unités...",
+            btn_open_skill: "SKILL.md",
+            btn_open_workflow: "WORKFLOW.md",
+            no_content: "*Aucun contenu disponible.*",
+            id_prefix: "ID-",
+            footer_text: "Ingénierie des connaissances et développement par",
+            modal_detail: "Détail du Skill",
+            error_load_title: "Erreur de chargement",
+            error_load_desc: "Impossible de trouver INDEX.js ou il est corrompu. Exécutez ACTUALIZAR_EXPLORADOR.py.",
+            categories: {
+                "Sistema": "Système",
+                "Marketing Digital": "Marketing Numérique",
+                "Generación de Contenido": "Génération de Contenu",
+                "Gestión de Leads y CRM": "Gestion des Leads & CRM",
+                "Ventas y Comercio Electrónico": "Ventes & E-commerce",
+                "Atención al Cliente": "Service Client",
+                "Datos y Analítica": "Données & Analytique",
+                "Inteligencia Artificial": "Intelligence Artificielle",
+                "Productividad y Operaciones": "Productivité & Opérations",
+                "Comunicación y Mensajería": "Communication & Messagerie",
+                "Recursos Humanos": "Ressources Humaines",
+                "Finanzas y Contabilidad": "Finance & Comptabilité",
+                "Proyectos y Colaboración": "Projets & Collaboration",
+                "Desarrollo y Tecnología": "Développement & Tech",
+                "Legal y Cumplimiento": "Juridique & Conformité",
+                "Educación y Formación": "Éducation & Formation",
+                "Eventos y Webinars": "Événements & Webinaires",
+                "Salud y Bienestar": "Santé & Bienêtre",
+                "Inmobiliario y Gestión de Activos": "Immobilier & Actifs",
+                "Logística y Operaciones Físicas": "Logistique & Opérations",
+                "Investigación e Inteligencia de Negocio": "Recherche & BI",
+                "Comunicación y Marca Digital": "Marque & Comms",
+                "Desarrollo de Software": "Développement Logiciel",
+                "Productividad y Gestión del Tiempo": "Gestion du Temps",
+                "Diseño y Creatividad": "Design & Créativité",
+                "Estrategia y Operaciones": "Stratégie & Opérations"
+            },
+            subcategories: {
+          "Agentes Autónomos": "Agents Autonomes",
+          "Almacén y Stock": "Entrepôt et Stock",
+          "Analisis Estratégico": "Analyse Stratégique",
+          "Análisis de Mercado": "Analyse de Marché",
+          "Análisis de Tendencias": "Analyse des Tendances",
+          "Aprendizaje Continuo": "Apprentissage Continu",
+          "Aprobaciones y Flujos Internos": "Approbations et Flux Internes",
+          "Arquitectura de Software": "Architecture Logicielle",
+          "Asesoría Jurídica": "Conseil Juridique",
+          "Atención al Cliente": "Service Client",
+          "Auditoría de Seguridad": "Audit de Sécurité",
+          "Auditorías y Logs": "Audits et Journaux",
+          "Automatización Agéntica": "Automatisation d'Agents",
+          "Automatización de Reuniones": "Automatisation de Réunions",
+          "Backend": "Backend",
+          "Bases de Datos": "Bases de Données",
+          "Bienestar Corporativo": "Bien-être en Entreprise",
+          "Blockchain y Web3": "Blockchain et Web3",
+          "CI": "CI/CD",
+          "CRM y Automatización": "CRM et Automatisation",
+          "Captación de Propiedades": "Acquisition Immobilière",
+          "Captura de Leads": "Capture de Leads",
+          "Chatbots y Asistentes": "Chatbots et Assistants",
+          "Ciencia de Datos": "Science des Données",
+          "Clasificación y Extracción": "Classification et Extraction",
+          "Comunicación Multicanal": "Communication Multicanal",
+          "Comunicación Preevento": "Communication Pré-événement",
+          "Consultoría y Asesoramiento": "Conseil et Orientation",
+          "Control de Gastos": "Contrôle des Dépenses",
+          "Control de Versiones": "Contrôle de Version",
+          "Creación de Cursos": "Création de Cours",
+          "Cualificación y Scoring": "Qualification de Leads",
+          "Cultura Organizacional": "Culture Organisationnelle",
+          "Cumplimiento Normativo (GDPR)": "Conformité Réglementaire (RGPD)",
+          "Desarrollo Mobile": "Développement Mobile",
+          "Desarrollo Web": "Développement Web",
+          "Devoluciones y Reclamaciones": "Retours et Réclamations",
+          "Discovery": "Découverte",
+          "Diseño UI": "Design UI",
+          "Documentación Colaborativa": "Documentation Collaborative",
+          "Email Marketing": "Email Marketing",
+          "Email Transaccional": "Email Transactionnel",
+          "Encuestas y Feedback": "Sondages et Retours",
+          "Estrategia de Contenidos": "Stratégie de Contenu",
+          "Estrategia de Crecimiento": "Stratégie de Croissance",
+          "Estrategia de Datos": "Stratégie de Données",
+          "Estrategia de Marca": "Stratégie de Marque",
+          "Estrategia de Ventas": "Stratégie de Ventes",
+          "Evaluación de Desempeño": "Évaluation des Performances",
+          "Ética y Responsabilidad": "Éthique et Responsabilité",
+          "Facturación Automática": "Facturation Automatisée",
+          "Fine-tuning y Evaluación": "Fine-Tuning et Évaluation",
+          "Fintech y Criptoactivos": "Fintech et Crypto-actifs",
+          "Formación y E-learning": "Formation et E-learning",
+          "Generación de Contenido con IA": "Génération de Contenu IA",
+          "Gestion Documental": "Gestion Documentaire",
+          "Gestión Documental": "Gestion Documentaire",
+          "Gestión de APIs": "Gestion des API",
+          "Gestión de Almacenes": "Gestion d'Entrepôt",
+          "Gestión de Calidad": "Gestion de Qualité",
+          "Gestión de Contratos": "Gestion de Contrats",
+          "Gestión de Crisis en Redes": "Gestion de Crise sur Réseaux Sociaux",
+          "Gestión de Inventario": "Gestion d'Inventaire",
+          "Gestión de Pedidos": "Gestion de Commandes",
+          "Gestión de Productos": "Gestion de Produits",
+          "Gestión de Proyectos": "Gestion de Projets",
+          "Gestión de Tareas": "Gestion des Tâches",
+          "Gestión de Ventas": "Gestion des Ventes",
+          "Growth Hacking y CRO": "Growth Hacking et CRO",
+          "Growth Marketing": "Growth Marketing",
+          "Hardware e IoT": "Hardware et IoT",
+          "Herramientas de Productividad": "Outils de Productivité",
+          "Historiales Clínicos": "Dossiers Médicaux",
+          "Identidad Visual": "Identité Visuelle",
+          "Imágenes y Visuales": "Images et Visuels",
+          "Indexación": "Indexation",
+          "Infraestructura Cloud": "Infrastructure Cloud",
+          "Infraestructura y DevOps": "Infrastructure et DevOps",
+          "Ingeniería de Prompts": "Ingénierie de Prompts",
+          "Investigación Técnica": "Recherche Technique",
+          "Investigación de Mercado": "Étude de Marché",
+          "Liderazgo y Mentoring": "Leadership et Mentorat",
+          "Mantenimiento y Incidencias": "Maintenance et Incidents",
+          "Marca Personal": "Marque Personnelle",
+          "Marketing de Afiliados": "Marketing d'Affiliation",
+          "Monitorización de Competencia": "Surveillance de la Concurrence",
+          "Monitorización de IA": "Surveillance de l'IA",
+          "Monitorización de Sistemas": "Surveillance des Systèmes",
+          "Networking Virtual": "Réseautage Virtuel",
+          "Operaciones Financieras (FinOps)": "Opérations Financières (FinOps)",
+          "Optimización de Modelos": "Optimisation des Modèles",
+          "Paradigmas de Programación": "Paradigmes de Programmation",
+          "Podcasts y Audio": "Podcasts et Audio",
+          "Postventa y Fidelización": "Service Après-vente et Fidélisation",
+          "Power Skills": "Power Skills",
+          "Procesos y Metodologías": "Processus et Méthodologies",
+          "Prompting y Chains": "Prompting et Chaînes",
+          "Protección de Datos": "Protection des Données",
+          "Proveedores y Compras": "Fournisseurs et Achats",
+          "Publicidad de Pago (Ads)": "Publicité Payante (Ads)",
+          "RAG y Bases de Conocimiento": "RAG et Bases de Connaissances",
+          "Reclutamiento y Selección": "Recrutement et Sélection",
+          "Recordatorios y Notificaciones": "Rappels et Notifications",
+          "Redacción con IA": "Rédaction IA",
+          "Redacción y Copywriting": "Rédaction et Copywriting",
+          "Redes Sociales": "Réseaux Sociaux",
+          "Registro e Inscripciones": "Inscriptions et Enregistrements",
+          "Reportes Automáticos": "Rapports Automatisés",
+          "Reportes Financieros": "Rapports Financiers",
+          "Reportes de Cartera": "Rapports de Portefeuille",
+          "Reportes de Pipeline": "Rapports de Pipeline",
+          "Respuestas Automáticas": "Réponses Automatisées",
+          "SEO (Optimización de Buscadores)": "SEO (Optimisation pour Moteurs de Recherche)",
+          "SEO y Posicionamiento": "SEO et Positionnement",
+          "Seguimiento de Envíos": "Suivi des Expéditions",
+          "Seguimiento de Sprints": "Suivi des Sprints",
+          "Seguridad y Accesos": "Sécurité et Accès",
+          "Sincronización con CRM": "Synchronisation CRM",
+          "Sincronización entre Herramientas": "Synchronisation d'Outils",
+          "Sintesis de Noticias e Informes": "Synthèse d'Actualités et Rapports",
+          "Síntesis de Noticias e Informes": "Synthèse d'Actualités et Rapports",
+          "Slack y Teams": "Slack et Teams",
+          "Social Selling": "Social Selling",
+          "Sostenibilidad": "Durabilité",
+          "Storytelling Corporativo": "Storytelling d'Entreprise",
+          "Telemedicina": "Télémédecine",
+          "Transformación y Limpieza": "Transformation et Nettoyage des Données",
+          "Upselling y Cross-selling": "Ventes Incitatives et Croisées",
+          "Video y Multimedia": "Vidéo et Multimédia",
+          "Visión por Computadora": "Vision par Ordinateur",
+          "Visualización de Datos": "Visualisation des Données",
+          "Visualización y Dashboards": "Visualisation et Tableaux de Bord",
+          "Web3 y Blockchain": "Web3 et Blockchain",
+          "WhatsApp y Telegram": "WhatsApp et Telegram"
+            },
+            subcategories: {
+                "Email Marketing": "Marketing Email",
+                "Redes Sociales": "Réseaux Sociaux",
+                "Publicidad de Pago (Ads)": "Publicité (Ads)",
+                "SEO (Optimización de Buscadores)": "SEO (Optimisation Moteurs)",
+                "Marketing de Afiliados": "Affiliation",
+                "Estrategia de Contenidos": "Stratégie Contenu",
+                "Growth Marketing": "Growth Marketing",
+                "Estrategia de Marca": "Stratégie de Marque",
+                "Redacción con IA": "Rédaction IA",
+                "Imágenes y Visuales": "Images & Visuels",
+                "Video y Multimedia": "Vidéo & Multimédia",
+                "Podcasts y Audio": "Podcasts & Audio",
+                "Traducción y Localización": "Traduction",
+                "Diseño UI": "Design UI",
+                "Captura de Leads": "Capture Leads",
+                "Cualificación y Scoring": "Scoring Leads",
+                "Nurturing y Seguimiento": "Nurturing",
+                "Sincronización con CRM": "Sync CRM",
+                "Reportes de Pipeline": "Rapports Pipeline",
+                "Gestión de Pedidos": "Gestion Commandes",
+                "Desarrollo Web": "Dév Web",
+                "Agentes Autónomos": "Agents Autonomes",
+                "Automatización de Marketing": "Autom. Marketing",
+                "CRM y Automatización": "CRM & Autom.",
+                "Bases de Datos": "Bases de Données",
+                "Infraestructura Cloud": "Cloud Infra",
+                "Arquitectura de Software": "Arch. Logicielle",
+                "CI": "CI/CD",
+                "Desarrollo Mobile": "Dév Mobile",
+                "Estrategia de Crecimiento": "Stratégie Croissance",
+                "Gestión de APIs": "Gestion API",
+                "Hardware e IoT": "Hardware & IoT",
+                "Monitorización de Sistemas": "Monitoring Système",
+                "Paradigmas de Programación": "Paradigmes",
+                "Seguridad y Accesos": "Sécurité",
+                "Web3 y Blockchain": "Web3 & Blockchain",
+                "Ingeniería de Prompts": "Ingénierie de Prompts",
+                "RAG y Bases de Conocimiento": "RAG & Bases de Connaissances",
+                "Automatización Agentique": "Automatisation Agentique",
+                "Síntesis de Noticias e Informes": "Synthèse de Nouvelles",
+                "WhatsApp y Telegram": "Messagerie"
+            }
+        },
+        de: {
+            header_title: "Skill Explorer",
+            search_placeholder: "Skills suchen...",
+            filter_title: "Systeme & Kategorien",
+            all_systems: "Alle Systeme",
+            units_available: "Verfügbare Einheiten",
+            master_repo: "Hauptarchiv",
+            loading: "Wissenseinheiten werden geladen...",
+            btn_open_skill: "SKILL.md",
+            btn_open_workflow: "WORKFLOW.md",
+            no_content: "*Kein Inhalt verfügbar.*",
+            id_prefix: "ID-",
+            footer_text: "Wissensingenieurwesen und Entwicklung von",
+            modal_detail: "Skill-Details",
+            error_load_title: "Datenladefehler",
+            error_load_desc: "INDEX.js konnte nicht gefunden werden oder ist beschädigt. Führen Sie ACTUALIZAR_EXPLORADOR.py aus.",
+            categories: {
+                "Sistema": "System",
+                "Marketing Digital": "Digitales Marketing",
+                "Generación de Contenido": "Content-Generierung",
+                "Gestión de Leads y CRM": "Lead- & CRM-Management",
+                "Ventas y Comercio Electrónico": "Vertrieb & E-Commerce",
+                "Atención al Cliente": "Kundenservice",
+                "Datos y Analítica": "Daten & Analytik",
+                "Inteligencia Artificial": "Künstliche Intelligenz",
+                "Productividad y Operaciones": "Produktivität & Abläufe",
+                "Comunicación y Mensajería": "Kommunikation & Messaging",
+                "Recursos Humanos": "Personalwesen",
+                "Finanzas y Contabilidad": "Finanzen & Buchhaltung",
+                "Proyectos y Colaboración": "Projekte & Zusammenarbeit",
+                "Desarrollo y Tecnología": "Entwicklung & Tech",
+                "Legal y Cumplimiento": "Recht & Compliance",
+                "Educación y Formación": "Bildung & Training",
+                "Eventos y Webinars": "Events & Webinare",
+                "Salud y Bienestar": "Gesundheit & Wellness",
+                "Inmobiliario y Gestión de Activos": "Immobilien & Vermögen",
+                "Logística y Operaciones Físicas": "Logistik & Abläufe",
+                "Investigación e Inteligencia de Negocio": "Wirtschaftsforschung & BI",
+                "Comunicación y Marca Digital": "Digitale Marke & Komms",
+                "Desarrollo de Software": "Softwareentwicklung",
+                "Productividad y Gestión del Tiempo": "Zeitmanagement",
+                "Diseño y Creatividad": "Design & Kreativität",
+                "Estrategia y Operaciones": "Strategie & Betrieb"
+            },
+            subcategories: {
+          "Agentes Autónomos": "Autonome Agenten",
+          "Almacén y Stock": "Lager & Bestand",
+          "Analisis Estratégico": "Strategische Analyse",
+          "Análisis de Mercado": "Marktanalyse",
+          "Análisis de Tendencias": "Trendanalyse",
+          "Aprendizaje Continuo": "Kontinuierliches Lernen",
+          "Aprobaciones y Flujos Internos": "Genehmigungen & Interne Abläufe",
+          "Arquitectura de Software": "Softwarearchitektur",
+          "Asesoría Jurídica": "Rechtsberatung",
+          "Atención al Cliente": "Kundenservice",
+          "Auditoría de Seguridad": "Sicherheitsaudit",
+          "Auditorías y Logs": "Audits & Protokolle",
+          "Automatización Agéntica": "Agenten-Automatisierung",
+          "Automatización de Reuniones": "Meeting-Automatisierung",
+          "Backend": "Backend",
+          "Bases de Datos": "Datenbanken",
+          "Bienestar Corporativo": "Betriebliches Gesundheitsmanagement",
+          "Blockchain y Web3": "Blockchain & Web3",
+          "CI": "CI/CD",
+          "CRM y Automatización": "CRM & Automatisierung",
+          "Captación de Propiedades": "Immobiliengewinnung",
+          "Captura de Leads": "Lead-Erfassung",
+          "Chatbots y Asistentes": "Chatbots & Assistenten",
+          "Ciencia de Datos": "Data Science",
+          "Clasificación y Extracción": "Klassifizierung & Extraktion",
+          "Comunicación Multicanal": "Multichannel-Kommunikation",
+          "Comunicación Preevento": "Pre-Event-Kommunikation",
+          "Consultoría y Asesoramiento": "Beratung & Betreuung",
+          "Control de Gastos": "Kostenkontrolle",
+          "Control de Versiones": "Versionskontrolle",
+          "Creación de Cursos": "Kurserstellung",
+          "Cualificación y Scoring": "Lead-Scoring & Qualifikation",
+          "Cultura Organizacional": "Unternehmenskultur",
+          "Cumplimiento Normativo (GDPR)": "Compliance & DSGVO",
+          "Desarrollo Mobile": "Mobile Entwicklung",
+          "Desarrollo Web": "Web-Entwicklung",
+          "Devoluciones y Reclamaciones": "Retouren & Reklamationen",
+          "Discovery": "Discovery",
+          "Diseño UI": "UI-Design",
+          "Documentación Colaborativa": "Kollaborative Dokumentation",
+          "Email Marketing": "E-Mail-Marketing",
+          "Email Transaccional": "Transaktions-E-Mails",
+          "Encuestas y Feedback": "Umfragen & Feedback",
+          "Estrategia de Contenidos": "Content-Strategie",
+          "Estrategia de Crecimiento": "Wachstumsstrategie",
+          "Estrategia de Datos": "Datenstrategie",
+          "Estrategia de Marca": "Markenstrategie",
+          "Estrategia de Ventas": "Vertriebsstrategie",
+          "Evaluación de Desempeño": "Leistungsbewertung",
+          "Ética y Responsabilidad": "Ethik & Verantwortung",
+          "Facturación Automática": "Automatisierte Abrechnung",
+          "Fine-tuning y Evaluación": "Fine-Tuning & Evaluierung",
+          "Fintech y Criptoactivos": "Fintech & Krypto-Assets",
+          "Formación y E-learning": "Training & E-Learning",
+          "Generación de Contenido con IA": "KI-Inhaltsgenerierung",
+          "Gestion Documental": "Dokumentenmanagement",
+          "Gestión Documental": "Dokumentenmanagement",
+          "Gestión de APIs": "API-Management",
+          "Gestión de Almacenes": "Lagermanagement",
+          "Gestión de Calidad": "Qualitätsmanagement",
+          "Gestión de Contratos": "Vertragsmanagement",
+          "Gestión de Crisis en Redes": "Social-Media-Krisenmanagement",
+          "Gestión de Inventario": "Bestandsmanagement",
+          "Gestión de Pedidos": "Auftragsverwaltung",
+          "Gestión de Productos": "Produktmanagement",
+          "Gestión de Proyectos": "Projektmanagement",
+          "Gestión de Tareas": "Aufgabenmanagement",
+          "Gestión de Ventas": "Vertriebsmanagement",
+          "Growth Hacking y CRO": "Growth Hacking & CRO",
+          "Growth Marketing": "Growth Marketing",
+          "Hardware e IoT": "Hardware & IoT",
+          "Herramientas de Productividad": "Produktivitätstools",
+          "Historiales Clínicos": "Medizinische Akten",
+          "Identidad Visual": "Visuelle Identität",
+          "Imágenes y Visuales": "Bilder & Visuals",
+          "Indexación": "Indexierung",
+          "Infraestructura Cloud": "Cloud-Infrastruktur",
+          "Infraestructura y DevOps": "Infrastruktur & DevOps",
+          "Ingeniería de Prompts": "Prompt Engineering",
+          "Investigación Técnica": "Technische Forschung",
+          "Investigación de Mercado": "Marktforschung",
+          "Liderazgo y Mentoring": "Führung & Mentoring",
+          "Mantenimiento y Incidencias": "Wartung & Vorfälle",
+          "Marca Personal": "Personal Branding",
+          "Marketing de Afiliados": "Affiliate-Marketing",
+          "Monitorización de Competencia": "Wettbewerberbeobachtung",
+          "Monitorización de IA": "KI-Überwachung",
+          "Monitorización de Sistemas": "Systemüberwachung",
+          "Networking Virtual": "Virtuelles Networking",
+          "Operaciones Financieras (FinOps)": "Finanzoperationen (FinOps)",
+          "Optimización de Modelos": "Modell-Optimierung",
+          "Paradigmas de Programación": "Programmierparadigmen",
+          "Podcasts y Audio": "Podcasts & Audio",
+          "Postventa y Fidelización": "After-Sales & Kundentreue",
+          "Power Skills": "Power Skills",
+          "Procesos y Metodologías": "Prozesse & Methoden",
+          "Prompting y Chains": "Prompting & Chains",
+          "Protección de Datos": "Datenschutz",
+          "Proveedores y Compras": "Lieferanten & Einkauf",
+          "Publicidad de Pago (Ads)": "Bezahlte Werbung (Ads)",
+          "RAG y Bases de Conocimiento": "RAG & Wissensdatenbanken",
+          "Reclutamiento y Selección": "Rekrutierung & Auswahl",
+          "Recordatorios y Notificaciones": "Erinnerungen & Benachrichtigungen",
+          "Redacción con IA": "KI-Texten",
+          "Redacción y Copywriting": "Texten & Copywriting",
+          "Redes Sociales": "Social Media",
+          "Registro e Inscripciones": "Anmeldungen & Registrierungen",
+          "Reportes Automáticos": "Automatisierte Berichte",
+          "Reportes Financieros": "Finanzberichte",
+          "Reportes de Cartera": "Portfolio-Berichte",
+          "Reportes de Pipeline": "Pipeline-Berichte",
+          "Respuestas Automáticas": "Automatisierte Antworten",
+          "SEO (Optimización de Buscadores)": "SEO (Suchmaschinenoptimierung)",
+          "SEO y Posicionamiento": "SEO & Positionierung",
+          "Seguimiento de Envíos": "Sendungsverfolgung",
+          "Seguimiento de Sprints": "Sprint-Tracking",
+          "Seguridad y Accesos": "Sicherheit & Zugang",
+          "Sincronización con CRM": "CRM-Synchronisierung",
+          "Sincronización entre Herramientas": "Tool-Synchronisierung",
+          "Sintesis de Noticias e Informes": "Nachrichten- & Berichtsynthese",
+          "Síntesis de Noticias e Informes": "Nachrichten- & Berichtsynthese",
+          "Slack y Teams": "Slack & Teams",
+          "Social Selling": "Social Selling",
+          "Sostenibilidad": "Nachhaltigkeit",
+          "Storytelling Corporativo": "Corporate Storytelling",
+          "Telemedicina": "Telemedizin",
+          "Transformación y Limpieza": "Datentransformation & -bereinigung",
+          "Upselling y Cross-selling": "Upselling & Cross-Selling",
+          "Video y Multimedia": "Video & Multimedia",
+          "Visión por Computadora": "Computer Vision",
+          "Visualización de Datos": "Datenvisualisierung",
+          "Visualización y Dashboards": "Visualisierung & Dashboards",
+          "Web3 y Blockchain": "Web3 & Blockchain",
+          "WhatsApp y Telegram": "WhatsApp & Telegram"
+            },
+            subcategories: {
+                "Email Marketing": "E-Mail-Marketing",
+                "Redes Sociales": "Social Media",
+                "Publicidad de Pago (Ads)": "Bezahlte Werbung",
+                "SEO (Optimización de Buscadores)": "SEO (Suchmaschinenoptimierung)",
+                "Marketing de Afiliados": "Affiliate-Marketing",
+                "Estrategia de Contenidos": "Content-Strategie",
+                "Growth Marketing": "Growth Marketing",
+                "Estrategia de Marca": "Markenstrategie",
+                "Redacción con IA": "KI-Schreiben",
+                "Imágenes y Visuales": "Bilder & Grafiken",
+                "Video y Multimedia": "Video & Multimedia",
+                "Podcasts y Audio": "Podcasts & Audio",
+                "Traducción y Localización": "Übersetzung",
+                "Diseño UI": "UI-Design",
+                "Captura de Leads": "Lead-Erfassung",
+                "Cualificación y Scoring": "Qualifizierung & Scoring",
+                "Nurturing y Seguimiento": "Nurturing & Follow-up",
+                "Sincronización con CRM": "CRM-Sync",
+                "Reportes de Pipeline": "Pipeline-Berichte",
+                "Gestión de Pedidos": "Bestellverwaltung",
+                "Desarrollo Web": "Webentwicklung",
+                "Agentes Autónomos": "Autonome Agenten",
+                "Automatización de Marketing": "Marketing-Autom.",
+                "CRM y Automatización": "CRM & Automatisierung",
+                "Bases de Datos": "Datenbanken",
+                "Infraestructura Cloud": "Cloud-Infra",
+                "Arquitectura de Software": "Software-Architektur",
+                "CI": "CI/CD",
+                "Desarrollo Mobile": "Mobile Entwicklung",
+                "Estrategia de Crecimiento": "Wachstumsstrategie",
+                "Gestión de APIs": "API-Management",
+                "Hardware e IoT": "Hardware & IoT",
+                "Monitorización de Sistemas": "Systemüberwachung",
+                "Paradigmas de Programación": "Paradigmen",
+                "Seguridad y Accesos": "Sicherheit",
+                "Web3 y Blockchain": "Web3 & Blockchain",
+                "Ingeniería de Prompts": "Prompt-Engineering",
+                "RAG y Bases de Conocimiento": "RAG & Wissensdatenbanken",
+                "Automatización Agéntica": "Agenten-Automatisierung",
+                "Síntesis de Noticias e Informes": "Nachrichtensynthese",
+                "WhatsApp y Telegram": "Messaging"
+            }
+        },
+        zh: {
+            header_title: "技能探索器",
+            search_placeholder: "搜索技能...",
+            filter_title: "系统与类别",
+            all_systems: "所有系统",
+            units_available: "可用单元",
+            master_repo: "主存储库",
+            loading: "正在加载知识单元...",
+            btn_open_skill: "SKILL.md",
+            btn_open_workflow: "WORKFLOW.md",
+            no_content: "*暂无可用内容。*",
+            id_prefix: "ID-",
+            footer_text: "知识工程与开发",
+            modal_detail: "技能详情",
+            error_load_title: "数据加载错误",
+            error_load_desc: "无法找到 INDEX.js 文件或文件已损坏。请运行 ACTUALIZAR_EXPLORADOR.py 重新生成。",
+            categories: {
+                "Sistema": "系统",
+                "Marketing Digital": "数字营销",
+                "Generación de Contenido": "内容生成",
+                "Gestión de Leads y CRM": "线索与CRM管理",
+                "Ventas y Comercio Electrónico": "销售与电子商务",
+                "Atención al Cliente": "客户服务",
+                "Datos y Analítica": "数据与分析",
+                "Inteligencia Artificial": "人工智能",
+                "Productividad y Operaciones": "生产力与运营",
+                "Comunicación y Mensajería": "通信与消息",
+                "Recursos Humanos": "人力资源",
+                "Finanzas y Contabilidad": "财务与会计",
+                "Proyectos y Colaboración": "项目与协作",
+                "Desarrollo y Tecnología": "开发与技术",
+                "Legal y Cumplimiento": "法律与合规",
+                "Educación y Formación": "教育与培训",
+                "Eventos y Webinars": "活动与研讨会",
+                "Salud y Bienestar": "健康与保健",
+                "Inmobiliario y Gestión de Activos": "房地产与资产",
+                "Logística y Operaciones Físicas": "物流与运营",
+                "Investigación e Inteligencia de Negocio": "商务研究与BI",
+                "Comunicación y Marca Digital": "品牌与数字通信",
+                "Desarrollo de Software": "软件开发",
+                "Productividad y Gestión del Tiempo": "时间管理",
+                "Diseño y Creatividad": "设计与创意",
+                "Estrategia y Operaciones": "战略与运营"
+            },
+            subcategories: {
+          "Agentes Autónomos": "自治代理",
+          "Almacén y Stock": "仓储与库存",
+          "Analisis Estratégico": "战略分析",
+          "Análisis de Mercado": "市场分析",
+          "Análisis de Tendencias": "趋势分析",
+          "Aprendizaje Continuo": "持续学习",
+          "Aprobaciones y Flujos Internos": "审批与内部流程",
+          "Arquitectura de Software": "软件架构",
+          "Asesoría Jurídica": "法律咨询",
+          "Atención al Cliente": "客户服务",
+          "Auditoría de Seguridad": "安全审计",
+          "Auditorías y Logs": "审计和日志",
+          "Automatización Agéntica": "代理自动化",
+          "Automatización de Reuniones": "会议自动化",
+          "Backend": "后端开发",
+          "Bases de Datos": "数据库",
+          "Bienestar Corporativo": "企业福祉",
+          "Blockchain y Web3": "区块链和 Web3",
+          "CI": "CI/CD",
+          "CRM y Automatización": "CRM与自动化",
+          "Captación de Propiedades": "房产获取",
+          "Captura de Leads": "潜在客户捕获",
+          "Chatbots y Asistentes": "聊天机器人和助手",
+          "Ciencia de Datos": "数据科学",
+          "Clasificación y Extracción": "分类和提取",
+          "Comunicación Multicanal": "多渠道通信",
+          "Comunicación Preevento": "活动前通信",
+          "Consultoría y Asesoramiento": "咨询和建议",
+          "Control de Gastos": "费用控制",
+          "Control de Versiones": "版本控制",
+          "Creación de Cursos": "课程创建",
+          "Cualificación y Scoring": "潜在客户评分和资格审查",
+          "Cultura Organizacional": "组织文化",
+          "Cumplimiento Normativo (GDPR)": "合规性(GDPR)",
+          "Desarrollo Mobile": "移动开发",
+          "Desarrollo Web": "Web 开发",
+          "Devoluciones y Reclamaciones": "退货和投诉",
+          "Discovery": "发现",
+          "Diseño UI": "UI 设计",
+          "Documentación Colaborativa": "协作文档",
+          "Email Marketing": "电子邮件营销",
+          "Email Transaccional": "交易电子邮件",
+          "Encuestas y Feedback": "调查和反馈",
+          "Estrategia de Contenidos": "内容策略",
+          "Estrategia de Crecimiento": "增长策略",
+          "Estrategia de Datos": "数据策略",
+          "Estrategia de Marca": "品牌策略",
+          "Estrategia de Ventas": "销售策略",
+          "Evaluación de Desempeño": "绩效评估",
+          "Ética y Responsabilidad": "道德与责任",
+          "Facturación Automática": "自动计费",
+          "Fine-tuning y Evaluación": "微调和评估",
+          "Fintech y Criptoactivos": "金融科技与加密资产",
+          "Formación y E-learning": "培训和在线学习",
+          "Generación de Contenido con IA": "AI内容生成",
+          "Gestion Documental": "文件管理",
+          "Gestión Documental": "文件管理",
+          "Gestión de APIs": "API 管理",
+          "Gestión de Almacenes": "仓库管理",
+          "Gestión de Calidad": "质量管理",
+          "Gestión de Contratos": "合同管理",
+          "Gestión de Crisis en Redes": "社交媒体危机管理",
+          "Gestión de Inventario": "库存管理",
+          "Gestión de Pedidos": "订单管理",
+          "Gestión de Productos": "产品管理",
+          "Gestión de Proyectos": "项目管理",
+          "Gestión de Tareas": "任务管理",
+          "Gestión de Ventas": "销售管理",
+          "Growth Hacking y CRO": "增长黑客和 CRO",
+          "Growth Marketing": "增长营销",
+          "Hardware e IoT": "硬件和物联网",
+          "Herramientas de Productividad": "生产力工具",
+          "Historiales Clínicos": "医疗记录",
+          "Identidad Visual": "视觉识别",
+          "Imágenes y Visuales": "图像和视觉",
+          "Indexación": "索引",
+          "Infraestructura Cloud": "云基础设施",
+          "Infraestructura y DevOps": "基础架构和 DevOps",
+          "Ingeniería de Prompts": "提示工程",
+          "Investigación Técnica": "技术研究",
+          "Investigación de Mercado": "市场调查",
+          "Liderazgo y Mentoring": "领导力和指导",
+          "Mantenimiento y Incidencias": "维护和事件",
+          "Marca Personal": "个人品牌",
+          "Marketing de Afiliados": "联盟营销",
+          "Monitorización de Competencia": "竞争对手监控",
+          "Monitorización de IA": "AI监控",
+          "Monitorización de Sistemas": "系统监控",
+          "Networking Virtual": "虚拟网络",
+          "Operaciones Financieras (FinOps)": "财务运营 (FinOps)",
+          "Optimización de Modelos": "模型优化",
+          "Paradigmas de Programación": "编程范式",
+          "Podcasts y Audio": "播客和音频",
+          "Postventa y Fidelización": "售后和忠诚度",
+          "Power Skills": "Power Skills",
+          "Procesos y Metodologías": "流程和方法",
+          "Prompting y Chains": "Prompting 和 Chains",
+          "Protección de Datos": "数据保护",
+          "Proveedores y Compras": "供应商和采购",
+          "Publicidad de Pago (Ads)": "付费广告(Ads)",
+          "RAG y Bases de Conocimiento": "RAG & 知识库",
+          "Reclutamiento y Selección": "招聘和选拔",
+          "Recordatorios y Notificaciones": "提醒和通知",
+          "Redacción con IA": "AI 写作",
+          "Redacción y Copywriting": "写作和文案",
+          "Redes Sociales": "社交媒体",
+          "Registro e Inscripciones": "注册和报名",
+          "Reportes Automáticos": "自动报告",
+          "Reportes Financieros": "财务报告",
+          "Reportes de Cartera": "投资组合报告",
+          "Reportes de Pipeline": "管道报告",
+          "Respuestas Automáticas": "自动回复",
+          "SEO (Optimización de Buscadores)": "SEO（搜索引擎优化）",
+          "SEO y Posicionamiento": "SEO与定位",
+          "Seguimiento de Envíos": "货件追踪",
+          "Seguimiento de Sprints": "Sprint 跟踪",
+          "Seguridad y Accesos": "安全和访问",
+          "Sincronización con CRM": "CRM 同步",
+          "Sincronización entre Herramientas": "工具同步",
+          "Sintesis de Noticias e Informes": "新闻和报告综合",
+          "Síntesis de Noticias e Informes": "新闻和报告综合",
+          "Slack y Teams": "Slack & Teams",
+          "Social Selling": "社交销售",
+          "Sostenibilidad": "可持续性",
+          "Storytelling Corporativo": "企业故事",
+          "Telemedicina": "远程医疗",
+          "Transformación y Limpieza": "数据转换和清理",
+          "Upselling y Cross-selling": "向上销售和交叉销售",
+          "Video y Multimedia": "视频和多媒体",
+          "Visión por Computadora": "计算机视觉",
+          "Visualización de Datos": "数据可视化",
+          "Visualización y Dashboards": "可视化和仪表板",
+          "Web3 y Blockchain": "Web3与区块链",
+          "WhatsApp y Telegram": "WhatsApp和Telegram"
+            },
+            subcategories: {
+                "Email Marketing": "邮件营销",
+                "Redes Sociales": "社交媒体",
+                "Publicidad de Pago (Ads)": "付费广告",
+                "SEO (Optimización de Buscadores)": "SEO (搜索优化)",
+                "Marketing de Afiliados": "联盟营销",
+                "Estrategia de Contenidos": "内容策略",
+                "Growth Marketing": "增长营销",
+                "Estrategia de Marca": "品牌策略",
+                "Redacción con IA": "AI撰写",
+                "Imágenes y Visuales": "图像与视觉",
+                "Video y Multimedia": "视频多媒体",
+                "Podcasts y Audio": "播客音频",
+                "Traducción y Localización": "翻译定位",
+                "Diseño UI": "UI设计",
+                "Captura de Leads": "线索获取",
+                "Cualificación y Scoring": "评分量化",
+                "Nurturing y Seguimiento": "线索培育",
+                "Sincronización con CRM": "CRM同步",
+                "Reportes de Pipeline": "漏斗报告",
+                "Gestión de Pedidos": "订单管理",
+                "Desarrollo Web": "网页开发",
+                "Agentes Autónomos": "自主代理",
+                "Automatización de Marketing": "营销自动化",
+                "CRM y Automatización": "CRM与自动化",
+                "Bases de Datos": "数据库",
+                "Infraestructura Cloud": "云基础设施",
+                "Arquitectura de Software": "软件架构",
+                "CI": "CI/CD",
+                "Desarrollo Mobile": "移动开发",
+                "Estrategia de Crecimiento": "增长战略",
+                "Gestión de APIs": "API管理",
+                "Hardware e IoT": "硬件与物联网",
+                "Monitorización de Sistemas": "系统监控",
+                "Paradigmas de Programación": "编程范式",
+                "Seguridad y Accesos": "安全与访问",
+                "Web3 y Blockchain": "Web3与区块链",
+                "Ingeniería de Prompts": "提示工程",
+                "RAG y Bases de Conocimiento": "RAG与知识库",
+                "Automatización Agéntica": "代理自动化",
+                "Síntesis de Noticias e Informes": "新闻简报",
+                "WhatsApp y Telegram": "通信"
+            }
+        },
+        ja: {
+            header_title: "スキルエクスプローラー",
+            search_placeholder: "スキルを検索...",
+            filter_title: "システムとカテゴリ",
+            all_systems: "すべてのシステム",
+            units_available: "利用可能なユニット",
+            master_repo: "マスターリポジトリ",
+            loading: "知識ユニットを読み込み中...",
+            btn_open_skill: "SKILL.md",
+            btn_open_workflow: "WORKFLOW.md",
+            no_content: "*コンテンツがありません。*",
+            id_prefix: "ID-",
+            footer_text: "ナレッジエンジニアリングと開発",
+            modal_detail: "スキル詳細",
+            error_load_title: "データ読み込みエラー",
+            error_load_desc: "INDEX.jsが見つからないか破損しています。ACTUALIZAR_EXPLORADOR.pyを実行してください。",
+            categories: {
+                "Sistema": "システム",
+                "Marketing Digital": "デジタルマーケティング",
+                "Generación de Contenido": "コンテンツ生成",
+                "Gestión de Leads y CRM": "リード・CRM管理",
+                "Ventas y Comercio Electrónico": "販売・Eコマース",
+                "Atención al Cliente": "カスタマーサポート",
+                "Datos y Analítica": "データ・分析",
+                "Inteligencia Artificial": "人工知能",
+                "Productividad y Operaciones": "生産性・オペレーション",
+                "Comunicación y Mensajería": "通信・メッセージング",
+                "Recursos Humanos": "人事・HR",
+                "Finanzas y Contabilidad": "財務・会計",
+                "Proyectos y Colaboración": "プロジェクト・コラボレーション",
+                "Desarrollo y Tecnología": "開発・技術",
+                "Legal y Cumplimiento": "法務・コンプライアンス",
+                "Educación y Formación": "教育・トレーニング",
+                "Eventos y Webinars": "イベント・ウェビナー",
+                "Salud y Bienestar": "ヘルス＆ウェルネス",
+                "Inmobiliario y Gestión de Activos": "不動産・資産",
+                "Logística y Operaciones Físicas": "物流・オペレーション",
+                "Investigación e Inteligencia de Negocio": "ビジネス調査・BI",
+                "Comunicación y Marca Digital": "デジタルブランド・通信",
+                "Desarrollo de Software": "ソフトウェア開発",
+                "Productividad y Gestión del Tiempo": "時間管理",
+                "Diseño y Creatividad": "デザイン・クリエイティビティ",
+                "Estrategia y Operaciones": "戦略・オペレーション"
+            },
+            subcategories: {
+          "Agentes Autónomos": "自律型エージェント",
+          "Almacén y Stock": "倉庫と在庫",
+          "Analisis Estratégico": "戦略分析",
+          "Análisis de Mercado": "市場分析",
+          "Análisis de Tendencias": "トレンド分析",
+          "Aprendizaje Continuo": "継続的学習",
+          "Aprobaciones y Flujos Internos": "承認と内部フロー",
+          "Arquitectura de Software": "ソフトウェアアーキテクチャ",
+          "Asesoría Jurídica": "法務アドバイス",
+          "Atención al Cliente": "カスタマーサービス",
+          "Auditoría de Seguridad": "セキュリティ監査",
+          "Auditorías y Logs": "監査とログ",
+          "Automatización Agéntica": "エージェント自動化",
+          "Automatización de Reuniones": "会議自動化",
+          "Backend": "バックエンド",
+          "Bases de Datos": "データベース",
+          "Bienestar Corporativo": "企業の福利厚生",
+          "Blockchain y Web3": "ブロックチェーンとWeb3",
+          "CI": "CI/CD",
+          "CRM y Automatización": "CRMと自動化",
+          "Captación de Propiedades": "不動産取得",
+          "Captura de Leads": "リードの獲得",
+          "Chatbots y Asistentes": "チャットボットとアシスタント",
+          "Ciencia de Datos": "データサイエンス",
+          "Clasificación y Extracción": "分類と抽出",
+          "Comunicación Multicanal": "オムニチャネル対応",
+          "Comunicación Preevento": "イベント前コミュニケーション",
+          "Consultoría y Asesoramiento": "コンサルティングと助言",
+          "Control de Gastos": "経費管理",
+          "Control de Versiones": "バージョン管理",
+          "Creación de Cursos": "コース作成",
+          "Cualificación y Scoring": "リードスコアリングと資格確認",
+          "Cultura Organizacional": "組織文化",
+          "Cumplimiento Normativo (GDPR)": "コンプライアンス（GDPR）",
+          "Desarrollo Mobile": "モバイル開発",
+          "Desarrollo Web": "Web開発",
+          "Devoluciones y Reclamaciones": "返品とクレーム",
+          "Discovery": "ディスカバリー",
+          "Diseño UI": "UIデザイン",
+          "Documentación Colaborativa": "共同ドキュメント",
+          "Email Marketing": "メールマーケティング",
+          "Email Transaccional": "トランザクションメール",
+          "Encuestas y Feedback": "アンケートとフィードバック",
+          "Estrategia de Contenidos": "コンテンツ戦略",
+          "Estrategia de Crecimiento": "成長戦略",
+          "Estrategia de Datos": "データ戦略",
+          "Estrategia de Marca": "ブランド戦略",
+          "Estrategia de Ventas": "販売戦略",
+          "Evaluación de Desempeño": "パフォーマンス評価",
+          "Ética y Responsabilidad": "倫理と責任",
+          "Facturación Automática": "自動請求",
+          "Fine-tuning y Evaluación": "ファインチューニングと評価",
+          "Fintech y Criptoactivos": "フィンテックと暗号資産",
+          "Formación y E-learning": "トレーニングとEラーニング",
+          "Generación de Contenido con IA": "AIコンテンツ生成",
+          "Gestion Documental": "ドキュメント管理",
+          "Gestión Documental": "ドキュメント管理",
+          "Gestión de APIs": "API管理",
+          "Gestión de Almacenes": "倉庫管理",
+          "Gestión de Calidad": "品質管理",
+          "Gestión de Contratos": "契約管理",
+          "Gestión de Crisis en Redes": "SNS危機管理",
+          "Gestión de Inventario": "在庫管理",
+          "Gestión de Pedidos": "注文管理",
+          "Gestión de Productos": "製品管理",
+          "Gestión de Proyectos": "プロジェクト管理",
+          "Gestión de Tareas": "タスク管理",
+          "Gestión de Ventas": "販売管理",
+          "Growth Hacking y CRO": "グロースハックとCRO",
+          "Growth Marketing": "グロースマーケティング",
+          "Hardware e IoT": "ハードウェアとIoT",
+          "Herramientas de Productividad": "生産性ツール",
+          "Historiales Clínicos": "医療記録",
+          "Identidad Visual": "ビジュアルアイデンティティ",
+          "Imágenes y Visuales": "画像とビジュアル",
+          "Indexación": "インデックス作成",
+          "Infraestructura Cloud": "クラウドインフラ",
+          "Infraestructura y DevOps": "インフラとDevOps",
+          "Ingeniería de Prompts": "プロンプトエンジニアリング",
+          "Investigación Técnica": "技術調査",
+          "Investigación de Mercado": "市場調査",
+          "Liderazgo y Mentoring": "リーダーシップとメンタリング",
+          "Mantenimiento y Incidencias": "メンテナンスとインシデント",
+          "Marca Personal": "パーソナルブランディング",
+          "Marketing de Afiliados": "アフィリエイトマーケティング",
+          "Monitorización de Competencia": "競合他社の監視",
+          "Monitorización de IA": "AI監視",
+          "Monitorización de Sistemas": "システム監視",
+          "Networking Virtual": "仮想ネットワーキング",
+          "Operaciones Financieras (FinOps)": "財務オペレーション（FinOps）",
+          "Optimización de Modelos": "モデル最適化",
+          "Paradigmas de Programación": "プログラミングパラダイム",
+          "Podcasts y Audio": "ポッドキャストとオーディオ",
+          "Postventa y Fidelización": "アフターセールスとロイヤルティ",
+          "Power Skills": "パワースキル",
+          "Procesos y Metodologías": "プロセスと方法論",
+          "Prompting y Chains": "プロンプティングとチェーン",
+          "Protección de Datos": "データ保護",
+          "Proveedores y Compras": "サプライヤーと購買",
+          "Publicidad de Pago (Ads)": "有料広告",
+          "RAG y Bases de Conocimiento": "RAGとナレッジベース",
+          "Reclutamiento y Selección": "採用と選考",
+          "Recordatorios y Notificaciones": "リマインダーと通知",
+          "Redacción con IA": "AIによる執筆",
+          "Redacción y Copywriting": "執筆とコピーライティング",
+          "Redes Sociales": "ソーシャルメディア",
+          "Registro e Inscripciones": "登録と申し込み",
+          "Reportes Automáticos": "自動レポート",
+          "Reportes Financieros": "財務レポート",
+          "Reportes de Cartera": "ポートフォリオレポート",
+          "Reportes de Pipeline": "パイプラインレポート",
+          "Respuestas Automáticas": "自動返信",
+          "SEO (Optimización de Buscadores)": "SEO（検索エンジン最適化）",
+          "SEO y Posicionamiento": "SEOとポジショニング",
+          "Seguimiento de Envíos": "配送追跡",
+          "Seguimiento de Sprints": "スプリント計測",
+          "Seguridad y Accesos": "セキュリティとアクセス",
+          "Sincronización con CRM": "CRM同期",
+          "Sincronización entre Herramientas": "ツールの同期",
+          "Sintesis de Noticias e Informes": "ニュースとレポートの統合",
+          "Síntesis de Noticias e Informes": "ニュースとレポートの統合",
+          "Slack y Teams": "SlackとTeams",
+          "Social Selling": "ソーシャルセリング",
+          "Sostenibilidad": "サステナビリティ",
+          "Storytelling Corporativo": "企業ストーリーテリング",
+          "Telemedicina": "遠隔医療",
+          "Transformación y Limpieza": "データの変換とクリーニング",
+          "Upselling y Cross-selling": "アップセルとクロスセル",
+          "Video y Multimedia": "ビデオとマルチメディア",
+          "Visión por Computadora": "コンピュータビジョン",
+          "Visualización de Datos": "データ可視化",
+          "Visualización y Dashboards": "可視化とダッシュボード",
+          "Web3 y Blockchain": "Web3とブロックチェーン",
+          "WhatsApp y Telegram": "WhatsAppとTelegram"
+            },
+            subcategories: {
+                "Email Marketing": "メールマーケティング",
+                "Redes Sociales": "ソーシャルメディア",
+                "Publicidad de Pago (Ads)": "リスティング広告",
+                "SEO (Optimización de Buscadores)": "SEO・検索順位",
+                "Marketing de Afiliados": "アフィリエイト",
+                "Estrategia de Contenidos": "コンテンツ戦略",
+                "Growth Marketing": "グロースマーケティング",
+                "Estrategia de Marca": "ブランド戦略",
+                "Redacción con IA": "AIライティング",
+                "Imágenes y Visuales": "画像・ビジュアル",
+                "Video y Multimedia": "動画・マルチメディア",
+                "Podcasts y Audio": "ポッドキャスト",
+                "Traducción y Localización": "翻訳・地域化",
+                "Diseño UI": "UIデザイン",
+                "Captura de Leads": "リード獲得",
+                "Cualificación y Scoring": "スコアリング",
+                "Nurturing y Seguimiento": "リード育成",
+                "Sincronización con CRM": "CRM同期",
+                "Reportes de Pipeline": "レポート",
+                "Gestión de Pedidos": "注文管理",
+                "Desarrollo Web": "ウェブ開発",
+                "Agentes Autónomos": "自律型エージェント",
+                "Automatización de Marketing": "マーケティング自動化",
+                "CRM y Automatización": "CRMと自動化",
+                "Bases de Datos": "データベース",
+                "Infraestructura Cloud": "クラウドインフラ",
+                "Arquitectura de Software": "ソフトウェアアーキテクチャ",
+                "CI": "CI/CD",
+                "Desarrollo Mobile": "モバイル開発",
+                "Estrategia de Crecimiento": "成長戦略",
+                "Gestión de APIs": "API管理",
+                "Hardware e IoT": "ハードウェア・IoT",
+                "Monitorización de Sistemas": "システム監視",
+                "Paradigmas de Programación": "パラダイム",
+                "Seguridad y Accesos": "セキュリティ管理",
+                "Web3 y Blockchain": "Web3 & ブロックチェーン",
+                "Ingeniería de Prompts": "プロンプトエンジニアリング",
+                "RAG y Bases de Conocimiento": "RAGナレッジベース",
+                "Automatización Agéntica": "エージェント自動化",
+                "Síntesis de Noticias e Informes": "要約レポート",
+                "WhatsApp y Telegram": "メッセージング"
+            }
+        }
+    };
+
+    function updateUI(lang) {
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.dataset.i18n;
+            if (translations[lang] && translations[lang][key]) {
+                el.innerHTML = translations[lang][key];
+            }
+        });
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.dataset.i18nPlaceholder;
+            if (translations[lang] && translations[lang][key]) {
+                el.placeholder = translations[lang][key];
+            }
+        });
+        document.getElementById('langSelect').value = lang;
+        document.documentElement.lang = lang;
+        
+        document.getElementById('sideFilterTitle').innerText = translations[lang].filter_title;
+        document.getElementById('allSystemsText').innerText = translations[lang].all_systems;
+
+        // Iniciar iconos Lucide
+        if (window.lucide) lucide.createIcons({
+            attrs: {
+                'stroke-width': 2.5,
+                'stroke-linecap': 'round',
+                'stroke-linejoin': 'round'
+            }
+        });
+        
+        if (typeof skillsData !== 'undefined') {
+            renderCategories();
+            selectCategory('all');
+        }
+    }
+
+    function changeLanguage(lang) {
+        currentLang = lang;
+        localStorage.setItem('antigravity_lang', lang);
+        updateUI(lang);
+    }
+
+    function loadSkills() {
+        if (typeof skillsData === 'undefined') {
+            console.error('Error: INDEX.js no se ha cargado correctamente.');
+            const t = translations[currentLang] || translations.es;
+            document.getElementById('skillGrid').innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 4rem; background: rgba(255,0,0,0.05); border-radius: 20px; border: 1px dashed rgba(255,0,0,0.2);">
+                    <h3 style="color: #ff4444; margin-bottom: 1rem;">${t.error_load_title}</h3>
+                    <p style="color: #94a3b8;">${t.error_load_desc}</p>
+                </div>`;
+            return;
+        }
+        
+        processData();
+        updateUI(currentLang);
+        renderCategories();
+        renderSkills('all');
+        document.getElementById('totalCount').innerText = skillsData.length;
+    }
+
+    function processData() {
+        categories = {};
+        skillsData.forEach(skill => {
+            // Normalizar a NFC para evitar problemas con tildes combinadas (NFD)
+            const cat = (skill.category || 'Sin Categoría').normalize('NFC');
+            const sub = (skill.subcategory || 'Sin Subcategoría').normalize('NFC');
+            
+            // Actualizar skill.category y skill.subcategory para que el renderizado use los mismos valores
+            skill.category = cat;
+            skill.subcategory = sub;
+
+            if (!categories[cat]) {
+                categories[cat] = {
+                    total: 0,
+                    subcategories: {}
+                };
+            }
+            categories[cat].total++;
+            
+            if (!categories[cat].subcategories[sub]) {
+                categories[cat].subcategories[sub] = 0;
+            }
+            categories[cat].subcategories[sub]++;
+        });
+    }
+
+    function renderCategories() {
+        const list = document.getElementById('categoryList');
+        const items = list.querySelectorAll('.category-item:not([data-category="all"]), .subcat-list');
+        items.forEach(item => item.remove());
+
+        const sortedCats = Object.keys(categories).sort();
+        
+        sortedCats.forEach(cat => {
+            const displayCat = translations[currentLang].categories[cat] || cat;
+            // Contenedor de categoría principal
+            const li = document.createElement('li');
+            li.className = 'category-item';
+            li.dataset.category = cat;
+            li.innerHTML = `<span>${displayCat}</span> <span class="skill-count">${categories[cat].total}</span>`;
+            li.onclick = () => selectCategory(cat);
+            list.appendChild(li);
+
+            // Sublista para subcategorías
+            const sublist = document.createElement('ul');
+            sublist.className = 'subcat-list';
+            sublist.id = `subcat-${cat.replace(/\s+/g, '-')}`;
+            
+            const sortedSubCats = Object.keys(categories[cat].subcategories).sort();
+            sortedSubCats.forEach(sub => {
+                const subLi = document.createElement('li');
+                subLi.className = 'subcat-item';
+                subLi.dataset.category = cat;
+                subLi.dataset.subcategory = sub;
+                const displaySub = translations[currentLang].subcategories ? (translations[currentLang].subcategories[sub] || sub) : sub;
+                subLi.innerHTML = `${displaySub} (${categories[cat].subcategories[sub]})`;
+                subLi.onclick = (e) => {
+                    e.stopPropagation();
+                    selectSubcategory(cat, sub);
+                };
+                sublist.appendChild(subLi);
+            });
+            list.appendChild(sublist);
+        });
+    }
+
+    let searchTimeout;
+    const BATCH_SIZE = 30;
+
+    function handleSearch(event) {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            const query = document.getElementById('searchInput').value;
+            const activeCategory = document.querySelector('.category-item.active')?.dataset.category || 'all';
+            const activeSub = document.querySelector('.subcat-item.active')?.dataset.subcategory || 'all';
+            renderSkills(activeCategory, query, activeSub);
+        }, 300);
+    }
+
+    function renderSkills(categoryFilter = 'all', searchQuery = '', subcatFilter = 'all') {
+        const grid = document.getElementById('skillGrid');
+        grid.innerHTML = '';
+        
+        const filtered = skillsData.filter(skill => {
+            const matchesCat = categoryFilter === 'all' || skill.category === categoryFilter;
+            const matchesSub = subcatFilter === 'all' || skill.subcategory === subcatFilter;
+            const searchLower = searchQuery.toLowerCase();
+            const matchesSearch = skill.name.toLowerCase().includes(searchLower) || 
+                                 skill.description.toLowerCase().includes(searchLower) ||
+                                 skill.subcategory.toLowerCase().includes(searchLower);
+            return matchesCat && matchesSub && matchesSearch;
+        });
+
+        let index = 0;
+        function renderBatch() {
+            const end = Math.min(index + BATCH_SIZE, filtered.length);
+            const batch = filtered.slice(index, end);
+            const fragment = document.createDocumentFragment();
+
+            batch.forEach((skill, i) => {
+                const card = document.createElement('div');
+                card.className = 'skill-card';
+                card.style.animationDelay = `${(i % 15) * 0.05}s`;
+                
+                const catLabel = translations[currentLang].categories[skill.category] || skill.category;
+                const subLabel = translations[currentLang].subcategories[skill.subcategory] || skill.subcategory;
+
+                // Mapeo de iconos
+                const iconsMap = {
+                    "1. Marketing Digital": "trending-up", "2. Generación de Contenido": "edit-3",
+                    "3. Gestión de Leads y CRM": "users", "13. Desarrollo y Tecnología": "code"
+                };
+                const icon = iconsMap[skill.category] || "book-open";
+
+                card.innerHTML = `
+                    <div>
+                        <div class="skill-meta">
+                            <i data-lucide="${icon}" style="width:12px;height:12px;vertical-align:middle;margin-right:4px;"></i>
+                            ${catLabel} › ${subLabel}
+                        </div>
+                        <h3 class="skill-title">${skill.name}</h3>
+                        <p class="skill-desc">${skill.description}</p>
+                    </div>
+                    <div class="skill-footer">
+                        <span class="skill-id">${translations[currentLang].id_prefix}${String(skill.id).padStart(3, '0')}</span>
+                        <div class="btn-group">
+                            <button onclick="openSkill(${skill.id}, 'skill')" class="btn-open">
+                                <i data-lucide="file-text" style="width:16px;height:16px;margin-right:6px;"></i>
+                                ${translations[currentLang].btn_open_skill}
+                            </button>
+                            ${skill.workflow_content ? `
+                                <button onclick="openSkill(${skill.id}, 'workflow')" class="btn-open btn-workflow" title="Flujo Operativo N8N / Python">
+                                    <i data-lucide="zap" style="width:16px;height:16px;margin-right:6px;color:#fbbf24;"></i>
+                                    ${translations[currentLang].btn_open_workflow}
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+                fragment.appendChild(card);
+            });
+
+            grid.appendChild(fragment);
+            index = end;
+
+            if (index < filtered.length) {
+                requestAnimationFrame(renderBatch);
+            } else {
+                if (window.lucide) lucide.createIcons({
+                    attrs: {
+                        'stroke-width': 2.5,
+                        'stroke-linecap': 'round',
+                        'stroke-linejoin': 'round'
+                    }
+                });
+            }
+        }
+
+        renderBatch();
+        document.getElementById('resultsCount').innerText = `${filtered.length} ${translations[currentLang].units_available}`;
+    }
+
+    function selectCategory(cat) {
+        document.querySelectorAll('.category-item, .subcat-item').forEach(el => el.classList.remove('active', 'expanded'));
+        const target = cat === 'all' ? document.querySelector('[data-category="all"]') : document.querySelector(`[data-category="${cat}"]`);
+        if (target) {
+            target.classList.add('active');
+            if (cat !== 'all') target.classList.add('expanded');
+        }
+        
+        const displayCat = cat === 'all' ? translations[currentLang].all_systems : (translations[currentLang].categories[cat] || cat);
+        document.getElementById('activeFilterTitle').innerText = displayCat;
+        renderSkills(cat, document.getElementById('skillSearch').value);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function selectSubcategory(cat, sub) {
+        document.querySelectorAll('.subcat-item').forEach(el => el.classList.remove('active'));
+        const target = document.querySelector(`.subcat-item[data-subcategory="${sub}"][data-category="${cat}"]`);
+        if (target) target.classList.add('active');
+
+        const displayCat = translations[currentLang].categories[cat] || cat;
+        const displaySub = translations[currentLang].subcategories ? (translations[currentLang].subcategories[sub] || sub) : sub;
+        document.getElementById('activeFilterTitle').innerText = `${displayCat} › ${displaySub}`;
+        renderSkills(cat, document.getElementById('skillSearch').value, sub);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Funciones del Modal
+    function openSkill(id, type = 'skill') {
+        const skill = skillsData.find(s => s.id === id);
+        if (!skill) return;
+
+        const modal = document.getElementById('skillModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+
+        const isWorkflow = type === 'workflow';
+        const rawContent = isWorkflow ? skill.workflow_content : skill.content;
+        
+        modalTitle.innerText = isWorkflow ? `${skill.name} - Workflow` : skill.name;
+        
+        // Convertimos Markdown a HTML usando marked.js
+        modalBody.innerHTML = marked.parse(rawContent || translations[currentLang].no_content);
+        
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Bloquear scroll del fondo
+    }
+
+    function closeSkill() {
+        const modal = document.getElementById('skillModal');
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    // Cerrar modal al hacer clic fuera o presionar ESC
+    window.onclick = (event) => {
+        const modal = document.getElementById('skillModal');
+        if (event.target == modal) closeSkill();
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === "Escape") closeSkill();
+    });
+
+    document.getElementById('skillSearch').oninput = (e) => {
+        const activeCatEl = document.querySelector('.category-item.active');
+        const activeSubEl = document.querySelector('.subcat-item.active');
+        
+        const activeCat = activeCatEl ? activeCatEl.dataset.category : 'all';
+        const activeSub = activeSubEl ? activeSubEl.dataset.subcategory : 'all';
+        
+        renderSkills(activeCat, e.target.value, activeSub);
+    };
+
+    window.onload = loadSkills;
+</script>
+</body>
+</html>
