@@ -1099,6 +1099,15 @@
             <h3 class="step-title" data-i18n="step1_title">📌 ¿Qué quieres crear?</h3>
             <p class="step-subtitle" data-i18n="step1_subtitle">Cuéntanos tu idea. No necesitas ser técnico, describe lo que imaginas con tus propias palabras.</p>
 
+            <!-- DISCOVERY PROTOCOL LINK -->
+            <div class="discovery-hint" style="margin-top: 1.5rem; margin-bottom: 1.5rem; padding: 1.2rem; background: var(--bg-deep); border-radius: 12px; border-left: 4px solid var(--accent-1); box-shadow: var(--shadow-sm);">
+                <p style="font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary);" data-i18n="discovery_protocol_hint">Te recomendamos rellenar este documento antes de empezar para obtener mejores resultados.</p>
+                <a id="discoveryLink" download href="REPOSITORIO/00. Sistema/Protocolos/ANTIGRAVITY_DISCOVERY_PROTOCOLO.md" target="_blank" style="font-size: 0.9rem; font-weight: 800; color: var(--accent-1); text-decoration: none; display: inline-flex; align-items: center; gap: 0.6rem; transition: all 0.2s ease;">
+                    <i data-lucide="file-text" style="width: 20px; height: 20px;"></i>
+                    <span data-i18n="discovery_protocol_link">Descarga el Protocolo de Descubrimiento</span>
+                </a>
+            </div>
+
             <div class="field-group">
                 <label class="field-label" for="appName" data-i18n="label_app_name">Nombre de tu aplicación</label>
                 <span class="field-hint" data-i18n="hint_app_name">Ej: "GastroBot", "MiTienda", "ControlStock"</span>
@@ -1117,6 +1126,7 @@
                     <option value="Web App" data-i18n="opt_web_app">Web App (se abre en navegador)</option>
                     <option value="Mobile App" data-i18n="opt_mobile_app">Mobile App (para teléfonos)</option>
                     <option value="Desktop App" data-i18n="opt_desktop_app">Desktop App (para ordenador)</option>
+                    <option value="Ecosistema Antigravity" data-i18n="opt_ecosystem">Ecosistema Antigravity (Herramienta interna)</option>
                     <option value="API / Backend" data-i18n="opt_api">API / Backend (servicio sin interfaz)</option>
                     <option value="Otro" data-i18n="opt_other">Otro (especificar...)</option>
                 </select>
@@ -1369,6 +1379,8 @@
     // ═══════════ i18n DICTIONARY ═══════════
     const translations = {
         es: {
+            discovery_protocol_link: "Descarga el Protocolo de Descubrimiento",
+            discovery_protocol_hint: "Te recomendamos rellenar este documento antes de empezar para obtener mejores resultados.",
             header_subtitle: "v1.0 — by Jesús García Fernández",
             nav_view_skills: "Ver Skills",
             status_connecting: "Conectando...",
@@ -1435,6 +1447,7 @@
             opt_mobile_app: "Mobile App (para teléfonos)",
             opt_desktop_app: "Desktop App (para ordenador)",
             opt_api: "API / Backend (servicio sin interfaz)",
+            opt_ecosystem: "Ecosistema Antigravity (Herramienta interna)",
             opt_other: "Otro (especificar...)",
             opt_users_public: "Clientes / Público general",
             opt_users_internal: "Empleados / Equipo interno",
@@ -1506,6 +1519,8 @@
             }
         },
         en: {
+            discovery_protocol_link: "Download the Discovery Protocol",
+            discovery_protocol_hint: "We recommend filling out this document before starting to obtain better results.",
             header_subtitle: "v1.0 — by Jesús García Fernández",
             nav_view_skills: "View Skills",
             status_connecting: "Connecting...",
@@ -1572,6 +1587,7 @@
             opt_mobile_app: "Mobile App (for phones)",
             opt_desktop_app: "Desktop App (for computer)",
             opt_api: "API / Backend (headless service)",
+            opt_ecosystem: "Antigravity Ecosystem (Internal Tool)",
             opt_other: "Other (specify...)",
             opt_users_public: "Customers / General public",
             opt_users_internal: "Employees / Internal team",
@@ -1779,6 +1795,8 @@
           "WhatsApp y Telegram": "WhatsApp & Telegram"
             }},
         fr: {
+            discovery_protocol_link: "Télécharger le Protocole de Découverte",
+            discovery_protocol_hint: "Nous vous recommandons de remplir ce document avant de commencer pour obtenir de meilleurs résultats.",
             header_subtitle: "v1.0 — par Jesús García Fernández",
             nav_view_skills: "Voir Skills",
             status_connecting: "Connexion...",
@@ -1812,6 +1830,7 @@
             opt_mobile_app: "Mobile App (pour téléphones)",
             opt_desktop_app: "Desktop App (ordinateur)",
             opt_api: "API / Backend (service sans interface)",
+            opt_ecosystem: "Écosystème Antigravity (Outil interne)",
             opt_other: "Autre (préciser...)",
             step2_title: "👥 Pour qui est-ce ?",
             step2_subtitle: "Connaître l'utilisateur final nous aide à choisir les bons outils.",
@@ -2051,6 +2070,8 @@
           "WhatsApp y Telegram": "WhatsApp et Telegram"
             }},
         de: {
+            discovery_protocol_link: "Download Entdeckungsprotokoll",
+            discovery_protocol_hint: "Wir empfehlen, dieses Dokument vor dem Start auszufüllen, um bessere Ergebnisse zu erzielen.",
             header_subtitle: "v1.0 — von Jesús García Fernández",
             nav_view_skills: "Skills ansehen",
             status_connecting: "Verbinde...",
@@ -2084,6 +2105,7 @@
             opt_mobile_app: "Mobile App (für Telefone)",
             opt_desktop_app: "Desktop App (für Computer)",
             opt_api: "API / Backend (Dienst ohne Interface)",
+            opt_ecosystem: "Antigravity Ökosystem (Internes Tool)",
             opt_other: "Andere (bitte angeben...)",
             step2_title: "👥 Für wen ist es?",
             step2_subtitle: "Ihre Zielgruppe zu kennen hilft uns, die richtigen Tools zu wählen.",
@@ -2323,6 +2345,8 @@
           "WhatsApp y Telegram": "WhatsApp & Telegram"
             }},
         zh: {
+            discovery_protocol_link: "下载发现协议",
+            discovery_protocol_hint: "我们建议在开始前填写此文档，以获得更好的效果。",
             header_subtitle: "v1.0 — 由 Jesús García Fernández 设计",
             nav_view_skills: "查看技能",
             status_connecting: "正在连接...",
@@ -2389,6 +2413,7 @@
             opt_mobile_app: "移动应用（手机版）",
             opt_desktop_app: "桌面应用（电脑版）",
             opt_api: "API / 后端（无界面服务）",
+            opt_ecosystem: "Antigravity 生态系统（内部工具）",
             opt_other: "其他（请注明...）",
             opt_users_public: "客户 / 普通公众",
             opt_users_internal: "员工 / 内部团队",
@@ -2596,6 +2621,8 @@
           "WhatsApp y Telegram": "WhatsApp和Telegram"
             }},
         ja: {
+            discovery_protocol_link: "ディスカバリー・プロトコルをダウンロード",
+            discovery_protocol_hint: "より良い結果を得るために、開始前にこのドキュメントに記入することをお勧めします。",
             header_subtitle: "v1.0 — Jesús García Fernández による",
             nav_view_skills: "スキルを見る",
             status_connecting: "接続中...",
@@ -2662,6 +2689,7 @@
             opt_mobile_app: "モバイルアプリ（スマホ用）",
             opt_desktop_app: "デスクトップアプリ（PC用）",
             opt_api: "API / バックエンド（インターフェースなし）",
+            opt_ecosystem: "Antigravity エコシステム（内部ツール）",
             opt_other: "その他（指定してください...）",
             opt_users_public: "顧客 / 一般公開",
             opt_users_internal: "従業員 / 内部チーム",
@@ -2896,6 +2924,13 @@
                 'stroke-linejoin': 'round'
             }
         });
+
+        // Actualización dinámica del enlace al protocolo según el idioma
+        const discoveryLink = document.getElementById('discoveryLink');
+        if (discoveryLink) {
+            const suffix = lang === 'es' ? '' : '_' + lang.toUpperCase();
+            discoveryLink.href = `REPOSITORIO/00. Sistema/Protocolos/ANTIGRAVITY_DISCOVERY_PROTOCOLO${suffix}.md`;
+        }
     }
 
     function changeLanguage(lang) {

@@ -1621,17 +1621,32 @@ class BlueprintHandler(BaseHTTPRequestHandler):
 
         else:
             # Intentar servir archivos estáticos del directorio raíz
-            file_path = os.path.join(REPO_ROOT, path.lstrip('/'))
+            # IMPORTANTE: Descodificar el path de la URL para manejar espacios y caracteres especiales
+            clean_path = urllib.parse.unquote(path.lstrip('/'))
+            file_path = os.path.join(REPO_ROOT, clean_path)
             if os.path.exists(file_path) and os.path.isfile(file_path):
                 ext = os.path.splitext(file_path)[1].lower()
                 content_types = {
                     '.html': 'text/html', '.js': 'application/javascript',
                     '.css': 'text/css', '.png': 'image/png',
                     '.jpg': 'image/jpeg', '.svg': 'image/svg+xml',
-                    '.json': 'application/json', '.md': 'text/markdown'
+                    '.json': 'application/json', '.md': 'text/markdown; charset=utf-8'
                 }
                 ct = content_types.get(ext, 'application/octet-stream')
-                self._send_file(file_path, ct)
+                
+                # Para archivos markdown, forzar descarga y asegurar UTF-8
+                if ext == '.md':
+                    filename = os.path.basename(file_path)
+                    self.send_response(200)
+                    self.send_header('Content-Type', ct)
+                    self.send_header('Content-Disposition', f'attachment; filename="{filename}"')
+                    self.send_header('Access-Control-Allow-Origin', '*')
+                    self.send_header('Content-Length', str(os.path.getsize(file_path)))
+                    self.end_headers()
+                    with open(file_path, 'rb') as f:
+                        self.wfile.write(f.read())
+                else:
+                    self._send_file(file_path, ct)
             else:
                 self.send_error(404)
 
