@@ -1,5 +1,5 @@
 ---
-title: Inteligencia Artificial
+title: Notificaciones
 version: 1.1
 author: Jesús García Fernández
 website: jesusgarciafernandez.com
@@ -16,14 +16,14 @@ notice: >
   Permitido su uso personal y educativo citando la fuente.
   Prohibida su venta, redistribución comercial o modificación
   sin autorización expresa del autor.
-id: inteligencia-artificial
+id: notificaciones
 ---
 
 ## Descripción
-Manual técnico pendiente para la funcionalidad: Inteligencia Artificial.
+Manual técnico pendiente para la funcionalidad: Notificaciones.
 
 ## Cuándo usarla
-- Aplicable cuando es necesario integrar Inteligencia Artificial.
+- Aplicable cuando es necesario integrar Notificaciones.
 
 ## Requisitos
 - Revisión manual por Antigravity pendiente.
@@ -31,7 +31,7 @@ Manual técnico pendiente para la funcionalidad: Inteligencia Artificial.
 ## Instrucciones y Pasos detallados que se debe seguir:
 1. Analizar los requisitos del proyecto.
 2. Implementar siguiendo las mejores prácticas.
-(Antigravity: Rellenar con los detalles de implementación necesarios para Inteligencia Artificial)
+(Antigravity: Rellenar con los detalles de implementación necesarios para Notificaciones)
 
 ## Workflow N8N
 Referencia al archivo `workflow.json` o script correspondiente.

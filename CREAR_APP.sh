@@ -9,7 +9,7 @@ REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$REPO_ROOT"
 
 echo "═══════════════════════════════════════════════════════"
-echo "  🛸 App Blueprint Generator v1.0"
+echo "  🛸 App Blueprint Generator v1.2.0"
 echo "  Autor: Jesús García Fernández"
 echo "═══════════════════════════════════════════════════════"
 echo ""

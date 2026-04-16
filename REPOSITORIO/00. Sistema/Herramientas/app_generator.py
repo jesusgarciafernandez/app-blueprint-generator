@@ -46,7 +46,7 @@ PORT = 5500
 AUTHOR = "Jesús García Fernández"
 AUTHOR_WEB = "jesusgarciafernandez.com"
 TOOL_NAME = "App Blueprint Generator"
-TOOL_VERSION = "1.0"
+TOOL_VERSION = "1.2.0"
 
 # ────────────────────────────────────────────────────────────
 # STOPWORDS para español e inglés
@@ -1203,6 +1203,189 @@ def generate_diseno(data, lang='es'):
 """
 
 
+def generate_reglas_workspace(data, lang='es'):
+    """Genera 05_REGLAS/WORKSPACE.md."""
+    t = BP_I18N.get(lang, BP_I18N['es'])
+    return f"""---
+{t['generated_with']}: {TOOL_NAME}
+{t['tool_author']}: {AUTHOR}
+---
+
+# 🏢 Reglas Específicas del Área de Trabajo (Workspace)
+
+Este documento define la normativa operativa y restricciones del entorno de trabajo lógico y físico.
+
+## Estructura de Trabajo
+1. **Directorio Base**: Todos los desarrollos deberán localizarse en el directorio raíz establecido por el entorno del usuario.
+2. **Archivos Temporales**: Cualquier recurso o archivo temporal deberá guardarse en un directorio explícito (ej `tmp/` o `.cache/`) que se encuentre ignorado en el control de versiones.
+3. **No Interferencia**: No se deben crear, modificar ni eliminar archivos fuera del repositorio activo del proyecto, a menos que conste explícitamente en los *Prompts*.
+
+## Políticas de Ejecución
+- Se debe respetar obligatoriamente cualquier flujo de confirmación.
+- Los cambios estructucturales (Bases de datos, variables de entorno que borren claves previas) tienen que ser notificados y explicados antes de ejecutarse masivamente.
+
+## Entorno Local vs Producción
+- NUNCA sobreescribir las variables globales del sistema (Host).
+- Los archivos `.env` solo tendrán referencias vacías si han de subirse a repositorios; las credenciales se manejan offline o con secretos en plataformas de CI/CD.
+
+---
+*{t['footer_generated']} {TOOL_NAME} v{TOOL_VERSION} | {AUTHOR} — {AUTHOR_WEB}*
+"""
+
+
+def generate_workflow_tree(data, lang='es'):
+    """Genera 05_REGLAS/WORK_FLOW_TREE.md."""
+    t = BP_I18N.get(lang, BP_I18N['es'])
+    return f"""---
+{t['generated_with']}: {TOOL_NAME}
+{t['tool_author']}: {AUTHOR}
+---
+
+# 🌳 Work Flow Tree del Área de Trabajo (Workspace)
+
+El Work Flow Tree representa y unifica la visión del ciclo de desarrollo. Define el marco operativo y el layout esperado del proyecto.
+
+```text
+📁 PROYECTO RAIZ (Workspace)
+ ├── 📄 README.md                (Contexto global y entrada)
+ ├── 📄 docker-compose.yml       (SI APLICA: Entorno contenedorizado)
+ ├── 📁 .github/ / .gitlab/      (CI/CD, flujos de versiones)
+ ├── 📁 src/                     (Código fuente principal y lógica)
+ │    ├── 📁 core/               (Núcleo del negocio, reglas y modelos)
+ │    ├── 📁 api/                (Rutas / Endpoints)
+ │    ├── 📁 ui/                 (Componentes UI y Frontales)
+ │    └── 📁 utils/              (Funciones de utilidad compartidas)
+ ├── 📁 tests/                   (Pruebas / Verificaciones)
+ ├── 📁 docs/                    (Manuales, guías y descripciones ext.)
+ └── 📁 data/                    (Archivos estáticos o temporales .gitignore)
+```
+
+## Flujo por Etapas
+1. **Preparación (Blueprint)**: Revisión de variables y requerimientos funcionales y técnicos.
+2. **Desarrollo Base (Core & API)**: Implementación de la lógica inicial y estructuras DB.
+3. **Desarrollo Visual (UI)**: Acoplamiento de Front y Back de acuerdo al Work Flow definido.
+4. **Validación Exhaustiva (TEST)**: Desplegar pruebas preventivas.
+5. **Entrega/Build**: Creación de entregable final o script automatizado de salida.
+
+---
+*{t['footer_generated']} {TOOL_NAME} v{TOOL_VERSION} | {AUTHOR} — {AUTHOR_WEB}*
+"""
+
+
+def generate_detalle_agentes(data, lang='es'):
+    """Devuelve un diccionario con los nombres de agente y su contenido markdown detallado."""
+    t = BP_I18N.get(lang, BP_I18N['es'])
+    app_name = data.get('app_name', 'la aplicación')
+    agentes = {}
+    
+    agentes["01_Arquitecto_IA.md"] = f"""---
+{t['generated_with']}: {TOOL_NAME}
+{t['tool_author']}: {AUTHOR}
+---
+
+# 🏗️ Arquitecto IA
+
+## Descripción Detallada
+El **Arquitecto IA** es el responsable de la visión global y estructural del proyecto "{app_name}". Analiza el requerimiento de negocio y toma las decisiones pertinentes a alto nivel acerca de integraciones, escalabilidad, seguridad y fiabilidad, sentando las bases fundacionales de toda la infraestructura y diseño.
+
+## Responsabilidades
+- **Rol principal:** Construir el diagrama maestro y validar que ningún subsistema falle estructuralmente.
+- Diseñar y delimitar responsabilidades de cada componente del código.
+- Identificar puntos de fricción, dependencias críticas o limitantes de la base tecnológica establecida en este Blueprint.
+- Auditar y unificar al resto del equipo IA.
+
+## Entregables
+- Esquemas lógicos y de datos.
+- Elección de patrones arquitectónicos a seguir de forma transversal en toda la app.
+"""
+
+    agentes["02_Desarrollador_Backend_IA.md"] = f"""---
+{t['generated_with']}: {TOOL_NAME}
+{t['tool_author']}: {AUTHOR}
+---
+
+# ⚙️ Desarrollador Backend IA
+
+## Descripción Detallada
+El **Desarrollador Backend IA** construye el cerebro lógico, el almacenamiento de datos, y los conectores API que harán posible el funcionamiento técnico de "{app_name}". Es el "motor" del proyecto bajo la supervisión de la Arquitectura escogida.
+
+## Responsabilidades
+- **Rol principal:** Escribir y validar la lógica back-end, asegurar la estructura en la persistencia de los datos.
+- Controlar el sistema de Autenticación, JWT, roles y permisos correspondientes.
+- Integrar APIs y servicios de terceros.
+- Optimizar cálculos y garantizar una velocidad de respuesta eficaz (performance server).
+
+## Entregables
+- Tablas y Controladores (Modelos y Queries de DB).
+- Endpoints (REST, GraphQL) finalizados y documentados.
+- Lógica de sincronización.
+"""
+
+    agentes["03_Desarrollador_Frontend_IA.md"] = f"""---
+{t['generated_with']}: {TOOL_NAME}
+{t['tool_author']}: {AUTHOR}
+---
+
+# 🎨 Desarrollador Frontend IA
+
+## Descripción Detallada
+El **Desarrollador Frontend IA** crea la magia visual y la interacción humana de la aplicación. Su finalidad es dar vida al "diseño y estilo visual" ya estipulados de "{app_name}" y conectar las vistas con el servidor (Backend).
+
+## Responsabilidades
+- **Rol principal:** Plasmar el Look & Feel de la app asegurando una correcta Experiencia y Uso (UI/UX).
+- Revestir el estado de la aplicación mediante la maquetación.
+- Manejar adecuadamente errores frontales, estados de espera (loading spinners) para que la sensación tecnológica sea fluida.
+- Cumplir reglas de accesibilidad, coherencia de color y uso en dispositivos variados (Responsive).
+
+## Entregables
+- Vistas completas interactuables.
+- Código reutilizable visual a base de componentes (React, Vue, HTML puro o nativos).
+- Integración Frontend-Backend transparente para el usuario.
+"""
+
+    agentes["04_Ingeniero_QA_IA.md"] = f"""---
+{t['generated_with']}: {TOOL_NAME}
+{t['tool_author']}: {AUTHOR}
+---
+
+# 🧪 Ingeniero QA IA
+
+## Descripción Detallada
+El **Ingeniero QA (Quality Assurance) IA** es el sabueso y red de seguridad vital del flujo. Rastrea minuciosamente todo lo que el Frontend y el Backend unieron a fin de prevenir fallas o malas prácticas en el proyecto "{app_name}".
+
+## Responsabilidades
+- **Rol principal:** Buscar agresivamente vulnerabilidades de código o lógicas (edge cases no prevenidos).
+- Revisar que se cumplan todas las *Líneas Rojas* dictadas para el proyecto globalmente.
+- Configurar y proponer suites de testing (Unitarias, Integración, mock tools).
+
+## Entregables
+- Scripts de validación o pruebas.
+- Reporte cruzado de vulnerabilidades solucionables y revisiones de seguridad críticas.
+"""
+
+    agentes["05_Ingeniero_DevOps_IA.md"] = f"""---
+{t['generated_with']}: {TOOL_NAME}
+{t['tool_author']}: {AUTHOR}
+---
+
+# 📦 Ingeniero DevOps IA
+
+## Descripción Detallada
+El **Ingeniero DevOps IA** es quien agarra el conjunto de código estandarizado y funcional y le abre la puerta del mundo exterior. Automatiza infraestructuras y procesos de integración post-desarrollo.
+
+## Responsabilidades
+- **Rol principal:** Asegurar que "{app_name}" pueda construirse (Build) y pueda lanzarse limpiamente en su entorno meta (Producción / LocalHost global).
+- Estructurar entornos dockerizados o scripts de despliegue si han sido solicitados.
+- Dictar y organizar la integración continua en variables o dependencias finales en un `package.json` o `requirements.txt`.
+
+## Entregables
+- Configuraciones listas y limpias (Dockerfile, dependencias puras).
+- Paso final de despliegue garantizado.
+"""
+
+    return agentes
+
+
 # ────────────────────────────────────────────────────────────
 # COMPOSITOR DEL BLUEPRINT (genera el ZIP)
 # ────────────────────────────────────────────────────────────
@@ -1264,9 +1447,16 @@ def compose_blueprint(data, matched_skills):
         zf.writestr("05_REGLAS/LINEAS_ROJAS.md", generate_lineas_rojas(data, lang))
         zf.writestr("05_REGLAS/ESTANDARES.md", generate_estandares(data, lang))
         zf.writestr("05_REGLAS/SEGURIDAD.md", generate_seguridad(lang))
+        zf.writestr("05_REGLAS/WORKSPACE.md", generate_reglas_workspace(data, lang))
+        zf.writestr("05_REGLAS/WORK_FLOW_TREE.md", generate_workflow_tree(data, lang))
 
         # 06_DISEÑO
         zf.writestr("06_DISEÑO/ESTILO_VISUAL.md", generate_diseno(data, lang))
+        
+        # AGENTES DETALLADOS
+        detalles_agentes = generate_detalle_agentes(data, lang)
+        for filename, content in detalles_agentes.items():
+            zf.writestr(f"02_AGENTES/AGENTES_INDIVIDUALES/{filename}", content)
 
     print(f"[✓] Blueprint generado ({lang}): {zip_path}")
     return zip_filename, zip_path

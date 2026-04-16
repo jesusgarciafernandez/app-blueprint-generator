@@ -1,9 +1,9 @@
 @echo off
-TITLE App Blueprint Generator v1.0
+TITLE App Blueprint Generator v1.2.0
 COLOR 0B
 
 echo ============================================================
-echo   App Blueprint Generator v1.0
+echo   App Blueprint Generator v1.2.0
 echo   Autor: Jesus Garcia Fernandez - jesusgarciafernandez.com
 echo ============================================================
 echo.
