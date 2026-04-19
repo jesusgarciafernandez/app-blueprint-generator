@@ -1,10 +1,10 @@
 ---
 title: Gestión de Equipos Interdisciplinares
-version: 1.1
+version: 2.0
 author: Jesús García Fernández
 website: jesusgarciafernandez.com
 created: 2026-04-01
-updated: 2026-04-06
+updated: 2026-04-17
 category: 12. Proyectos y Colaboración
 subcategory: General
 tags: ['cross-functional', 'interdisciplinary', 'team-management', 'collaboration', 'agile', 'squads', 'communication', 'silos']
@@ -17,7 +17,14 @@ notice: >
   Prohibida su venta, redistribución comercial o modificación
   sin autorización expresa del autor.
 id: 361
+
 ---
+
+## 0. Filosofía Human-Centric AI
+*Esta sección es obligatoria para cumplir con los estándares del App Blueprint Generator.*
+
+**El Rol del Humano:** Supervisión estratégica y validación ética de los resultados generados.
+**Empoderamiento:** Esta Skill dota al profesional de una escala productiva 10x mediante la automatización de la carga cognitiva repetitiva.
 
 ## Descripción
 Habilidad directiva para liderar, coordinar y sincronizar grupos de especialistas provenientes de diversas áreas del conocimiento (Ingeniería, Diseño, Marketing, Finanzas, Legal, etc.) que trabajan hacia un objetivo común. La Gestión de Equipos Interdisciplinares es la base de la innovación moderna, ya que rompe los "silos" organizacionales y permite una visión holística del producto o servicio. Bajo el enfoque "Ops", se aplica mediante marcos de trabajo tipo "Squads" (Modelo Spotify), el uso de glosarios compartidos para evitar barreras idiomáticas técnicas y protocolos de toma de decisiones que integran diversas perspectivas.

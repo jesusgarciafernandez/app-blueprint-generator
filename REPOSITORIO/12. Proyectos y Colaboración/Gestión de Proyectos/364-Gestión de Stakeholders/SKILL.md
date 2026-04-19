@@ -1,10 +1,10 @@
 ---
 title: Gestión de Stakeholders
-version: 1.1
+version: 2.0
 author: Jesús García Fernández
 website: jesusgarciafernandez.com
 created: 2026-04-01
-updated: 2026-04-06
+updated: 2026-04-17
 category: 12. Proyectos y Colaboración
 subcategory: General
 tags: ['stakeholder-management', 'influence', 'negotiation', 'engagement', 'communication-strategy', 'pmp', 'governance', 'power-interest-matrix']
@@ -17,7 +17,14 @@ notice: >
   Prohibida su venta, redistribución comercial o modificación
   sin autorización expresa del autor.
 id: 364
+
 ---
+
+## 0. Filosofía Human-Centric AI
+*Esta sección es obligatoria para cumplir con los estándares del App Blueprint Generator.*
+
+**El Rol del Humano:** Supervisión estratégica y validación ética de los resultados generados.
+**Empoderamiento:** Esta Skill dota al profesional de una escala productiva 10x mediante la automatización de la carga cognitiva repetitiva.
 
 ## Descripción
 Habilidad estratégica de gestión que permite identificar, priorizar y gestionar sistemáticamente las expectativas, el compromiso y la influencia de todas las personas o grupos que pueden afectar o verse afectados por un proyecto o decisión organizacional. La Gestión de Stakeholders es la clave para la viabilidad de cualquier iniciativa compleja. Bajo el enfoque "Ops", se aplica mediante el uso de Matrices de Poder/Interés dinámicas, planes de comunicación segmentados y protocolos de gestión de expectativas basados en la transparencia y la negociación de beneficios mutuos.

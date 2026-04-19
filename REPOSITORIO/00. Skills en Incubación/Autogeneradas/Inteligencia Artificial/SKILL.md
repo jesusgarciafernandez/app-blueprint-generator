@@ -1,10 +1,10 @@
 ---
 title: Inteligencia Artificial
-version: 1.1
+version: 2.0
 author: Jesús García Fernández
 website: jesusgarciafernandez.com
 created: 2026-04-15
-updated: 2026-04-15
+updated: 2026-04-17
 category: 00. Skills en Incubación
 subcategory: Autogeneradas
 tags: ['autogenerada', 'pendiente']
@@ -17,7 +17,14 @@ notice: >
   Prohibida su venta, redistribución comercial o modificación
   sin autorización expresa del autor.
 id: inteligencia-artificial
+
 ---
+
+## 0. Filosofía Human-Centric AI
+*Esta sección es obligatoria para cumplir con los estándares del App Blueprint Generator.*
+
+**El Rol del Humano:** Supervisión estratégica y validación ética de los resultados generados.
+**Empoderamiento:** Esta Skill dota al profesional de una escala productiva 10x mediante la automatización de la carga cognitiva repetitiva.
 
 ## Descripción
 Manual técnico pendiente para la funcionalidad: Inteligencia Artificial.

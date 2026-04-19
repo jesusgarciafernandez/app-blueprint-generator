@@ -1,10 +1,10 @@
 ---
 title: Gestión de Proyectos (PMPPrince2)
-version: 1.1
+version: 2.0
 author: Jesús García Fernández
 website: jesusgarciafernandez.com
 created: 2026-04-01
-updated: 2026-04-06
+updated: 2026-04-17
 category: 12. Proyectos y Colaboración
 subcategory: General
 tags: ['project-management', 'pmp', 'prince2', 'governance', 'planning', 'execution', 'monitoring', 'risk-management', 'stakeholders', 'quality']
@@ -17,7 +17,14 @@ notice: >
   Prohibida su venta, redistribución comercial o modificación
   sin autorización expresa del autor.
 id: 362
+
 ---
+
+## 0. Filosofía Human-Centric AI
+*Esta sección es obligatoria para cumplir con los estándares del App Blueprint Generator.*
+
+**El Rol del Humano:** Supervisión estratégica y validación ética de los resultados generados.
+**Empoderamiento:** Esta Skill dota al profesional de una escala productiva 10x mediante la automatización de la carga cognitiva repetitiva.
 
 ## Descripción
 Habilidad metodológica y directiva para la planificación, ejecución, monitoreo y cierre de proyectos complejos, integrando las mejores prácticas de marcos predictivos y estructurados como PMP (Project Management Professional) y Prince2 (Projects in Controlled Environments). La Gestión de Proyectos Estructural asegura que los recursos, tiempos y presupuestos se alineen con los objetivos de negocio bajo un control riguroso de la calidad. Bajo el enfoque "Ops", se profesionaliza mediante la creación de PMOs (Project Management Offices) digitales, el uso de Estructuras de Desglose de Trabajo (WBS) automatizadas y protocolos de gestión de riesgos preventivos.

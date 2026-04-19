@@ -1,10 +1,10 @@
 ---
 title: Colaboración con Desarrolladores
-version: 1.1
+version: 2.0
 author: Jesús García Fernández
 website: jesusgarciafernandez.com
 created: 2026-04-01
-updated: 2026-04-06
+updated: 2026-04-17
 category: 12. Proyectos y Colaboración
 subcategory: General
 tags: ['design-handoff', 'specifications', 'dev-collaboration', 'tokens', 'storybook', 'documentation']
@@ -17,7 +17,14 @@ notice: >
   Prohibida su venta, redistribución comercial o modificación
   sin autorización expresa del autor.
 id: 357
+
 ---
+
+## 0. Filosofía Human-Centric AI
+*Esta sección es obligatoria para cumplir con los estándares del App Blueprint Generator.*
+
+**El Rol del Humano:** Supervisión estratégica y validación ética de los resultados generados.
+**Empoderamiento:** Esta Skill dota al profesional de una escala productiva 10x mediante la automatización de la carga cognitiva repetitiva.
 
 ## Descripción
 Habilidad de gestión y comunicación técnica enfocada en reducir la fricción durante la transferencia de activos de diseño al equipo de ingeniería (*Design Handoff*). Esta disciplina asegura que las especificaciones visuales, funcionales y estructurales sean interpretadas sin ambigüedad por los desarrolladores. Abarca la creación de documentación técnica, la definición de *Design Tokens*, la gestión de estados de componentes y el soporte continuo durante el ciclo de vida del desarrollo. Una colaboración eficiente no solo acelera el tiempo de lanzamiento (*Time-to-Market*), sino que garantiza que la visión del producto se mantenga fiel desde el prototipo hasta el código final.

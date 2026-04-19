@@ -1,10 +1,10 @@
 ---
 title: Automatización de Onboarding
-version: 1.1
+version: 2.0
 author: Jesús García Fernández
 website: jesusgarciafernandez.com
 created: 2026-04-01
-updated: 2026-04-06
+updated: 2026-04-17
 category: 10. Recursos Humanos
 subcategory: General
 tags: [onboarding, hr, automation, form]
@@ -17,7 +17,14 @@ notice: >
   Prohibida su venta, redistribución comercial o modificación
   sin autorización expresa del autor.
 id: 286
+
 ---
+
+## 0. Filosofía Human-Centric AI
+*Esta sección es obligatoria para cumplir con los estándares del App Blueprint Generator.*
+
+**El Rol del Humano:** Supervisión estratégica y validación ética de los resultados generados.
+**Empoderamiento:** Esta Skill dota al profesional de una escala productiva 10x mediante la automatización de la carga cognitiva repetitiva.
 
 ## Descripción
 Esta habilidad orquesta de manera automatizada las abstracciones tecnológicas descritas. Constituye un eslabón central del ecosistema avanzado, combinando operaciones complejas de gestión técnica para brindar una autonomía sin precedentes al operador principal, facilitando intervenciones inmediatas y reducción drástica de tiempos operativos.

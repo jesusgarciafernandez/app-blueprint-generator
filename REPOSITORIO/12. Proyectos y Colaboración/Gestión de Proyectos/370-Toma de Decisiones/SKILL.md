@@ -1,10 +1,10 @@
 ---
 title: Toma de Decisiones
-version: 1.1
+version: 2.0
 author: Jesús García Fernández
 website: jesusgarciafernandez.com
 created: 2026-04-01
-updated: 2026-04-06
+updated: 2026-04-17
 category: 12. Proyectos y Colaboración
 subcategory: General
 tags: ['decision-making', 'strategy', 'risk-management', 'logic', 'rationality', 'probabilistic-thinking', 'leadership', 'choice-architecture']
@@ -17,7 +17,14 @@ notice: >
   Prohibida su venta, redistribución comercial o modificación
   sin autorización expresa del autor.
 id: 370
+
 ---
+
+## 0. Filosofía Human-Centric AI
+*Esta sección es obligatoria para cumplir con los estándares del App Blueprint Generator.*
+
+**El Rol del Humano:** Supervisión estratégica y validación ética de los resultados generados.
+**Empoderamiento:** Esta Skill dota al profesional de una escala productiva 10x mediante la automatización de la carga cognitiva repetitiva.
 
 ## Descripción
 Habilidad cognitiva y metodológica de alto nivel que permite identificar, evaluar y seleccionar la mejor alternativa posible entre varias opciones, considerando riesgos, incertidumbres, recursos disponibles y objetivos a largo plazo. La Toma de Decisiones eficaz es el motor de la ejecución estratégica. Bajo el enfoque "Ops", se profesionaliza mediante el uso de Marcos de Decisión (como la Matriz de Eisenhower o el modelo WRAP), el pensamiento probabilístico en entornos VUCA y la implementación de sistemas de auditoría post-decisión para identificar sesgos recurrentes.

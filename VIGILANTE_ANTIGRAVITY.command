@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script de Vigilancia Antigravity
+# Script de Vigilancia (App Blueprint Generator)
 # Este archivo abre una terminal y monitoriza cambios en las skills.
 
 REPO_ROOT=$(dirname "$0")

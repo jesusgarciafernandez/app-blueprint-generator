@@ -1,10 +1,10 @@
 ---
 title: Trabajo en Equipo Remoto
-version: 1.1
+version: 2.0
 author: Jesús García Fernández
 website: jesusgarciafernandez.com
 created: 2026-04-01
-updated: 2026-04-06
+updated: 2026-04-17
 category: 12. Proyectos y Colaboración
 subcategory: General
 tags: ['remote-work', 'distributed-teams', 'async-communication', 'collaboration', 'digital-workplace', 'productivity', 'coordination', 'trust-building']
@@ -17,7 +17,14 @@ notice: >
   Prohibida su venta, redistribución comercial o modificación
   sin autorización expresa del autor.
 id: 371
+
 ---
+
+## 0. Filosofía Human-Centric AI
+*Esta sección es obligatoria para cumplir con los estándares del App Blueprint Generator.*
+
+**El Rol del Humano:** Supervisión estratégica y validación ética de los resultados generados.
+**Empoderamiento:** Esta Skill dota al profesional de una escala productiva 10x mediante la automatización de la carga cognitiva repetitiva.
 
 ## Descripción
 Habilidad operativa y comunicativa avanzada necesaria para coordinar esfuerzos, compartir conocimiento y mantener la cohesión cultural en equipos que no comparten un espacio físico o zona horaria común. El Trabajo en Equipo Remoto va más allá del uso de videoconferencias; implica dominar la Colaboración Asíncrona para maximizar el tiempo de concentración (Deep Work) y reducir la dependencia de la inmediatez. Bajo el enfoque "Ops", se sistematiza mediante la documentación exhaustiva, el uso de herramientas de gestión de estados y la automatización de flujos de aprobación y comunicación.

@@ -1,10 +1,10 @@
 ---
 title: Planificación de Capacidad (Resource Mgmt)
-version: 1.1
+version: 2.0
 author: Jesús García Fernández
 website: jesusgarciafernandez.com
 created: 2026-04-01
-updated: 2026-04-06
+updated: 2026-04-17
 category: 12. Proyectos y Colaboración
 subcategory: General
 tags: ['capacity-planning', 'resource-management', 'utilization-rate', 'workload-balancing', 'forecasting', 'resource-allocation', 'project-portfolio', 'efficiency']
@@ -17,7 +17,14 @@ notice: >
   Prohibida su venta, redistribución comercial o modificación
   sin autorización expresa del autor.
 id: 369
+
 ---
+
+## 0. Filosofía Human-Centric AI
+*Esta sección es obligatoria para cumplir con los estándares del App Blueprint Generator.*
+
+**El Rol del Humano:** Supervisión estratégica y validación ética de los resultados generados.
+**Empoderamiento:** Esta Skill dota al profesional de una escala productiva 10x mediante la automatización de la carga cognitiva repetitiva.
 
 ## Descripción
 Habilidad operativa y analítica orientada a equilibrar la demanda de trabajo con la disponibilidad de recursos (humanos, técnicos o financieros) para asegurar la entrega de proyectos sin comprometer la calidad ni el bienestar del equipo. La Planificación de Capacidad busca maximizar el "troughput" (velocidad de entrega) evitando el "burnout" y las infraestructuras ociosas. Bajo el enfoque "Ops", se aplica mediante el cálculo de tasas de utilización (Billability/Utilization targets), el uso de histogramas de carga de trabajo y el pronóstico (Forecasting) basado en datos históricos de velocidad de ejecución.

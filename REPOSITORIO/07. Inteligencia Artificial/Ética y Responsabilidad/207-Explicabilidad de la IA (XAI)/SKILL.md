@@ -1,13 +1,13 @@
 ---
-title: Explicabilidad de la IA (XAI)
-version: 1.1
+title: Explicabilidad de la IA (XAI & Transparent AI Reasoning)
+version: 2.0
 author: Jesús García Fernández
 website: jesusgarciafernandez.com
 created: 2026-04-01
-updated: 2026-04-06
+updated: 2026-04-18
 category: 07. Inteligencia Artificial
-subcategory: General
-tags: ['xai', 'explainability', 'interpretability', 'shap', 'lime', 'feature-importance', 'transparency', 'black-box']
+subcategory: Ética y Responsabilidad
+tags: [ia, xai, explainability, interpretability, transparency, trust, feature-importance, shap, lime, ethical-ai, black-box-auditing]
 
 license: CC BY-NC 4.0
 license_url: https://creativecommons.org/licenses/by-nc/4.0/
@@ -19,33 +19,81 @@ notice: >
 id: 207
 ---
 
-## Descripción
-Habilidad técnica y ética enfocada en desmitificar las "cajas negras" de la Inteligencia Artificial, haciendo que los procesos de decisión de los modelos sean comprensibles e interpretables tanto para expertos como para usuarios finales. El XAI (Explainable AI) proporciona herramientas y métodos para responder al "por qué" de un resultado específico (ej: por qué se denegó un crédito). Esta skill abarca métodos agnósticos al modelo (SHAP, LIME), importancia de características, mapas de calor para visión por computadora y análisis de atención en Transformers. El objetivo es fomentar la confianza, facilitar la depuración de modelos y cumplir con el "derecho a la explicación" exigido por las regulaciones modernas de privacidad y ética.
+## 0. Filosofía Human-Centric AI
+*Esta habilidad desmitifica la complejidad de los sistemas algorítmicos al hacer que el razonamiento artificial sea comprensible y auditable, utilizando la tecnología para abrir las "cajas negras" de la inteligencia artificial y permitir que el humano confíe en las decisiones sintéticas, comprenda sus causas y garantice una adopción tecnológica transparente, justa y explicable para la sociedad.*
 
-## Cuándo usarla
-Escenarios que activan esta skill:
-- Al desplegar un modelo de diagnóstico médico que debe indicar a los doctores qué regiones de una imagen clínica justifican su predicción.
-- Para explicar a un cliente de banca la razones de peso detrás de un cálculo de riesgo crediticio automatizado.
-- Durante la depuración de un modelo que está cometiendo errores sistemáticos difíciles de detectar a simple vista.
-- En sectores regulados donde la ley exige que cualquier decisión automatizada tenga una justificación lógica comprensible para el ciudadano.
-- Para validar que un modelo de visión por computadora se fija en los objetos correctos y no en el ruido del fondo (ataques adversarios).
+**El Rol del Humano:** El Arquitecto de Explicabilidad debe ser un "Garantes de la Comprensión Lógica". La IA puede procesar trillones de parámetros, realizar predicciones complejas basándose en patrones matemáticos sutiles y generar resultados con alta precisión, pero solo el humano puede traducir esos pesos estadísticos en una justificación narrativa que tenga sentido para las personas, asegurar que la explicabilidad no sea una racionalización superficial de un sesgo oculto y garantizar que el "derecho a la explicación" sea una realidad para todos los ciudadanos afectados por decisiones automatizadas.
+**Empoderamiento:** Usamos la tecnología para sustituir la opacidad del algoritmo por una ventana de transparencia funcional y ética.
 
-## Requisitos
-- Comprensión sólida de la teoría de juegos (Valores de Shapley) aplicada a la IA.
-- Manejo de librerías de explicabilidad (SHAP, LIME, Captum, Eli5).
-- Conocimiento de la diferencia entre Interpretabilidad (por diseño) y Explicabilidad (post-hoc).
-- Capacidad para crear visualizaciones claras (force plots, summary plots).
-- Sensibilidad ética para identificar justificaciones superficiales o erróneas.
+---
 
-## Instrucciones y Pasos detallados que se debe seguir:
+## 1. Descripción Detallada
+La Explicabilidad de la IA o **XAI** (v2.0) es la competencia de diseñar y aplicar métodos que permitan interpretar el comportamiento de los modelos de IA. No es solo "hacer gráficos de importancia"; es **Ingeniería de la Transparencia Cognitiva**. El enfoque v2.0 se centra en la **Interpretación Holística**: desde métodos agnósticos al modelo (SHAP, LIME) para entender qué variables pesan más en una decisión, hasta el uso de visualizaciones de atención en Transformers y mapas de calor en visión artificial. El objetivo es proporcionar una justificación técnica y narrativa al "por qué" de cada output, fundamental para la depuración de errores, la mitigación de sesgos y el cumplimiento de marcos regulatorios como la AI Act europea.
 
+## 2. Escenarios de Aplicación
+- **Gobernanza en el Sector Financiero:** Explicación detallada de por qué se ha denegado un crédito bancario a un cliente, identificando los factores exactos del perfil que influyeron en la decisión.
+- **Auditoría de IA en Salud:** Justificación clínica de una recomendación diagnóstica, mostrando qué píxeles de una radiografía o qué biomarcadores fueron determinantes para la IA.
+- **Depuración de Agentes Autónomos:** Análisis de por qué un agente tomó una acción errónea en un flujo de trabajo complejo para corregir la instrucción base (Prompt) o la lógica de decisión.
+- **Cumplimiento Legal y Regulatorio:** Generación automática de informes de transparencia para algoritmos de contratación de personal o asignación de ayudas públicas.
+- **Validación de Modelos de Riesgo:** Verificación de que la IA no está utilizando "variables proxy" discriminatorias (Ej: Código postal como sustituto de raza) para tomar decisiones.
 
-## Workflow N8N
-Referencia al archivo `workflow.json` o scripts integrados.
+## 3. Requisitos de Implementación
+- **Dominio de Métodos de Interpretación:** Conocimiento técnico de SHAP (Shapley Additive Explanations), LIME e importancia de características.
+- **Capacidad de Visualización de Datos Crítica:** Habilidad para crear gráficos (Force plots, Decision plots) que comuniquen conceptos complejos de forma intuitiva.
+- **Sensibilidad Ética y Social:** Capacidad para detectar cuando una explicación técnica es insuficiente o encubre un comportamiento injusto del modelo.
+- **Conocimiento de la AI Act y GDPR:** Entendimiento de los requisitos legales sobre transparencia algorítmica y derecho a la información del ciudadano.
 
-## Notas y advertencias
-- ⚠️ **Mantenimiento Técnico**: Requiere verificación mensual.
+---
 
-## Changelog
-- v1.0 — Versión inicial
-- v1.1 — Enriquecimiento técnico especializado y normalización de formato V1.1
+## 4. Diferencial: Black Box IA vs. Explicabilidad v2.0 (XAI)
+
+| Dimensión | Enfoque Legacy (Caja Negra) | Explicabilidad IA (v2.0) |
+| :--- | :--- | :--- |
+| **Confianza** | Basada en la fe en el desarrollador. | Basada en la evidencia de la justificación. |
+| **Depuración** | Prueba y error (adivinanza). | Identificación exacta del fallo lógico. |
+| **Gobernanza** | Riesgo alto de sanciones legales. | Cumplimiento proactivo de regulaciones. |
+| **Usuario** | Recibe la respuesta sin contexto. | Comprende las razones detrás de la respuesta. |
+
+---
+
+## 5. Instrucciones y Pasos Detallados (Protocolo Maestro)
+
+### Fase 1: Auditoría de Visibilidad y Diseño de Justificaciones
+**Objetivo:** Definir qué partes de la decisión deben ser explicables y para quién.
+1.  **Identificación de Stakeholders:** IA ayuda a definir si la explicación es para un técnico (Python logs) o para un cliente (narrativa sencilla).
+2.  **Selección de Método XAI:** Determinación de si usaremos una importancia global del modelo o una explicación local (para una sola decisión concreta).
+
+**Prompt Maestro de Explicabilidad (XAI Strategy):**
+```text
+Actúa como un Senior XAI Engineer y Auditor de Transparencia Algorítmica. Diseña el marco de explicabilidad para el sistema [NOMBRE_MODELO/TAREA]. 
+1. Análisis de Importancia: Identifica las 3 variables de entrada que el sistema considera críticas para [DATO_SALIDA] y explica su relación lógica. 
+2. Diseño de la Narrativa de Justificación: Redacta un prompt de 'Explicador' que traduzca datos numéricos en un párrafo comprensible para un usuario no técnico. 
+3. Visualización de Atención: Diseña el mapa de calor visual (Heatmap) que mostrará en qué parte de la información se enfocó el modelo para dar la respuesta. 
+4. Detección de 'Causas de Error': Propón un método para alertar si el modelo está tomando decisiones basadas en ruido o variables no deseadas. 
+5. Protocolo de Transparencia: Genera el formato de 'Ficha de Decisión' que se adjuntará a cada output para cumplir con el derecho a la explicación.
+```
+
+### Fase 2: Implementación, Validación de Fidelidad y Reporte
+... (Expansión técnica sobre el uso de la técnica de 'Feature Attribution' para cuantificar el impacto de cada palabra en un prompt, la implementación de tests de fidelidad (Faithfulness) para asegurar que la explicación corresponde realmente a la lógica interna del modelo, y la creación de un sistema de transparencia proactiva que alerte si la interpretabilidad del sistema cae por debajo de un umbral aceptable) ...
+
+---
+
+## 6. Arquitectura de Automatización Lógica (Agnostic Flow)
+*Lógica de transparencia continua.*
+
+1.  **Trigger:** Decisión tomada por un modelo de IA en un proceso crítico de negocio o usuario.
+2.  **Nodo de Extracción de Pesos/Atención:** El sistema recupera la importancia de las características o los pesos de atención de la red neuronal para esa decisión específica.
+3.  **Nodo de Síntesis Narrativa XAI:** IA traduce los valores matemáticos de importancia en una justificación textual alineada con la rúbrica de explicabilidad.
+4.  **Nodo de Verificación de Alineación Ética:** Un proceso monitoriza que la explicación no revele datos privados ni intente justificar sesgos prohibidos.
+5.  **Output:** Decisión final acompañada de su justificación comprensible; log de transparencia almacenado para futuras auditorías o reclamaciones del usuario.
+
+---
+
+## 7. Ejemplo Práctico: Aseguradora 'ClearProtect'
+**Reto:** Su IA denegaba pólizas de vida a personas sanas sin razón aparente. El equipo técnico no sabía qué estaba fallando y los clientes estaban indignados.
+**Acción v2.0:** Implementaron XAI (Skill 207). El sistema reveló que la IA estaba dando un peso excesivo a una variable secundaria (el modelo de smartphone del cliente) que actuaba como proxy de estatus económico, no de salud.
+**Resultado:** Identificaron y eliminaron el sesgo en 24 horas. Ahora, cada denegación incluye una carta personalizada que explica detalladamente (y éticamente) los factores de salud considerados, aumentando la confianza del cliente un 40%.
+
+---
+**Autor:** Jesús García Fernández  
+**Licencia:** CC BY-NC 4.0

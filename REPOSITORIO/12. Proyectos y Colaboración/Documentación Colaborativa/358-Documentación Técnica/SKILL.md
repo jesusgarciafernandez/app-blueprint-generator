@@ -1,10 +1,10 @@
 ---
 title: Documentación Técnica
-version: 1.1
+version: 2.0
 author: Jesús García Fernández
 website: jesusgarciafernandez.com
 created: 2026-04-01
-updated: 2026-04-06
+updated: 2026-04-17
 category: 12. Proyectos y Colaboración
 subcategory: General
 tags: ['technical-writing', 'markdown', 'documentation', 'api-docs', 'software-architecture', 'developer-experience', 'knowledge-base']
@@ -17,7 +17,14 @@ notice: >
   Prohibida su venta, redistribución comercial o modificación
   sin autorización expresa del autor.
 id: 358
+
 ---
+
+## 0. Filosofía Human-Centric AI
+*Esta sección es obligatoria para cumplir con los estándares del App Blueprint Generator.*
+
+**El Rol del Humano:** Supervisión estratégica y validación ética de los resultados generados.
+**Empoderamiento:** Esta Skill dota al profesional de una escala productiva 10x mediante la automatización de la carga cognitiva repetitiva.
 
 ## Descripción
 Habilidad esencial para la creación, organización y mantenimiento de documentación técnica clara, precisa y accesible para desarrolladores (Docs-as-Code) y usuarios finales. Esta skill se centra en la capacidad de traducir conceptos técnicos complejos en guías de usuario, manuales de referencia de API, diagramas de arquitectura y especificaciones de requisitos. Abarca el dominio de lenguajes de marcado como Markdown y MDX, herramientas de generación de sitios de documentación (Docusaurus, GitBook), y la integración de la documentación en el ciclo de vida del desarrollo mediante Pull Requests y CI/CD. El objetivo es maximizar la mantenibilidad del software y mejorar la experiencia de los desarrolladores (DX) que interactúan con el sistema.

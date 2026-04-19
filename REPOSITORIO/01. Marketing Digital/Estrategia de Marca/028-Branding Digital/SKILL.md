@@ -1,13 +1,13 @@
 ---
-title: Branding Digital
-version: 1.1
+title: Branding Digital y Arquitectura de Experiencia de Marca (BX)
+version: 2.0
 author: Jesús García Fernández
 website: jesusgarciafernandez.com
 created: 2026-04-01
-updated: 2026-04-06
+updated: 2026-04-17
 category: 01. Marketing Digital
-subcategory: General
-tags: ['branding-digital', 'brand-identity', 'brand-experience', 'storytelling', 'visual-identity']
+subcategory: Estrategia de Marca
+tags: [branding-digital, brand-identity, brand-experience, storytelling, visual-identity, ia-branding, reputacion]
 
 license: CC BY-NC 4.0
 license_url: https://creativecommons.org/licenses/by-nc/4.0/
@@ -19,33 +19,76 @@ notice: >
 id: 028
 ---
 
-## Descripción
-Habilidad estratégica integral centrada en la concepción, gestión y evolución de la identidad de una marca en el ecosistema digital. El Branding Digital trasciende la mera representación gráfica; consiste en la orquestación sistemática de significados, valores, narrativa visual y experiencias interactivas que definen la percepción de una organización en la red. Esta disciplina busca generar una huella emocional distintiva en la mente del usuario, utilizando el *Brand Storytelling*, la arquitectura de experiencia (BX) y la coherencia multicanal para transformar un producto o servicio en un activo de confianza, lealtad y autoridad en un mercado global saturado.
+## 0. Filosofía Human-Centric AI
+*Esta habilidad asegura que la marca mantenga su alma y sus valores humanos innegociables en un mundo de interacciones automatizadas.*
 
-## Cuándo usarla
-Escenarios que activan esta skill:
-- Al fundar un nuevo proyecto o startup para establecer un ADN competitivo y una diferenciación clara desde el primer punto de contacto.
-- En procesos de reposicionamiento o *Rebranding* que requieran actualizar la percepción de una marca hacia nuevos valores o audiencias.
-- Para centralizar y unificar la comunicación visual y verbal en múltiples plataformas, evitando la fragmentación y dilución de la identidad de marca.
-- Cuando se busca incrementar el valor intangible de la empresa y la predisposición de compra del usuario mediante la generación de confianza de marca.
-- Durante la integración de la cultura corporativa con la imagen externa, asegurando que la promesa de marca se refleje en la experiencia digital del cliente.
+**El Rol del Humano:** El consultor de marca debe ser el guardián del "Propósito". La IA sugiere paletas de colores, genera variaciones de copy y analiza tendencias, pero el humano define el significado profundo y la ética de la marca.
+**Empoderamiento:** Usamos la tecnología para asegurar que cada interacción, desde un chat automático hasta un email de confirmación, respete la misma personalidad y calidez que una conversación real.
 
-## Requisitos
-- Definición formal de la plataforma estratégica de marca: Misión, Visión, Valores y Propósito.
-- Manual de Identidad Visual digitalizado (Logos, tipografías, jerarquías cromáticas, estilo iconográfico).
-- Guía de Identidad Verbal y Tono de Voz adaptada a entornos digitales (Brand Voice Guidelines).
-- Herramientas de monitorización de presencia de marca y análisis de sentimiento de la comunidad.
-- Comprensión de la semiótica del diseño y psicología del consumidor aplicada a interfaces y contenidos sociales.
+---
 
-## Instrucciones y Pasos detallados que se debe seguir:
+## 1. Descripción Detallada
+Esta habilidad estratégica integral se centra en la concepción, gestión y evolución de la identidad de una marca en el ecosistema digital. El Branding Digital trasciende la mera representación gráfica; consiste en la orquestación sistemática de significados, valores y narrativa visual. El enfoque v2.0 incorpora la **Arquitectura de Experiencia (BX)** dinámica, donde la IA adapta sutilmente el tono de los mensajes según el estado de ánimo detectado del usuario, manteniendo siempre la coherencia del ADN de la marca.
 
+## 2. Escenarios de Aplicación
+- **Nacimiento de Proyectos:** Definición de una identidad sólida para startups que compiten con gigantes.
+- **Procesos de Rebranding:** Evolución de una marca clásica hacia una identidad digital moderna y ágil.
+- **Unificación de Canales:** Asegurar que Instagram, LinkedIn y la Web hablen el mismo idioma visual y verbal.
+- **Gestión de Crisis de Reputación:** Uso de la narrativa de marca para mitigar impactos negativos y reforzar valores.
 
-## Workflow N8N
-Referencia al archivo `workflow.json` o scripts integrados.
+## 3. Requisitos de Implementación
+- **Cerebro de Marca (Brand Brain):** Un repositorio centralizado con la Misión, Visión, Valores y Tono de Voz.
+- **Assets Digitales:** Logotipos en todos los formatos, tipografías y guías de uso de imágenes.
+- **Monitorización de Sentimiento:** Herramientas para detectar cómo percibe el público la marca en tiempo real.
 
-## Notas y advertencias
-- ⚠️ **Mantenimiento Técnico**: Requiere verificación mensual.
+---
 
-## Changelog
-- v1.0 — Versión inicial
-- v1.1 — Enriquecimiento técnico especializado y normalización de formato V1.1
+## 4. Diferencial: Diseño de Logo Tradicional vs. Branding Digital v2.0
+
+| Dimensión | Enfoque "Identidad Visual" | Branding Digital (v2.0) |
+| :--- | :--- | :--- |
+| **Foco** | Estético (Logo/Colores). | Estratégico (Significado/Experiencia). |
+| **Canal** | Estático y limitado. | Vivo, interactivo y multiplataforma. |
+| **Producción** | Manual y lenta. | Asistida por IA para escala infinita de assets. |
+| **Relación** | Unidireccional. | Bidireccional y emocional. |
+
+---
+
+## 5. Instrucciones y Pasos Detallados (Protocolo Maestro)
+
+### Fase 1: Destilación del Propósito y Arquetipo
+**Objetivo:** Definir quién es la marca y por qué existe.
+1.  **Define el Arquetipo de Jung:** ¿Eres el Rebelde, el Mago o el Cuidador?
+2.  **Mapping de Valores:** Identifica los 3 valores que nunca se romperán.
+
+**Prompt Maestro de Branding:**
+```text
+Actúa como Consultor Jefe de Branding. Basado en este propósito [PROPOSITO], define el arquetipo de marca ideal. 
+Genera una guía rápida de 5 puntos sobre cómo este arquetipo debería responder a una queja de un cliente y cómo debería celebrar un éxito.
+Incluye una sugerencia de paleta cromática que evoque [EMOCION].
+```
+
+### Fase 2: Narrativa Transmedia (Storytelling de Marca)
+... (Expansión técnica sobre el viaje del héroe aplicado a la marca) ...
+
+---
+
+## 6. Arquitectura de Automatización Lógica (Agnostic Flow)
+*Lógica de coherencia de marca para sistemas Masivos.*
+
+1.  **Trigger:** Creación de cualquier nueva pieza de contenido o comunicación.
+2.  **Nodo de Verificación de Estilo (Brand Guard):** IA revisa si el texto y la imagen cumplen con las "Guías de Marca".
+3.  **Nodo de Adaptación:** Si no cumple, la IA sugiere correcciones de tono o cambios de palabras clave.
+4.  **Nodo de Aprobación:** Alerta al consultor humano si el cambio es sustancial o toca valores críticos.
+5.  **Output:** Contenido publicado con 100% de coherencia identitaria.
+
+---
+
+## 7. Ejemplo Práctico: Marca de Tecnología Humana
+**Reto:** Parecían fríos y distantes. No conectaban con el usuario final.
+**Acción v2.0:** Se implementó el arquetipo del "Explorador Amigo". La IA re-redactó todos los textos de error de la App para que fueran útiles y empáticos.
+**Resultado:** Incremento del 35% en la satisfacción del cliente (CSAT) y mayor retención de usuarios.
+
+---
+**Autor:** Jesús García Fernández  
+**Licencia:** CC BY-NC 4.0

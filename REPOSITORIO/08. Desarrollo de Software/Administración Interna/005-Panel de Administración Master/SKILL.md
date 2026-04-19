@@ -1,13 +1,13 @@
 ---
-title: Panel de Administración (Backoffice Master)
-version: 1.1
+title: Panel de Administración Master (Backoffice & Business Intelligence)
+version: 2.0
 author: Jesús García Fernández
 website: jesusgarciafernandez.com
 created: 2026-04-01
-updated: 2026-04-06
+updated: 2026-04-18
 category: 08. Desarrollo de Software
-subcategory: Administración Interna
-tags: ["estándar-v1.1", "validado", "admin", "dashboard", "nextjs", "metrics"]
+subcategory: Administración Interna
+tags: [admin, dashboard, nextjs, metrics, backoffice, shadcn, kpi, business-intelligence, operations, control-panel, real-time-data, data-visualization]
 
 license: CC BY-NC 4.0
 license_url: https://creativecommons.org/licenses/by-nc/4.0/
@@ -19,56 +19,81 @@ notice: >
 id: 005-ADMIN
 ---
 
-## Descripción
-Esta skill permite construir la "torre de control" de cualquier aplicación: el Panel de Administración o Backoffice. Proporciona las herramientas para gestionar usuarios, monitorizar métricas críticas (KPIs), visualizar datos mediante gráficos interactivos y realizar tareas operativas internas (CRUD) de manera eficiente y segura.
+## 0. Filosofía Human-Centric AI
+*Esta habilidad construye la torre de control definitiva al desarrollar paneles de administración que transforman el caos de los datos crudos en claridad operativa y estratégica, utilizando la inteligencia de negocio para iluminar el camino y permitir que el humano tome decisiones informadas, precisas y humanas que impulsen el éxito del proyecto con una visión de 360 grados de toda la plataforma.*
 
-## Cuándo usarla
-- **Gestión Interna**: Para que el equipo operativo gestione pedidos, usuarios o contenido.
-- **Analytics**: Visualización de rendimiento del negocio en tiempo real.
-- **Control de Acceso**: Interfaz para gestionar roles y permisos de la plataforma.
-- **Auditoría**: Revisión de logs y eventos del sistema.
+**El Rol del Humano:** El Comandante de Operaciones debe ser un "Garantes de la Claridad y la Decisión". La IA puede agregar millones de transacciones, detectar anomalías en el comportamiento de los usuarios y generar proyecciones de crecimiento automáticas, pero solo el humano posee el juicio para interpretar el contexto real detrás de los números, decidir las prioridades estratégicas basadas en la visión de negocio y asegurar que el panel de administración sea una herramienta de empoderamiento que simplifique la gestión humana sin perder el alma del proyecto.
+**Empoderamiento:** Usamos la tecnología para sustituir la ceguera operativa por una inteligencia de negocio accionable y transparente.
 
-## Requisitos
-- **Stack Recomendado**: Next.js (App Router), Shadcn UI, TanStack Table, Recharts o Chart.js.
-- **Conceptos**: Server Components, Client Components, Server Actions para CRUD.
-- **Seguridad**: Middleware para protección de rutas de administración (`/admin/*`).
+---
 
-## Impacto Humano y Empoderamiento Personal
-Un panel de administración no es solo un conjunto de tablas; es la **claridad operativa**. Al automatizar la visualización de datos complejos, transformas el caos de la información en **decisiones estratégicas**. Esta herramienta empodera al profesional al darle una visión de 360 grados de su proyecto, permitiéndole identificar cuellos de botella y oportunidades de crecimiento sin depender de programadores para cada informe o cambio manual.
+## 1. Descripción Detallada
+El Panel de Administración Master (v2.0) es la competencia de diseñar y desarrollar el centro de mando de cualquier aplicación (Backoffice). No es solo "hacer tablas CRUD"; es **Ingeniería de la Operativa Estratégica**. El enfoque v2.0 se centra en los **Dashboards de Alta Densidad y Acciones en Lote**: interfaces desarrolladas con Next.js y Shadcn UI que presentan KPIs en tiempo real (Ventas, Usuarios Activos, Salud del Sistema) y permiten realizar tareas administrativas complejas de forma masiva y segura. Abarca la gestión de roles y permisos (RBAC), la visualización avanzada de datos (Recharts) y la monitorización de auditorías internas para garantizar la transparencia total de lo que sucede en el núcleo del negocio.
 
-## Instrucciones y Pasos detallados que se debe seguir:
+## 2. Escenarios de Aplicación
+- **Gestión Integral de E-commerce:** Panel para control de stock, procesamiento de pedidos, gestión de reembolsos y visualización de hitos de venta diarios.
+- **Sistemas de Suscripción y SaaS:** Monitorización de tasa de cancelación (Churn), ingresos recurrentes (MRR) y gestión de cuentas de clientes premium.
+- **Backoffice para Aplicaciones en el Borde:** Visualización de latencias globales, consumo de recursos por región y despliegue rápido de configuraciones de emergencia.
+- **Herramientas de Moderación de Contenidos:** Interfaz para que los administradores revisen, aprueben o rechacen publicaciones, comentarios o perfiles de usuario de forma masiva.
+- **Centros de Soporte al Cliente Interno:** Panel que unifica las incidencias abiertas, el historial de usuario y las métricas de satisfacción (NPS) del servicio.
 
-### 1. Estructura de Navegación y UI
-- Diseñar un Layout con Sidebar persistente y Header de estado.
-- Utilizar componentes de UI consistentes (Shadcn UI) para tablas, botones y modals.
-- Implementar modo oscuro/claro para mejorar la salud visual en jornadas largas.
+## 3. Requisitos de Implementación
+- **Manejo Experto de Next.js y Shadcn UI:** Uso de Server Components para velocidad y Client Components para interactividad rica en gráficos y tablas.
+- **Habilidad en Visualización de Datos Profundos:** Capacidad para integrar bibliotecas como Recharts o Chart.js conectadas a fuentes de datos en tiempo real (Supabase/PostgreSQL).
+- **Gestión de Seguridad y Roles (Auth):** Implementación de Middleware para protección de rutas `/admin`, 2FA obligatorio y registros de auditoría inmutables.
+- **Diseño de Tablas Inteligentes (TanStack Table):** Creación de interfaces de datos con filtrado avanzado, ordenación multienfoque y exportación manual a formatos de negocio (CSV/PDF).
 
-### 2. Gestión de Datos (Data Tables)
-- Implementar tablas con filtrado, ordenamiento y paginación en el servidor (TanStack Table).
-- Crear flujos de edición (Modals o páginas dedicadas) con validación de formularios (Zod/React Hook Form).
-- Implementar acciones en lote (Bulk actions) para mejorar la productividad.
+---
 
-### 3. Visualización de Métricas (Dashboards)
-- Identificar los 4-5 KPIs principales y presentarlos mediante "Stat Cards" con tendencia.
-- Implementar gráficos de línea/barra interactivos para ver la evolución temporal (Recharts).
-- Conectar los gráficos directamente a la base de datos (Supabase) con caché inteligente.
+## 4. Diferencial: CRUD Simple vs. Backoffice Master v2.0
 
-### 4. Seguridad de Administración (Gatekeeping)
-- Implementar un nivel de acceso "Role: Admin" verificado mediante Middleware.
-- Crear logs de actividad para saber quién hizo qué cambio en el panel.
-- Habilitar autenticación de dos factores (2FA) obligatoria para entrar al backoffice.
+| Dimensión | Enfoque Legacy (Admin Básico) | Backoffice Master (v2.0) |
+| :--- | :--- | :--- |
+| **Enfoque** | Solo entrada/salida de datos individuales. | Inteligencia de negocio y operativa global. |
+| **Velocidad** | Consultas directas pesadas y lentas. | Caché inteligente y agregaciones en el servidor. |
+| **Diseño** | Interfaz secundaria y descuidada. | Diseño premium, consistente y productivo. |
+| **Acción** | Tarea por tarea; muy lento. | Acciones masivas y automatización de procesos. |
 
-## Workflow N8N / Automatización
-*Ver archivo `workflow.md` para la implementación técnica en Python, N8N y API.*
+---
 
-## Seguridad y Mejores Prácticas
-- 🛡️ **Prevención de Exposición**: Nunca exponer datos de usuarios finales que no sean necesarios para la operativa.
-- 📉 **Optimización de Queries**: Usar vistas de PostgreSQL para agregaciones pesadas en lugar de procesar todo en JS.
-- 🧪 **Testing**: Verificar que las rutas de admin son inaccesibles para usuarios estándar.
+## 5. Instrucciones y Pasos Detallados (Protocolo Maestro)
 
-## Notas y advertencias
-- ⚠️ **Rendimiento**: Un panel cargado de gráficos puede ser lento. Utiliza carga diferida (Suspense) para las métricas más pesadas.
+### Fase 1: Auditoría de KPIs y Diseño de la Estructura de Navegación
+**Objetivo:** Reducir el tiempo de búsqueda para aumentar el tiempo de decisión.
+1.  **Identificación de las 'Constantes Vitales' del Negocio:** IA ayuda a jerarquizar qué 4 métricas deben estar siempre visibles (Ej: Revenue, Active Sessions, Errors, Conversions).
+2.  **Arquitectura de Permisos (RBAC):** Definición de qué puede ver cada rol (Admin, Editor, Support, Auditor) para garantizar el mínimo privilegio.
 
-## Changelog
-- v1.0 — Versión inicial (Autogenerada)
-- v1.1 — Normalización V1.1: Stack Next.js/Shadcn + Sección Empoderamiento Humano.
+**Prompt Maestro de Diseño de Backoffice (Operations Architect):**
+```text
+Actúa como un Senior Product Manager y Experto en UX de Herramientas Internas. Diseña el Panel Master para el proyecto: [NOMBRE_PROYECTO]. 
+1. Jerarquía de Información (Dashboard): Define las 4 'Stat Cards' superiores y el gráfico principal (Ej: Línea de tiempo de ventas) que darán la visión de salud inmediata. 
+2. Diseño de la Data Table Principal: Describe las columnas, filtros y acciones masivas (Ej: Ban de usuarios, Enviar cupón) necesarias para gestionar la entidad [ENTIDAD_X]. 
+3. Flujo de Navegación y Roles: Diseña el sidebar con secciones claras (Métricas, Usuarios, Configuración, Logs) y especifica qué rol accede a cada una. 
+4. Implementación de Alertas Visuales: Propón un sistema de código de colores o iconos que resalte anomalías críticas (Ej: Caída de ventas > 20% en una hora) de forma instantánea. 
+5. Protocolo de Auditoría: Define qué eventos (Quién, Cuándo, Qué) deben quedar registrados permanentemente para cumplir con la trazabilidad operativa.
+```
+
+### Fase 2: Ejecución, Refinamiento de Carga y Dashboards Interactivos
+... (Expansión técnica sobre el uso de la técnica de 'Infinite Streaming' para tablas de gran tamaño, la implementación de un proceso de 'Real-time Updates' vía WebSockets o suscripciones de base de datos, y la monitorización de la 'Latencia de Dashboards' para asegurar que el panel nunca sea un cuello de botella para la rapidez de la organización) ...
+
+---
+
+## 6. Arquitectura de Automatización Lógica (Agnostic Flow)
+*Lógica de control total.*
+
+1.  **Trigger:** El administrador accede al backoffice o se dispara una alerta automática por una métrica fuera de rango.
+2.  **Nodo de Agregación de Datos en Tiempo Real:** El sistema consulta las fuentes de verdad, aplica filtros de seguridad según el rol y genera los resúmenes estadísticos.
+3.  **Nodo de Visualización Reactiva:** El panel presenta los datos mediante componentes premium (Charts/Tables) permitiendo la interacción profunda del humano.
+4.  **Nodo de Acción Operativa:** El administrador realiza una acción manual o supervisa una automatización disparada por el sistema desde la misma interfaz.
+5.  **Output:** Decisión estratégica ejecutada; estado de la plataforma modificado; registro de la acción guardado en el historial de auditoría maestro.
+
+---
+
+## 7. Ejemplo Práctico: App de Movilidad 'CityFlow'
+**Reto:** Los gestores de 'CityFlow' no sabían en qué zonas de la ciudad faltaban patinetes hasta que recibían quejas. Consultaban manualmente 5 herramientas diferentes para entender la operativa del día anterior.
+**Acción v2.0:** Implementaron Skill 005. Crearon un Panel Master con un mapa de calor en tiempo real y alertas de baja batería. Unificaron la gestión de usuarios y el soporte técnico en la misma herramienta.
+**Resultado:** La eficiencia logística subió un 40%. Ahora los gestores mueven los patinetes proactivamente basándose en la predicción del dashboard. El tiempo de resolución de quejas de usuarios bajó de 2 horas a 10 minutos.
+
+---
+**Autor:** Jesús García Fernández  
+**Licencia:** CC BY-NC 4.0

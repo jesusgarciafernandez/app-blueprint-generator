@@ -1,13 +1,13 @@
 ---
-title: Gestión de E-commerce
-version: 1.1
+title: Gestión de E-commerce (Digital Retail & Ops Mastery)
+version: 2.0
 author: Jesús García Fernández
 website: jesusgarciafernandez.com
 created: 2026-04-01
-updated: 2026-04-06
-category: 04. Ventas y Comercio Electrónico
-subcategory: General
-tags: ['e-commerce-management', 'online-sales', 'inventory-control', 'conversion-optimization', 'retail-ops']
+updated: 2026-04-17
+category: 04. Ventas y Comercio Electrónico
+subcategory: Gestión de Pedidos
+tags: [e-commerce-management, online-retail, conversion-rate-optimization, fulfillment-ops, checkout-optimization, inventory-management, digital-merchandising, direct-to-consumer, payments-gateways]
 
 license: CC BY-NC 4.0
 license_url: https://creativecommons.org/licenses/by-nc/4.0/
@@ -19,33 +19,80 @@ notice: >
 id: 156
 ---
 
-## Descripción
-Habilidad estratégica integral centrada en la administración, escalado y rentabilización de operaciones de venta digital. La Gestión de E-commerce abarca desde la arquitectura técnica del catálogo de productos y la gestión dinámica de inventarios, hasta la optimización quirúrgica de la experiencia de usuario (UX) en el embudo de compra. Esta skill implica la coordinación de múltiples sistemas (CMS, ERP, Pasarelas de Pago y Logística) para garantizar un flujo transaccional sin fricciones, maximizando métricas clave como el Valor Medio del Pedido (AOV), la Tasa de Conversión (CR) y el Valor de Vida del Cliente (LTV) mediante el análisis constante de datos de comportamiento y operaciones de última milla.
+## 0. Filosofía Human-Centric AI
+*Esta habilidad orquesta la experiencia de compra digital para que sea fluida, gratificante y eficiente, utilizando la tecnología para eliminar las barreras de fricción y asegurar que cada pedido llegue a su destino con la máxima calidad y transparencia.*
 
-## Cuándo usarla
-Escenarios que activan esta skill:
-- Al lanzar o gestionar profesionalmente una tienda online D2C (Direct to Consumer) que requiera una sincronización perfecta entre catálogo, stock y pedidos.
-- Cuando se detectan cuellos de botella en la tasa de conversión, especialmente en las fases de carrito y proceso de pago (Checkout).
-- Para orquestar periodos promocionales de alta demanda (Black Friday, campañas estacionales) que necesiten una gestión masiva de precios y visibilidad.
-- Al internacionalizar una marca, integrando sistemas de gestión de divisas múltiples, aranceles automáticos y logística transfronteriza.
-- Para optimizar la rentabilidad operativa mediante el control riguroso de las tasas de devolución y la eficiencia de los procesos de fulfillment.
+**El Rol del Humano:** El E-commerce Manager debe ser un "Director de Orquesta Digital". La IA puede optimizar los niveles de stock para evitar roturas, sugerir productos relacionados según el comportamiento de navegación y automatizar el flujo de estados de pedidos, pero solo el humano puede definir una política de devoluciones que genere confianza, decidir qué tono de voz usar en las comunicaciones de post-venta y asegurar que la marca mantenga su promesa de valor y calidad en cada paquete entregado físicamente.
+**Empoderamiento:** Usamos la tecnología para sustituir la gestión manual de catálogos y envíos por un sistema orquestado que permite al equipo centrarse en la estrategia de crecimiento y la experiencia del cliente.
 
-## Requisitos
-- Dominio de plataformas CMS líderes en comercio electrónico (ej: Shopify Plus, Adobe Commerce/Magento, BigCommerce o WooCommerce).
-- Conocimiento técnico de integración con pasarelas de pago y normativas de seguridad de datos transaccionales (PCI DSS).
-- Experiencia en la gestión de flujos de logística y mensajería (sistemas de etiquetas, seguimiento de envíos y logística inversa).
-- Base sólida en analítica orientada a e-commerce (GA4 Ecommerce, análisis de cohortes, mapas de calor).
-- Entendimiento de estrategias de merchandising digital y SEO técnico para fichas de producto y categorías.
+---
 
-## Instrucciones y Pasos detallados que se debe seguir:
+## 1. Descripción Detallada
+La Gestión de E-commerce (v2.0) es la disciplina integral que abarca desde la adquisición del cliente digital hasta la entrega física del producto. No es solo "vender online"; es **Ingeniería de la Transacción Sin Fricciones**. El enfoque v2.0 se centra en la **Optimización del Embudo de Conversión (CRO)**, la gestión inteligente del **Fulfillment** y la sincronización omnicanal. Utiliza datos en tiempo real para ajustar precios, personalizar el merchandising visual y automatizar las operaciones de última milla, garantizando que el negocio escale de forma rentable y predecible.
 
+## 2. Escenarios de Aplicación
+- **Lanzamientos D2C (Direct-to-Consumer):** Creación y gestión de tiendas online de alto rendimiento en Shopify, WooCommerce o plataformas headless.
+- **Optimización de Checkout y Pagos:** Implementación de flujos de pago en un solo toque (One-touch) para reducir el abandono de carrito.
+- **Gestión Masiva de Campañas (Black Friday):** Preparación técnica y operativa para picos de tráfico y pedidos masivos.
+- **Internacionalización de Ventas Online:** Adaptación de impuestos, logística transfronteriza y pasarelas de pago locales por país.
+- **Sincronización Stock Online-Físico:** Integración de sistemas POS con el catálogo digital para una gestión de inventario unificada.
 
-## Workflow N8N
-Referencia al archivo `workflow.json` o scripts integrados.
+## 3. Requisitos de Implementación
+- **Stack Ecommerce Moderno:** Uso de CMS escalables con API robustas para integraciones M2M.
+- **Analítica Transaccional Avanzada:** Monitorización constante del AOV (Ticket Medio), CR (Tasa de Conversión) y LTV.
+- **Partners de Fulfillment de Confianza:** Acuerdos con operadores logísticos que permitan el seguimiento del pedido en tiempo real.
 
-## Notas y advertencias
-- ⚠️ **Mantenimiento Técnico**: Requiere verificación mensual.
+---
 
-## Changelog
-- v1.0 — Versión inicial
-- v1.1 — Enriquecimiento técnico especializado y normalización de formato V1.1
+## 4. Diferencial: Catálogo Estático vs. Gestión E-commerce v2.0
+
+| Dimensión | Enfoque Legacy (Tienda) | Gestión E-commerce (v2.0) |
+| :--- | :--- | :--- |
+| **Conversión** | Esperar que el cliente compre. | CRO dinámico, test A/B y recuperación activa. |
+| **Stock** | Actualización manual semanal. | Sincronización en milisegundos multicanal. |
+| **Logística** | "Ya llegará el paquete". | Tracking predictivo y notificaciones push de estado. |
+| **Datos** | Solo el volumen total ventas. | Análisis de cohortes, CPA y márgenes por SKU. |
+
+---
+
+## 5. Instrucciones y Pasos Detallados (Protocolo Maestro)
+
+### Fase 1: Diagnóstico de Conversión y Flujo de Operaciones
+**Objetivo:** Identificar dónde se están "perdiendo" los clientes y el beneficio.
+1.  **Auditoría de Embudo (Funnel Audit):** IA analiza en qué paso del checkout se van más usuarios (Ej: Gastos de envío imprevistos).
+2.  **Optimización de 'Ficha de Producto':** Uso de IA para generar descripciones SEO, videos y reseñas sociales que eliminen dudas de compra.
+
+**Prompt Maestro de Estrategia E-commerce:**
+```text
+Actúa como un Senior E-commerce Expert y Consultor de Retail Ops. Diseña el plan de optimización para la tienda [NOMBRE_TIENDA]. 
+1. Realiza un 'Análisis del Checkout': ¿Cuáles son los 3 puntos de fricción que debemos eliminar hoy mismo? 
+2. Diseña la 'Estrategia de Cross-selling': ¿Qué productos sugerimos en el carrito para subir el ticket medio un 15%? 
+3. Automatización de Fulfillment: ¿Cómo integramos el CMS con el transportista para generar etiquetas de envío sin intervención humana? 
+4. Establece la política de 'Logística Inversa': ¿Cómo gestionamos las devoluciones para que el cliente no se enfade y nosotros no perdamos margen? 
+5. Indica los 5 KPIs sagrados del Dashboard: Conversión, AOV, CPA, Tasa de Abandono de Carrito y Coste Logístico por Pedido.
+```
+
+### Fase 2: Automatización, Pago y Fidelización Transaccional
+... (Expansión técnica sobre el uso de Service Workers para navegación ultrarrápida, la integración de 'Buy Now Pay Later' -BNPL- y la automatización de correos de recuperación de carrito basados en el valor del mismo) ...
+
+---
+
+## 6. Arquitectura de Automatización Lógica (Agnostic Flow)
+*Lógica de procesamiento de venta.*
+
+1.  **Trigger:** El cliente completa el pago de un pedido en la tienda online.
+2.  **Nodo de Verificación y Fraude:** El sistema cruza datos para asegurar que el pago es auténtico y el stock está realmente disponible.
+3.  **Nodo de Orquestación de Almacén:** Envío automático de la orden de picking al almacén más cercano y generación de la etiqueta de transporte.
+4.  **Nodo de Comunicación al Cliente:** Envío de recibo legal y enlace de seguimiento dinámico por SMS/WhatsApp.
+5.  **Output:** Pedido enviado y registrado en contabilidad; el inventario se actualiza en todos los canales de venta simultáneamente.
+
+---
+
+## 7. Ejemplo Práctico: Marca de Cosmética 'Aha Baby'
+**Reto:** Tenían un 80% de abandono de carrito en móvil porque el registro era demasiado largo y pedía el DNI obligatoriamente al principio.
+**Acción v2.0:** Se activó el "Guest Checkout" con Apple Pay/Google Pay. Se redujo el formulario a 2 campos. Se enviaron notificaciones push de "Stock agotándose" a quienes dejaron el carrito.
+**Resultado:** La tasa de conversión en móvil subió del 1.2% al 4.5% en un mes. Las ventas totales crecieron un 30% sin aumentar el gasto en publicidad.
+
+---
+**Autor:** Jesús García Fernández  
+**Licencia:** CC BY-NC 4.0

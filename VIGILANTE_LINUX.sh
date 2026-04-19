@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script de Vigilancia Antigravity para Linux
+# Script de Vigilancia (App Blueprint Generator) para Linux
 REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$REPO_ROOT"
 

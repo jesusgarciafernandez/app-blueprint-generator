@@ -1,13 +1,13 @@
 ---
-title: Automatización de Marketing
-version: 1.1
+title: Automatización de Marketing y Gestión de Ciclo de Vida (Lifecycle)
+version: 2.0
 author: Jesús García Fernández
 website: jesusgarciafernandez.com
 created: 2026-04-01
-updated: 2026-04-06
+updated: 2026-04-17
 category: 01. Marketing Digital
-subcategory: General
-tags: ['automatización', 'marketing', 'conversion', 'crm']
+subcategory: Automatización
+tags: [automatización, marketing, conversion, crm, lifecycle, lead-nurturing, ia-operativa]
 
 license: CC BY-NC 4.0
 license_url: https://creativecommons.org/licenses/by-nc/4.0/
@@ -19,32 +19,76 @@ notice: >
 id: 014
 ---
 
-## Descripción
-Habilidad estratégica centrada en el diseño, implementación y gestión de flujos de trabajo (workflows) automatizados para optimizar el ciclo de vida del cliente. Esta skill permite escalar procesos de comunicación personalizados, nutrir leads de forma sistemática y aumentar la tasa de conversión mediante el uso de disparadores (triggers) basados en el comportamiento del usuario y datos demográficos.
+## 0. Filosofía Human-Centric AI
+*Esta habilidad permite que el negocio esté "siempre encendido", sirviendo al cliente en su propio horario.*
 
-## Cuándo usarla
-Escenarios que activan esta skill:
-- Al implementar secuencias de bienvenida (Onboarding) para nuevos usuarios o suscriptores.
-- Para la recuperación de ingresos mediante flujos de carritos abandonados o reactivación de clientes inactivos.
-- Cuando se requiere calificar leads (Lead Scoring) de forma automática antes de pasarlos al equipo comercial.
-- Durante el lanzamiento de campañas complejas que requieren múltiples puntos de contacto coordinados.
-- Al integrar el comportamiento web (páginas visitadas, eventos) con acciones directas de comunicación en tiempo real.
+**El Rol del Humano:** El consultor debe definir la "Voz de Marca" y los momentos de contacto emocionalmente significativos. La IA gestiona el timing y la logística del envío, pero el humano diseña el viaje del cliente.
+**Empoderamiento:** Escalamos la personalización. Podemos tratar a 10,000 leads como si tuviéramos un comercial dedicado a cada uno de ellos siguiendo su progreso paso a paso.
 
-## Requisitos
-- Acceso a una herramienta de automatización (Hubspot, ActiveCampaign, Salesforce Marketing Cloud o Mautic).
-- Base de datos centralizada con capacidad de segmentación dinámica y etiquetado (Tags).
-- Conocimientos básicos de lógica condicional (IF/ELSE) y manejo de APIs/Webhooks.
-- Definición previa de los "Buyer Personas" y sus respectivos trayectos de compra (Customer Journeys).
+---
 
-## Instrucciones y Pasos detallados que se debe seguir:
+## 1. Descripción Detallada
+Esta habilidad estratégica se centra en el diseño, implementación y gestión de flujos de trabajo (workflows) automatizados para optimizar el ciclo de vida del cliente (Lifecycle Marketing). No solo enviamos mensajes; creamos un ecosistema donde cada acción del usuario (visita a una página de precios, descarga de un PDF, inactividad de 30 días) dispara una respuesta inteligente. El enfoque v2.0 incorpora el **Análisis Predictivo de Churn**, permitiendo que la automatización se active antes de que el usuario decida irse, ofreciendo incentivos personalizados basados en su comportamiento histórico.
 
+## 2. Escenarios de Aplicación
+- **Nutrición Sincronizada (Lead Nurturing):** Envío de contenido educativo en el momento exacto en que el usuario demuestra interés.
+- **Recuperación de Carritos y Abandono de Navegación:** Identificación de usuarios que dudan en la compra para ofrecerles ayuda o clarificación técnica.
+- **Onboarding de Alto Impacto:** Guía automática para nuevos clientes asegurando su éxito con el producto (Time-to-Value).
+- **Lanzamientos Multicanal:** Orquestación de SMS, Email y Webhooks sincronizados para grandes eventos de ventas.
 
-## Workflow N8N
-Referencia al archivo `workflow.json` o scripts integrados.
+## 3. Requisitos de Implementación
+- **Plataforma Core:** HubSpot, ActiveCampaign, Salesforce o Mautic.
+- **Lógica Condicional:** Dominio de estructuras IF/THEN/ELSE y Split Testing.
+- **Event-Driven Tracking:** Píxel de seguimiento o API de eventos instalada en la web/App.
 
-## Notas y advertencias
-- ⚠️ **Mantenimiento Técnico**: Requiere verificación mensual.
+---
 
-## Changelog
-- v1.0 — Versión inicial
-- v1.1 — Enriquecimiento técnico especializado y normalización de formato V1.1
+## 4. Diferencial: Automatización Tradicional vs. IA-Lifecycle v2.0
+
+| Factor | Automatización Lineal | IA-Lifecycle (v2.0) |
+| :--- | :--- | :--- |
+| **Flujo de Trabajo** | Secuencia fija de pasos. | Flujo dinámico que cambia según la respuesta del usuario. |
+| **Personalización** | Basada en campos fijos del CRM. | Basada en el contexto actual y el sentimiento del usuario. |
+| **Frecuencia** | Programada por el sistema. | Adaptativa: Envía cuando el usuario es más propenso a leer. |
+| **Objetivo** | Entregar el mensaje. | Optimizar para el siguiente paso del Funnel. |
+
+---
+
+## 5. Instrucciones y Pasos Detallados (Protocolo Maestro)
+
+### Fase 1: Mapping del Customer Journey y Micro-Momentos
+**Objetivo:** Identificar dónde podemos aportar valor automático.
+1.  **Auditoría de Puntos de Fricción:** ¿Dónde perdemos más leads?
+2.  **Definición de Triggers:** Crea una lista de "Momentos de Oro" para intervenir.
+
+**Prompt de Diseño de Workflow:**
+```text
+Actúa como Estratega de Marketing Automation. 
+Diseña un flujo de nutrición de 5 pasos para un usuario que ha descargado un manual técnico pero no ha solicitado una demo. 
+El flujo debe durar 14 días e incluir cambios de etiqueta según si el usuario abre o no los emails intermedios.
+```
+
+### Fase 2: Construcción de la Lógica de Orquestación
+... (Expansión sobre Webhooks, retrasos inteligentes y sincronización entre plataformas) ...
+
+---
+
+## 6. Arquitectura de Automatización Lógica (Agnostic Flow)
+*Lógica central ejecutable en cualquier motor.*
+
+1.  **Trigger:** Evento de "Interés Alto" (Ej: Visita 3 veces a la página de Precios).
+2.  **Nodo de Verificación:** ¿Ya es cliente? ¿Tiene un agente comercial asignado?
+3.  **Nodo de Acción Inmediata:** Envío de invitación a una llamada de asesoría gratuita.
+4.  **Nodo de Seguimiento:** Si no acepta en 24h, enviar un caso de éxito similar a su industria (IA selecciona el caso).
+5.  **Output:** Lead calificado y movido a "Ready for Sale" en el Pipeline.
+
+---
+
+## 7. Ejemplo Práctico: Escuela de Yoga Online
+**Reto:** Los alumnos se apuntaban a la prueba gratuita pero no compraban la suscripción.
+**Acción v2.0:** Se creó una secuencia que preguntaba "¿Cuál es tu objetivo: Flexibilidad o Paz Mental?" al segundo día.
+**Resultado:** Los emails cambiaban según la respuesta. La conversión de prueba a pago subió un 45%.
+
+---
+**Autor:** Jesús García Fernández  
+**Licencia:** CC BY-NC 4.0

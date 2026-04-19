@@ -223,7 +223,7 @@ BP_I18N = {
         'role_desc': 'Eres un equipo de desarrollo Senior especializado en **{app_type}**.',
         'mission_desc': 'Tu misión es construir **{app_name}** siguiendo estrictamente los documentos de este Blueprint.',
         'pending_tasks': 'TAREAS PENDIENTES DEL ECOSISTEMA (CRÍTICO)',
-        'pending_desc': 'Antigravity, hemos detectado que las siguientes funcionalidades solicitadas por el usuario **NO existían en este repositorio de Skills**:',
+        'pending_desc': '{ai_name}, hemos detectado que las siguientes funcionalidades solicitadas por el usuario **NO existían en este repositorio de Skills**: ',
         'pending_obligation': '👉 TU OBLIGACIÓN: ANTES de empezar a escribir el código de la app, COMPLETA Y REDACTA detalladamente los archivos `SKILL.md` y `workflow.md` correspondientes dentro de esas carpetas en el sistema físico. ¡Retroalimenta tu propio ecosistema!',
         'project_desc_title': 'Descripción del Proyecto',
         'no_desc': 'Sin descripción proporcionada.',
@@ -323,7 +323,7 @@ BP_I18N = {
         'role_desc': 'You are a Senior development team specialized in **{app_type}**.',
         'mission_desc': 'Your mission is to build **{app_name}** strictly following the documents in this Blueprint.',
         'pending_tasks': 'PENDING ECOSYSTEM TASKS (CRITICAL)',
-        'pending_desc': 'Antigravity, we have detected that the following features requested by the user **did NOT exist in this Skills repository**:',
+        'pending_desc': '{ai_name}, we have detected that the following features requested by the user **did NOT exist in this Skills repository**:',
         'pending_obligation': '👉 YOUR OBLIGATION: BEFORE you start writing code, COMPLETE AND REDACT in detail the corresponding `SKILL.md` and `workflow.md` files within those folders in the physical system. Feed back your own ecosystem!',
         'project_desc_title': 'Project Description',
         'no_desc': 'No description provided.',
@@ -523,7 +523,7 @@ BP_I18N = {
         'role_desc': 'Sie sind ein Senior-Entwicklungsteam, spezialisiert auf **{app_type}**.',
         'mission_desc': 'Ihre Mission ist es, **{app_name}** unter strenger Einhaltung der Dokumente in diesem Blueprint zu erstellen.',
         'pending_tasks': 'AUSSTEHENDE ÖKOSYSTEM-AUFGABEN (KRITISCH)',
-        'pending_desc': 'Antigravity, wir haben festgestellt, dass die folgenden vom Benutzer angeforderten Funktionen **NICHT in diesem Skills-Repository existierten**:',
+        'pending_desc': '{ai_name}, wir haben festgestellt, dass die folgenden vom Benutzer angeforderten Funktionen **NICHT in diesem Skills-Repository existierten**:',
         'pending_obligation': '👉 IHRE VERPFLICHTUNG: BEVOR Sie mit dem Schreiben von Code beginnen, VERVOLLSTÄNDIGEN UND VERFASSEN Sie die entsprechenden `SKILL.md`- und `workflow.md`-Dateien in diesen Ordnern im physischen System detailliert. Geben Sie Rückmeldung an Ihr eigenes Ökosystem!',
         'project_desc_title': 'Projektbeschreibung',
         'no_desc': 'Keine Beschreibung angegeben.',
@@ -623,7 +623,7 @@ BP_I18N = {
         'role_desc': '您是一个专注于 **{app_type}** 的高级开发团队。',
         'mission_desc': '您的任务是严格遵循本蓝图中的文档来构建 **{app_name}**。',
         'pending_tasks': '待处理生态系统任务（关键）',
-        'pending_desc': 'Antigravity，我们检测到用户请求的以下功能**在技能库中不存在**：',
+        'pending_desc': '{ai_name}，我们检测到用户请求的以下功能**在技能库中不存在**：',
         'pending_obligation': '👉 您的义务：在开始编写代码之前，请详细完成并编写物理系统中这些文件夹内相应的 `SKILL.md` 和 `workflow.md` 文件。反馈您自己的生态系统！',
         'project_desc_title': '项目描述',
         'no_desc': '未提供描述。',
@@ -723,7 +723,7 @@ BP_I18N = {
         'role_desc': 'あなたは**{app_type}**に特化したシニア開発チームです。',
         'mission_desc': 'あなたの使命は、このブループリント内のドキュメントに厳密に従って**{app_name}**を構築することです。',
         'pending_tasks': '保留中のエコシステムタスク（重要）',
-        'pending_desc': 'Antigravity、ユーザーが要求した以下の機能が**このスキルリポジトリに存在しない**ことを検出しました：',
+        'pending_desc': '{ai_name}、ユーザーが要求した以下の機能が**このスキルリポジトリに存在しない**ことを検出しました：',
         'pending_obligation': '👉 あなたの義務：コードを書き始める前に、物理システム内のそれらのフォルダにある対応する `SKILL.md` と `workflow.md` ファイルを詳細に完成させて記述してください。自身のエコシステムにフィードバックしてください！',
         'project_desc_title': 'プロジェクトの説明',
         'no_desc': '説明なし。',
@@ -836,7 +836,7 @@ def generate_leeme(app_name, lang='es'):
 """
 
 
-def generate_prompt_inicial(app_name, app_desc, app_type, features_list, missing_skills=None, lang='es'):
+def generate_prompt_inicial(app_name, app_desc, app_type, features_list, ai_engine='Antigravity', missing_skills=None, lang='es'):
     """Genera PROMPT_MAESTRO.md."""
     t = BP_I18N.get(lang, BP_I18N['es'])
     features_list = features_list or []
@@ -845,9 +845,10 @@ def generate_prompt_inicial(app_name, app_desc, app_type, features_list, missing
     missing_md = ""
     if missing_skills:
         m_list = "\n".join([f"- {m}" for m in missing_skills])
+        pending_desc_formatted = t['pending_desc'].format(ai_name=ai_engine)
         missing_md = f"""
 ## ⚠️ {t['pending_tasks']}
-{t['pending_desc']}
+{pending_desc_formatted}
 
 {m_list}
 
@@ -942,7 +943,7 @@ def generate_funcionalidades(data, lang='es'):
     integrations = data.get('integrations') or []
     features_md = "\n".join([f"- ✅ {f}" for f in features]) if features else f"- {t['no_features']}"
     ints_md = "\n".join([f"- 🔗 {i}" for i in integrations]) if integrations else f"- {t['no_ints']}"
-    return f"""---
+    html = f"""---
 {t['generated_with']}: {TOOL_NAME}
 {t['tool_author']}: {AUTHOR}
 ---
@@ -955,9 +956,19 @@ def generate_funcionalidades(data, lang='es'):
 ## {t['external_ints']}
 {ints_md}
 
----
+"""
+    nfrs = data.get('nfrs', '').strip()
+    if nfrs:
+        html += f"## Requisitos No Funcionales (NFRs)\n{nfrs}\n\n"
+        
+    schema = data.get('data_schema', '').strip()
+    if schema:
+        html += f"## Esquema de Datos Inicial\n```sql\n{schema}\n```\n\n"
+        
+    html += f"""---
 *{t['footer_generated']} {TOOL_NAME} v{TOOL_VERSION} | {AUTHOR} — {AUTHOR_WEB}*
 """
+    return html
 
 
 def generate_equipo_agentes(data, lang='es'):
@@ -1387,15 +1398,201 @@ El **Ingeniero DevOps IA** es quien agarra el conjunto de código estandarizado 
 
 
 # ────────────────────────────────────────────────────────────
+# SISTEMA MULTI-AGENTE (MAS)
+# ────────────────────────────────────────────────────────────
+def get_mas_content(complexity):
+    """Devuelve un diccionario con el contenido MAS según la complejidad seleccionada."""
+    mas_content = {}
+    
+    if complexity == 'classic':
+        return mas_content
+        
+    if complexity in ['copilot', 'autonomous_mas']:
+        mas_content['PROTOCOLOS_MCP_Y_HERRAMIENTAS'] = """# 🛠 Protocolos MCP y Uso de Herramientas
+## Regla de Menor Privilegio (PoLP)
+- Los agentes (o el asistente único) SOLO pueden solicitar ejecución de herramientas si es estrictamente necesario para cumplir el paso actual.
+- Prohibición de bucles de herramientas: Si una API falla 2 veces por timeout o input inválido, se debe emitir un _fallback_ al usuario o al log, no reintentar infinitamente.
+## Límite de Contexto (Context Window)
+- Cada respuesta generada tras llamar a múltiples herramientas debe ser condensada. Nunca devolver los JSON crudos íntegros en el razonamiento interno, solo la inferencia útil.
+"""
+        mas_content['GUARDRAILS_Y_QA'] = """# 🛡️ Guardrails y QA
+## Anti-Alucinación
+- Si una librería, puerto o Endpoint no ha sido provisto como contexto en este blueprint o mediante herramientas de búsqueda en vivo, SE PROHÍBE su invención.
+- Confirmación explícita: Si hay duda arquitectónica bloqueante, emitir "USER_QUERY" y pausar.
+"""
+
+    if complexity == 'autonomous_mas':
+        mas_content['MEMORIA_MAS'] = """# 🧠 Gestión de Memoria y Contexto
+## Memoria de Trabajo (Working Memory)
+- Se limitará al contexto de la Tarea/Skill actual. Cuando el superagente delega a un subagente, SOLO le transfiere este blueprint y el prompt de tarea, no el historial completo de chat.
+## Memoria Episódica (Episodic Memory)
+- Obligatorio uso de base de datos vectorial o dumps iterativos en `scratch_pad.md` para recordar decisiones tomadas en iteraciones anteriores. Antes de ejecutar cambios estructurales, el agente DEBE leer la memoria episódica.
+"""
+        mas_content['COMUNICACION_Y_OBSERVABILIDAD'] = """# 📡 Comunicación y Trazabilidad (Message Broker)
+## Inter-Agente
+- Los mensajes entre agentes deben ser estructurados: `[SENDER: Agente_X] -> [RECEIVER: Agente_Y] | [INTENT: Code_Review]`.
+- No se permiten comunicaciones circulares sin un árbitro (Superagente).
+## Observabilidad (Logs)
+- Todo output de subagente debe llevar adjunto un árbol de decisiones simple de por qué resolvió así la tarea.
+"""
+        
+    return mas_content
+
+# ────────────────────────────────────────────────────────────
 # COMPOSITOR DEL BLUEPRINT (genera el ZIP)
 # ────────────────────────────────────────────────────────────
+def _build_antigravity_format(zf, data, matched_skills, lang, app_name, features_list, ai_engine):
+    # Raíz del ZIP
+    zf.writestr("LEEME_PRIMERO.md", generate_leeme(app_name, lang))
+    zf.writestr("PROMPT_MAESTRO.md", generate_prompt_inicial(
+        app_name,
+        data.get('app_desc', ''),
+        data.get('app_type', 'Web App'),
+        features_list,
+        ai_engine,
+        data.get('missing_skills'),
+        lang
+    ))
+
+    # 01_VISION
+    zf.writestr("01_VISION/PROYECTO.md", generate_proyecto(data, lang))
+    zf.writestr("01_VISION/AUDIENCIA.md", generate_audiencia(data, lang))
+    zf.writestr("01_VISION/FUNCIONALIDADES.md", generate_funcionalidades(data, lang))
+
+    # 02_AGENTES
+    zf.writestr("02_AGENTES/EQUIPO.md", generate_equipo_agentes(data, lang))
+
+    # 03_SKILLS — Incluir las skills seleccionadas
+    for skill_info in matched_skills:
+        skill = skill_info[0] if isinstance(skill_info, tuple) else skill_info
+        skill_name = skill.get('name', 'Skill')
+        folder_name = re.sub(r'[^\w\s-]', '', skill_name).strip().replace(' ', '_')[:50]
+        skill_path_prefix = f"03_SKILLS/{folder_name}/"
+
+        # SKILL.md
+        content = skill.get('content', '')
+        if content:
+            zf.writestr(f"{skill_path_prefix}SKILL.md", content)
+
+        # workflow.md
+        wf_content = skill.get('workflow_content', '')
+        if wf_content:
+            zf.writestr(f"{skill_path_prefix}workflow.md", wf_content)
+
+    # 04_ARQUITECTURA
+    zf.writestr("04_ARQUITECTURA/STACK_TECNOLOGICO.md", generate_stack_tecnologico(data, lang))
+
+    # 07_SISTEMA_MAS (Opcional según complejidad)
+    ai_complexity = data.get('ai_complexity', 'classic')
+    mas_content = get_mas_content(ai_complexity)
+    if mas_content:
+        for title, content in mas_content.items():
+            zf.writestr(f"07_SISTEMA_MAS/{title}.md", content)
+
+    # 05_REGLAS
+    zf.writestr("05_REGLAS/LINEAS_ROJAS.md", generate_lineas_rojas(data, lang))
+    zf.writestr("05_REGLAS/ESTANDARES.md", generate_estandares(data, lang))
+    zf.writestr("05_REGLAS/SEGURIDAD.md", generate_seguridad(lang))
+    zf.writestr("05_REGLAS/WORKSPACE.md", generate_reglas_workspace(data, lang))
+    zf.writestr("05_REGLAS/WORK_FLOW_TREE.md", generate_workflow_tree(data, lang))
+
+    # 06_DISEÑO
+    zf.writestr("06_DISEÑO/ESTILO_VISUAL.md", generate_diseno(data, lang))
+    
+    # AGENTES DETALLADOS
+    detalles_agentes = generate_detalle_agentes(data, lang)
+    for filename, content in detalles_agentes.items():
+        zf.writestr(f"02_AGENTES/AGENTES_INDIVIDUALES/{filename}", content)
+
+    # ARCHIVO DE METADATOS .antigravity
+    zf.writestr(".antigravity", json.dumps(data, indent=2, ensure_ascii=False))
+
+def _build_claude_xml_format(zf, data, matched_skills, lang, app_name, features_list, ai_engine):
+    xml_content = f'<project name="{app_name}">\n'
+    xml_content += f"  <vision>\n{generate_proyecto(data, lang)}\n</vision>\n"
+    xml_content += f"  <audience>\n{generate_audiencia(data, lang)}\n</audience>\n"
+    xml_content += f"  <features>\n{generate_funcionalidades(data, lang)}\n</features>\n"
+    xml_content += f"  <architecture>\n{generate_stack_tecnologico(data, lang)}\n</architecture>\n"
+    xml_content += f"  <rules>\n{generate_lineas_rojas(data, lang)}\n{generate_estandares(data, lang)}\n{generate_seguridad(lang)}\n</rules>\n"
+    xml_content += f"  <design>\n{generate_diseno(data, lang)}\n</design>\n"
+    
+    ai_complexity = data.get('ai_complexity', 'classic')
+    mas_content = get_mas_content(ai_complexity)
+    if mas_content:
+        xml_content += f"  <mas_architecture>\n"
+        for title, content in mas_content.items():
+            safe_tag = title.lower()
+            xml_content += f"    <{safe_tag}>\n<![CDATA[\n{content}\n]]>\n    </{safe_tag}>\n"
+        xml_content += f"  </mas_architecture>\n"
+        
+    xml_content += f"  <skills>\n"
+    for skill_info in matched_skills:
+        skill = skill_info[0] if isinstance(skill_info, tuple) else skill_info
+        xml_content += f'    <skill name="{skill.get("name", "")}">\n'
+        xml_content += f"      <content><![CDATA[{skill.get('content', '')}]]></content>\n"
+        xml_content += f"      <workflow><![CDATA[{skill.get('workflow_content', '')}]]></workflow>\n"
+        xml_content += f"    </skill>\n"
+    xml_content += f"  </skills>\n"
+    xml_content += f"</project>"
+    
+    zf.writestr(f"{app_name}_context.xml", xml_content)
+    
+    # Archivo de configuración/metadatos .claude
+    claude_config = {
+        "project_name": app_name,
+        "context_file": f"{app_name}_context.xml",
+        "description": data.get('app_desc', ''),
+        "ai_engine": ai_engine
+    }
+    zf.writestr(".claude", json.dumps(claude_config, indent=2, ensure_ascii=False))
+
+    zf.writestr("PROMPT_MAESTRO.md", generate_prompt_inicial(
+        app_name,
+        data.get('app_desc', ''),
+        data.get('app_type', 'Web App'),
+        features_list,
+        ai_engine,
+        data.get('missing_skills'),
+        lang
+    ) + "\n\n**INSTRUCCIÓN:** Pasa el archivo XML adjunto como contexto inicial.")
+
+def _build_cursor_rules_format(zf, data, matched_skills, lang, app_name, features_list, ai_engine):
+    rules_content = f"# Contexto del Proyecto: {app_name}\n\n"
+    rules_content += generate_proyecto(data, lang) + "\n\n"
+    rules_content += generate_funcionalidades(data, lang) + "\n\n"
+    rules_content += "## Tecnologías\n" + generate_stack_tecnologico(data, lang) + "\n\n"
+    rules_content += "## Reglas y Líneas Rojas\n" + generate_lineas_rojas(data, lang) + "\n" + generate_estandares(data, lang) + "\n\n"
+    rules_content += "## Diseño\n" + generate_diseno(data, lang) + "\n\n"
+    
+    ai_complexity = data.get('ai_complexity', 'classic')
+    mas_content = get_mas_content(ai_complexity)
+    if mas_content:
+        rules_content += "# 🤖 ARQUITECTURA MULTI-AGENTE (MAS) Y RESILIENCIA\n\n"
+        for title, content in mas_content.items():
+            rules_content += f"{content}\n\n"
+    
+    filename = ".windsurfrules" if ai_engine == "Windsurf" else ".cursorrules"
+    zf.writestr(filename, rules_content)
+    
+    zf.writestr("PROMPT_MAESTRO.md", generate_prompt_inicial(
+        app_name,
+        data.get('app_desc', ''),
+        data.get('app_type', 'Web App'),
+        features_list,
+        ai_engine,
+        data.get('missing_skills'),
+        lang
+    ))
+
 def compose_blueprint(data, matched_skills):
-    """Compone el Blueprint completo y genera el archivo ZIP."""
+    """Compone el Blueprint completo y genera el archivo ZIP usando el Factory Pattern."""
     lang = data.get('ui_lang', 'es')
     app_name = data.get('app_name', 'MiApp')
+    ai_engine = data.get('ai_engine', 'Antigravity')
     safe_name = re.sub(r'[^\w\s-]', '', app_name).strip().replace(' ', '_')
+    safe_engine = re.sub(r'[^\w\s-]', '', ai_engine).strip()
     timestamp = datetime.now().strftime('%Y-%m-%d_%H%M')
-    zip_filename = f"{safe_name}_Blueprint_{timestamp}.zip"
+    zip_filename = f"{safe_name}_{safe_engine}_Blueprint_{timestamp}.zip"
 
     # Asegurar que existe la carpeta de salida
     os.makedirs(APPS_OUTPUT_DIR, exist_ok=True)
@@ -1404,61 +1601,15 @@ def compose_blueprint(data, matched_skills):
     features_list = data.get('features') or []
 
     with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
-        # Raíz del ZIP
-        zf.writestr("LEEME_PRIMERO.md", generate_leeme(app_name, lang))
-        zf.writestr("PROMPT_MAESTRO.md", generate_prompt_inicial(
-            app_name,
-            data.get('app_desc', ''),
-            data.get('app_type', 'Web App'),
-            features_list,
-            data.get('missing_skills'),
-            lang
-        ))
+        if ai_engine == 'Claude':
+            _build_claude_xml_format(zf, data, matched_skills, lang, app_name, features_list, ai_engine)
+        elif ai_engine in ['Cursor', 'Windsurf']:
+            _build_cursor_rules_format(zf, data, matched_skills, lang, app_name, features_list, ai_engine)
+        else:
+            # Default fallback format (Antigravity/Genérico)
+            _build_antigravity_format(zf, data, matched_skills, lang, app_name, features_list, ai_engine)
 
-        # 01_VISION
-        zf.writestr("01_VISION/PROYECTO.md", generate_proyecto(data, lang))
-        zf.writestr("01_VISION/AUDIENCIA.md", generate_audiencia(data, lang))
-        zf.writestr("01_VISION/FUNCIONALIDADES.md", generate_funcionalidades(data, lang))
-
-        # 02_AGENTES
-        zf.writestr("02_AGENTES/EQUIPO.md", generate_equipo_agentes(data, lang))
-
-        # 03_SKILLS — Incluir las skills seleccionadas
-        for skill_info in matched_skills:
-            skill = skill_info[0] if isinstance(skill_info, tuple) else skill_info
-            skill_name = skill.get('name', 'Skill')
-            folder_name = re.sub(r'[^\w\s-]', '', skill_name).strip().replace(' ', '_')[:50]
-            skill_path_prefix = f"03_SKILLS/{folder_name}/"
-
-            # SKILL.md
-            content = skill.get('content', '')
-            if content:
-                zf.writestr(f"{skill_path_prefix}SKILL.md", content)
-
-            # workflow.md
-            wf_content = skill.get('workflow_content', '')
-            if wf_content:
-                zf.writestr(f"{skill_path_prefix}workflow.md", wf_content)
-
-        # 04_ARQUITECTURA
-        zf.writestr("04_ARQUITECTURA/STACK_TECNOLOGICO.md", generate_stack_tecnologico(data, lang))
-
-        # 05_REGLAS
-        zf.writestr("05_REGLAS/LINEAS_ROJAS.md", generate_lineas_rojas(data, lang))
-        zf.writestr("05_REGLAS/ESTANDARES.md", generate_estandares(data, lang))
-        zf.writestr("05_REGLAS/SEGURIDAD.md", generate_seguridad(lang))
-        zf.writestr("05_REGLAS/WORKSPACE.md", generate_reglas_workspace(data, lang))
-        zf.writestr("05_REGLAS/WORK_FLOW_TREE.md", generate_workflow_tree(data, lang))
-
-        # 06_DISEÑO
-        zf.writestr("06_DISEÑO/ESTILO_VISUAL.md", generate_diseno(data, lang))
-        
-        # AGENTES DETALLADOS
-        detalles_agentes = generate_detalle_agentes(data, lang)
-        for filename, content in detalles_agentes.items():
-            zf.writestr(f"02_AGENTES/AGENTES_INDIVIDUALES/{filename}", content)
-
-    print(f"[✓] Blueprint generado ({lang}): {zip_path}")
+    print(f"[✓] Blueprint generado ({lang} - {ai_engine}): {zip_path}")
     return zip_filename, zip_path
 
 

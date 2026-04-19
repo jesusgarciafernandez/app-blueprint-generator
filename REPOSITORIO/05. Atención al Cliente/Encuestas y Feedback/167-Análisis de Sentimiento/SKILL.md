@@ -1,13 +1,13 @@
 ---
-title: Análisis de Sentimiento
-version: 1.1
+title: Análisis de Sentimiento (Emotional Intelligence & Opinion Mining)
+version: 2.0
 author: Jesús García Fernández
 website: jesusgarciafernandez.com
 created: 2026-04-01
-updated: 2026-04-06
-category: 05. Atención al Cliente
-subcategory: General
-tags: ['sentiment-analysis', 'nlp', 'opinion-mining', 'customer-feedback', 'emotion-detection', 'text-analytics', 'brand-monitoring']
+updated: 2026-04-17
+category: 05. Atención al Cliente
+subcategory: Encuestas y Feedback
+tags: [sentiment-analysis, nlp, opinion-mining, customer-feedback, emotion-detection, textual-analytics, brand-monitoring, intent-classification, ai-insights, real-time-monitoring]
 
 license: CC BY-NC 4.0
 license_url: https://creativecommons.org/licenses/by-nc/4.0/
@@ -19,33 +19,80 @@ notice: >
 id: 167
 ---
 
-## Descripción
-Habilidad de Procesamiento de Lenguaje Natural (NLP) dedicada a la identificación y extracción automatizada de actitudes emocionales, juicios y opiniones expresadas en datos textuales (o de voz convertida a texto). El Análisis de Sentimiento clasifica la polaridad de un discurso (Positivo, Negativo, Neutro) y puede profundizar en emociones específicas (alegría, enfado, tristeza) o en el análisis basado en aspectos (ej: opinión sobre la "batería" de un móvil vs su "pantalla"). Esta skill permite a las empresas medir la salud de su marca en redes sociales, identificar clientes insatisfechos en tiempo real y cuantificar la percepción del mercado sobre nuevos lanzamientos de forma objetiva.
+## 0. Filosofía Human-Centric AI
+*Esta habilidad otorga voz a los datos masivos al identificar las emociones y opiniones subyacentes en el texto, utilizando la tecnología para que las organizaciones escuchen con empatía a escala y respondan a las necesidades reales de sus usuarios antes de que se conviertan en problemas.*
 
-## Cuándo usarla
-Escenarios que activan esta skill:
-- Para monitorizar la reputación de la marca en Twitter/X durante una crisis de relaciones públicas.
-- Al procesar automáticamente miles de reseñas de productos en Amazon para resumir los puntos fuertes y débiles.
-- En flujos de atención al cliente para priorizar tickets donde se detecte un tono de enfado o urgencia elevado.
-- Para analizar transcripciones de llamadas de ventas e identificar qué argumentos generan mayor rechazo o aceptación.
-- Durante campañas electorales para medir la intención de voto o la reacción a debates en tiempo real.
+**El Rol del Humano:** El Analista de Datos debe ser un "Intérprete del Contexto". La IA puede clasificar millones de comentarios como "positivos" o "negativos" en milisegundos y detectar el sarcasmo con una precisión creciente, pero solo el humano puede entender el matiz cultural profundo detrás de una crítica, decidir si un pico de negatividad requiere un cambio en la estrategia de producto o una disculpa pública, y asegurar que la tecnología se use para mejorar la experiencia humana y no solo para "puntuar" la satisfacción de forma fría.
+**Empoderamiento:** Usamos la tecnología para sustituir la adivinanza sobre lo que piensa el mercado por una comprensión profunda y accionable del sentimiento del cliente.
 
-## Requisitos
-- Conocimientos de NLP (Tokenización, Lemmatización, Stopwords).
-- Familiaridad con modelos de clasificación (desde diccionarios léxicos como VADER hasta Transformers como RoBERTa).
-- Comprensión de matices lingüísticos regionales (slang, ironía, sarcasmo).
-- Experiencia en el uso de APIs de IA (GPT-4o, Claude) o librerías locales (Spacy, TextBlob).
-- Capacidad para integrar visualizaciones dinámicas (Nubes de palabras, evolución temporal de sentimiento).
+---
 
-## Instrucciones y Pasos detallados que se debe seguir:
+## 1. Descripción Detallada
+El Análisis de Sentimiento (v2.0) es la competencia técnica de extraer actitudes emocionales de datos no estructurados. No es solo "contar palabras felices"; es **Minería de la Opinión Basada en Aspectos**. El enfoque v2.0 integra el **Procesamiento de Lenguaje Natural (NLP)** avanzado con modelos de Deep Learning para identificar no solo la polaridad (Positivo/Negativo/Neutro), sino las emociones específicas (Ira, Alegría, Sorpresa) y el sentimiento vinculado a atributos concretos de un producto (Ej: Feedback positivo sobre el "diseño" pero negativo sobre el "precio").
 
+## 2. Escenarios de Aplicación
+- **Monitorización de Reputación de Marca:** Seguimiento en tiempo real de menciones en redes sociales y noticias.
+- **Priorización de Tickets de Soporte:** Identificación automática de usuarios "frustrados" para ser atendidos por agentes senior de forma prioritaria.
+- **Análisis de Reseñas de Producto (Marketplaces):** Síntesis masiva de pros y contras extraídos de miles de opiniones de usuarios.
+- **Auditoría de Conversaciones de Venta:** Análisis de transcripciones de llamadas para detectar objeciones recurrentes y niveles de aceptación.
+- **Climatología Laboral Interna:** Análisis anónimo de encuestas de empleados para detectar focos de desmotivación o conflicto.
 
-## Workflow N8N
-Referencia al archivo `workflow.json` o scripts integrados.
+## 3. Requisitos de Implementación
+- **Acceso a Modelos de Lenguaje Avanzados:** Uso de APIs de LLMs (GPT-4o, Claude) o modelos locales tipo BERT/RoBERTa optimizados.
+- **Pipeline de Ingesta de Datos No Estructurados:** Capacidad de recolectar datos de Twitter, Trustpilot, RSS o transcripciones de voz.
+- **Herramientas de Visualización de Datos:** Dashboards dinámicos (Grafana, PowerBI) que muestren la evolución del sentimiento en el tiempo.
 
-## Notas y advertencias
-- ⚠️ **Mantenimiento Técnico**: Requiere verificación mensual.
+---
 
-## Changelog
-- v1.0 — Versión inicial
-- v1.1 — Enriquecimiento técnico especializado y normalización de formato V1.1
+## 4. Diferencial: Lectura Manual vs. Análisis de Sentimiento v2.0
+
+| Dimensión | Enfoque Legacy (Manual) | Análisis de Sentimiento (v2.0) |
+| :--- | :--- | :--- |
+| **Escalabilidad** | Limitada a unos pocos comentarios. | Millones de datos procesados al instante. |
+| **Objetividad** | Sesgada por la percepción del lector. | Clasificación basada en modelos entrenados. |
+| **Profundidad** | Superficial (Me gusta / No me gusta). | Análisis por aspectos y detección de emociones. |
+| **Acción** | Reactiva y lenta. | Alertas automáticas ante variaciones críticas. |
+
+---
+
+## 5. Instrucciones y Pasos Detallados (Protocolo Maestro)
+
+### Fase 1: Recolección y Preprocesamiento de Corpus
+**Objetivo:** Preparar los datos para que la IA los "entienda" sin ruido.
+1.  **Limpieza de Ruido Textual:** IA elimina etiquetas HTML, emojis irrelevantes y carácteres especiales.
+2.  **Identificación de Idioma y Dialecto:** El sistema detecta automáticamente el contexto lingüístico (Ej: Español de España vs. México) para ajustar el modelo.
+
+**Prompt Maestro de Análisis de Sentimiento:**
+```text
+Actúa como un Senior NLP Data Scientist y Experto en Opinión Mining. Analiza el siguiente set de comentarios sobre [PRODUCTO/MARCA]. 
+1. Clasificación de Polaridad: Clasifica cada comentario como Positivo, Negativo o Neutro con un índice de confianza del 0 al 1. 
+2. Detección de Emociones: Identifica la emoción predominante (Ej: Frustración, Gratitud, Curiosidad). 
+3. Análisis por Aspectos: ¿A qué atributos específicos se refieren las críticas negativas (Ej: Batería, Envío, Atención telefónica)? 
+4. Extracción de 'Actionable Insights': Resume las 3 acciones inmediatas que la empresa debe tomar basada en este sentimiento. 
+5. Identificación de Ironía: Detecta posibles comentarios sarcásticos que puedan falsear la métrica de satisfacción.
+```
+
+### Fase 2: Automatización de Alertas y Reporting Estratégico
+... (Expansión técnica sobre la implementación de "Sentiment-based Routing" en el CRM, la creación de nubes de palabras dinámicas ponderadas por sentimiento y el uso de técnicas de "Zero-shot classification" para categorías de opinión personalizadas) ...
+
+---
+
+## 6. Arquitectura de Automatización Lógica (Agnostic Flow)
+*Lógica de monitorización emocional.*
+
+1.  **Trigger:** Llega un nuevo comentario, reseña o mensaje directo a la plataforma.
+2.  **Nodo de Procesamiento NLP:** El sistema extrae el texto, el autor y la metainformación; el modelo de IA clasifica la polaridad y los aspectos.
+3.  **Nodo de Lógica Reaccional:** Si el sentimiento es "Muy Negativo" (< 0.2), se dispara una alerta roja en Slack al equipo de Customer Success.
+4.  **Nodo de Registro Histórico:** Se guardan los datos procesados en una base de datos vectorial para analizar tendencias semanales.
+5.  **Output:** Dashboard de reputación actualizado en tiempo real; intervención humana inmediata en casos críticos de insatisfacción.
+
+---
+
+## 7. Ejemplo Práctico: Cadena de Hoteles 'Sun & Rest'
+**Reto:** Recibían 500 reseñas a la semana en 10 idiomas. No sabían exactamente por qué bajaba su nota en Booking.
+**Acción v2.0:** Implementaron un análisis por aspectos. La IA detectó que el 70% de las quejas negativas en el hotel de Marbella se referían específicamente al "tiempo de espera en el desayuno".
+**Resultado:** Contrataron a dos camareros más para el desayuno. En un mes, el sentimiento positivo en las reseñas subió un 15% y la nota media en Booking pasó de 7.8 a 8.4.
+
+---
+**Autor:** Jesús García Fernández  
+**Licencia:** CC BY-NC 4.0

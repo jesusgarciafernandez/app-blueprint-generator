@@ -1,13 +1,13 @@
 #!/bin/zsh
 
 # Script para Sincronizar Cambios con GitHub
-# Autor: Antigravity (Jesús García Fernández)
+# Autor: App Blueprint Generator (Jesús García Fernández)
 
 # Cambiar al directorio del script
 cd "$(dirname "$0")"
 
 echo "==========================================="
-echo "   Sincronizando con GitHub (Antigravity)   "
+echo "   Sincronizando con GitHub (App Blueprint Generator)   "
 echo "==========================================="
 
 # 1. Añadir todos los cambios (especialmente nuevas Skills)

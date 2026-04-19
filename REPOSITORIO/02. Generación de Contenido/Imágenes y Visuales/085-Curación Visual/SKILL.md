@@ -1,13 +1,13 @@
 ---
-title: Curación Visual
-version: 1.1
+title: Curación Visual, Dirección de Arte y Moodboarding Estratégico
+version: 2.0
 author: Jesús García Fernández
 website: jesusgarciafernandez.com
 created: 2026-04-01
-updated: 2026-04-06
-category: 02. Generación de Contenido
-subcategory: General
-tags: ['visual-curation', 'art-direction', 'moodboard', 'visual-identity', 'brand-consistency', 'visual-storytelling']
+updated: 2026-04-17
+category: 02. Generación de Contenido
+subcategory: Imágenes y Visuales
+tags: [visual-curation, art-direction, moodboard, visual-identity, brand-consistency, visual-storytelling, trend-forecasting, visual-research]
 
 license: CC BY-NC 4.0
 license_url: https://creativecommons.org/licenses/by-nc/4.0/
@@ -19,33 +19,79 @@ notice: >
 id: 085
 ---
 
-## Descripción
-Habilidad estratégica centrada en la búsqueda, selección, organización y presentación de referencias visuales que definen el ecosistema estético de un proyecto o marca. La Curación Visual no es solo recopilar imágenes, sino filtrar contenido bajo un criterio de dirección de arte coherente para transmitir sensaciones, conceptos o valores específicos. Esta disciplina utiliza herramientas como el *Moodboarding* para establecer la paleta cromática, la tipografía, las texturas y el estilo fotográfico antes de iniciar la producción técnica, asegurando que todos los activos visuales de una campaña o producto hablen el mismo idioma visual.
+## 0. Filosofía Human-Centric AI
+*Esta habilidad entrena el ojo humano para encontrar la belleza y el orden en el caos de la información visual, utilizando la tecnología para destilar la esencia de una marca.*
 
-## Cuándo usarla
-Escenarios que activan esta skill:
-- En la fase conceptual de un proyecto de branding para alinear expectativas estéticas con el cliente.
-- Durante la pre-producción de sesiones fotográficas o rodajes para definir el estilo de iluminación, encuadre y dirección de arte.
-- Al alimentar canales de comunicación visual (Instagram, Pinterest, Web) que requieran una estética consistente y atractiva.
-- Para crear guías de estilo visual que sirvan de referencia a otros diseñadores o creadores de contenido del equipo.
-- En la búsqueda de inspiración y tendencias (*Trend Forecasting*) para mantener la relevancia visual de un producto maduro.
+**El Rol del Humano:** El curador visual debe ser un "Filtro Crítico de Valor". La IA puede rastrear millones de imágenes y sugerir tendencias basadas en algoritmos de popularidad, pero solo el humano puede discernir qué imagen tiene la "alma" adecuada para un proyecto, descubrir conexiones poéticas entre referencias inconexas y asegurar que la colección final transmita una emoción genuina y coherente con el propósito humano del proyecto.
+**Empoderamiento:** Usamos la tecnología para acelerar la búsqueda y organización de referencias, permitiendo que el director creativo explore universos estéticos globales en segundos para elevar la calidad visual de sus propias creaciones.
 
-## Requisitos
-- Gran cultura visual y conocimiento de historia del arte, diseño, fotografía y cine.
-- Capacidad de síntesis para extraer conceptos abstractos y transformarlos en imágenes potentes.
-- Dominio de plataformas de búsqueda y organización visual (Pinterest, Behance, Are.na, Instagram).
-- Habilidad en la composición de *Moodboards* digitales (Figma, Adobe Express, Canva).
-- Entendimiento de la psicología del color y la teoría de la composición para justificar las selecciones.
+---
 
-## Instrucciones y Pasos detallados que se debe seguir:
+## 1. Descripción Detallada
+La Curación Visual es la búsqueda, selección y presentación estratégica de referencias visuales que definen el ecosistema estético de un proyecto. No es solo "recopilar fotos bonitas"; es **Arquitectura de la Referencia Visual**. El enfoque v2.0 incorpora la **Curación Semántica y el Moodboarding Dinámico**, donde las referencias no solo son imágenes estáticas, sino que incluyen texturas, movimientos, interacciones y paletas de color integradas que sirven de base indiscutible para la producción técnica posterior, garantizando que todos los departamentos (diseño, foto, vídeo) hablen el mismo idioma visual.
 
+## 2. Escenarios de Aplicación
+- **Fase Conceptual de Branding:** Alineación de expectativas estéticas con el cliente antes de diseñar el primer boceto de logo.
+- **Pre-producción de Sesiones Fotográficas/Rodajes:** Definición del estilo de luz, encuadre y 'acting' para unificar el resultado final.
+- **Alimentación de Canales de Marca (Instagram/Pinterest):** Creación de un 'feed' coherente que proyecte un estilo de vida aspiracional.
+- **Búsqueda de Inspiración y Tendencias (Trend Forecasting):** Mantener la marca a la vanguardia visual detectando cambios en la estética global.
+- **Creación de Guías de Estilo (Lookbooks):** Manuales visuales que sirven de referencia para creadores de contenido y fotógrafos externos.
 
-## Workflow N8N
-Referencia al archivo `workflow.json` o scripts integrados.
+## 3. Requisitos de Implementación
+- **Cultura Visual Profunda:** Conocimiento de historia del arte, fotografía, cine y diseño contemporáneo.
+- **Plataformas de Investigación de Referencia:** Behance, Pinterest, Are.na, Instagram y bancos de imágenes premium.
+- **Herramientas de Composición Editorial Digital:** Figma, Canva o Adobe Express para la creación de Moodboards organizados.
 
-## Notas y advertencias
-- ⚠️ **Mantenimiento Técnico**: Requiere verificación mensual.
+---
 
-## Changelog
-- v1.0 — Versión inicial
-- v1.1 — Enriquecimiento técnico especializado y normalización de formato V1.1
+## 4. Diferencial: Colección Casual vs. Curación Visual Estratégica v2.0
+
+| Dimensión | Enfoque "Guardar Pins" | Curación Visual de Alta Densidad (v2.0) |
+| :--- | :--- | :--- |
+| **Criterio** | Subjetivo y fragmentado. | Objetivo y alineado con valores de marca. |
+| **Utilidad** | Inspiración personal. | Hoja de ruta para la producción técnica. |
+| **Organización** | Caótica / Una sola carpeta. | Estructurada por categorías (Luz, Color, Composición). |
+| **Argumentación** | "Me gusta esta imagen". | "Esta imagen transmite [VALOR] por su uso de [TÉCNICA]". |
+
+---
+
+## 5. Instrucciones y Pasos Detallados (Protocolo Maestro)
+
+### Fase 1: Ingesta de Datos y Filtrado Semántico
+**Objetivo:** Recopilar el máximo de referencias relevantes para luego destilar la esencia.
+1.  **Apertura de Foco:** Realiza una búsqueda extensiva basada en palabras clave de concepto, no de producto (Ej: "Soledad Urbana" en lugar de "Persona en ciudad").
+2.  **Filtrado Crítico:** Elimina cualquier imagen que sea redundante o que no cumpla con los estándares de calidad/luz del proyecto.
+
+**Prompt Maestro de Dirección de Curación Visual:**
+```text
+Actúa como Director de Arte y Curador Visual de Vanguardia. Para el proyecto [NOMBRE_PROYECTO] que quiere transmitir [VALORES], realiza la siguiente curación conceptual: 
+1. Define el 'Visual DNA' del proyecto en 5 categorías: Iluminación (Ej: Claroscuro cinematográfico), Composición (Ej: Minimalismo asimétrico), Paleta de Color (Ej: Tonos tierra saturados), Texturas (Ej: Grano analógico) y Tipografía (Ej: Tipografía suiza expandida). 
+2. Para cada categoría, describe qué buscar para un 'Moodboard' que deje clara la dirección sin margen de error. 
+3. Sugiere 3 fotógrafos o artistas de referencia cuyo estilo sea la meta a seguir para este proyecto. 
+4. Explica por qué esta combinación de elementos visuales conectará emocionalmente con el target [AUDIENCIA].
+```
+
+### Fase 2: Composición del Moodboard, Anotaciones y Validación
+... (Expansión técnica sobre la jerarquía del Moodboard -imágenes dominantes y secundarias-, la inclusión de muestras de color HEX y la redacción de anotaciones de estilo para el fotógrafo) ...
+
+---
+
+## 6. Arquitectura de Automatización Lógica (Agnostic Flow)
+*Lógica de investigación estética automatizada.*
+
+1.  **Trigger:** El equipo aprueba un nuevo concepto de campaña de "Lujo Sostenible".
+2.  **Nodo de Rastreo Semántico:** IA busca en redes sociales y catálogos de arte imágenes que los usuarios asocian visualmente con esos términos.
+3.  **Nodo de Clustering Estético:** El sistema agrupa las imágenes por similitud de luz y color, descartando las de baja resolución.
+4.  **Nodo de Propuesta de Moodboard Inteligente:** Generación de una primera selección de referencias organizada por "Sensación" y "Técnica".
+5.  **Output:** El director creativo recibe un documento de inspiración de alta calidad en minutos, listo para pulir y presentar al cliente.
+
+---
+
+## 7. Ejemplo Práctico: Hotel Boutique de Montaña
+**Reto:** Su comunicación visual era una mezcla de fotos genéricas de naturaleza y fotos de comida con móvil. No había identidad.
+**Acción v2.0:** Se realizó una curación visual basada en el concepto "Silencio y Madera". Se creó un Moodboard que prohibía el uso de colores saturados y flash agresivo.
+**Resultado:** Los fotógrafos contratados entregaron un material 100% coherente que permitió relanzar la marca en Instagram, subiendo el precio medio de habitación por la nueva percepción de exclusividad.
+
+---
+**Autor:** Jesús García Fernández  
+**Licencia:** CC BY-NC 4.0

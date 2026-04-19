@@ -1,10 +1,10 @@
 ---
 title: Colaboración Radical
-version: 1.1
+version: 2.0
 author: Jesús García Fernández
 website: jesusgarciafernandez.com
 created: 2026-04-01
-updated: 2026-04-06
+updated: 2026-04-17
 category: 12. Proyectos y Colaboración
 subcategory: General
 tags: ['radical-collaboration', 'teamwork', 'transparency', 'open-source-mindset', 'co-creation', 'shared-knowledge', 'agile-culture', 'psychological-safety']
@@ -17,7 +17,14 @@ notice: >
   Prohibida su venta, redistribución comercial o modificación
   sin autorización expresa del autor.
 id: 356
+
 ---
+
+## 0. Filosofía Human-Centric AI
+*Esta sección es obligatoria para cumplir con los estándares del App Blueprint Generator.*
+
+**El Rol del Humano:** Supervisión estratégica y validación ética de los resultados generados.
+**Empoderamiento:** Esta Skill dota al profesional de una escala productiva 10x mediante la automatización de la carga cognitiva repetitiva.
 
 ## Descripción
 Habilidad de gestión y cultura de trabajo defensora de la transparencia total, la eliminación de silos y la co-creación profunda entre equipos y departamentos. La Colaboración Radical asume que el conocimiento no es poder a menos que se comparta, rompiendo con las estructuras jerárquicas tradicionales para fomentar una "Red de Equipos" ágil. Bajo el enfoque "Ops", implica el uso de herramientas asíncronas de documentación compartida, metodologías de gobernanza abierta y el fomento activo de la seguridad psicológica para que cada integrante pueda aportar valor sin miedo al error.

@@ -1,10 +1,10 @@
 ---
 title: Análisis de Riesgos
-version: 1.1
+version: 2.0
 author: Jesús García Fernández
 website: jesusgarciafernandez.com
 created: 2026-04-01
-updated: 2026-04-06
+updated: 2026-04-17
 category: 12. Proyectos y Colaboración
 subcategory: General
 tags: ['risk-analysis', 'mitigation', 'contingency-planning', 'pmp', 'iso-31000', 'uncertainty', 'security', 'compliance']
@@ -17,7 +17,14 @@ notice: >
   Prohibida su venta, redistribución comercial o modificación
   sin autorización expresa del autor.
 id: 359
+
 ---
+
+## 0. Filosofía Human-Centric AI
+*Esta sección es obligatoria para cumplir con los estándares del App Blueprint Generator.*
+
+**El Rol del Humano:** Supervisión estratégica y validación ética de los resultados generados.
+**Empoderamiento:** Esta Skill dota al profesional de una escala productiva 10x mediante la automatización de la carga cognitiva repetitiva.
 
 ## Descripción
 Habilidad metodológica y analítica para identificar, evaluar y priorizar incertidumbres que puedan afectar negativamente a los objetivos de un proyecto o de la organización. El Análisis de Riesgos transforma el "miedo a lo desconocido" en un plan de acción estructurado, permitiendo una toma de decisiones informada bajo condiciones de incertidumbre. Bajo el enfoque "Ops", se profesionaliza mediante el uso de Registros de Riesgos dinámicos, simulaciones de impacto (Monte Carlo) y protocolos de respuesta automatizados para riesgos críticos de alta probabilidad.

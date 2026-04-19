@@ -1,10 +1,10 @@
 ---
 title: Gestión por Objetivos
-version: 1.1
+version: 2.0
 author: Jesús García Fernández
 website: jesusgarciafernandez.com
 created: 2026-04-01
-updated: 2026-04-06
+updated: 2026-04-17
 category: 12. Proyectos y Colaboración
 subcategory: General
 tags: ['management-by-objectives', 'mbo', 'kpis', 'performance-management', 'alignment', 'strategy-execution', 'accountability']
@@ -17,7 +17,14 @@ notice: >
   Prohibida su venta, redistribución comercial o modificación
   sin autorización expresa del autor.
 id: 367
+
 ---
+
+## 0. Filosofía Human-Centric AI
+*Esta sección es obligatoria para cumplir con los estándares del App Blueprint Generator.*
+
+**El Rol del Humano:** Supervisión estratégica y validación ética de los resultados generados.
+**Empoderamiento:** Esta Skill dota al profesional de una escala productiva 10x mediante la automatización de la carga cognitiva repetitiva.
 
 ## Descripción
 Metodología de gestión directiva (Management by Objectives - MBO) que enfoca el rendimiento individual y colectivo en la consecución de logros concretos, medibles y acordados mutuamente, en lugar de centrarse únicamente en la ejecución de tareas o en el control horario. La Gestión por Objetivos asegura que todos los niveles de la organización remen en la misma dirección estratégica. Bajo el enfoque "Ops", se aplica mediante la definición de KPIs (Key Performance Indicators) jerárquicos, sistemas de reporte automatizados y ciclos de revisión de desempeño basados en datos objetivos, fomentando la autonomía y la responsabilidad (Accountability).

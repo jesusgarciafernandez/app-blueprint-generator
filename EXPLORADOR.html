@@ -337,24 +337,7 @@
             border-color: rgba(255, 255, 255, 0.3);
         }
 
-        .btn-workflow {
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(251, 191, 36, 0.3);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            color: #f8fafc;
-        }
 
-        .btn-workflow:hover:not(:disabled) {
-            background: rgba(30, 41, 59, 1);
-            border-color: rgba(251, 191, 36, 0.8);
-            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.15);
-        }
-
-        .btn-workflow:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            filter: grayscale(1);
-        }
 
         .skill-id {
             font-size: 0.75rem;
@@ -616,7 +599,7 @@
 </div>
 
 <!-- Carga de datos externos (Evita errores de CORS en local) -->
-<script src="INDEX.js"></script>
+<script src="INDEX_V2.js"></script>
 
 <script>
     let categories = {};
@@ -632,7 +615,7 @@
             master_repo: "Repositorio Maestro",
             loading: "Cargando unidades de conocimiento...",
             btn_open_skill: "SKILL.md",
-            btn_open_workflow: "WORKFLOW.md",
+
             no_content: "*No hay contenido disponible para esta vista.*",
             id_prefix: "ID-",
             footer_text: "Ingeniería de Conocimiento y Desarrollo por",
@@ -709,7 +692,6 @@
             master_repo: "Master Repository",
             loading: "Loading knowledge units...",
             btn_open_skill: "SKILL.md",
-            btn_open_workflow: "WORKFLOW.md",
             no_content: "*No content available for this view.*",
             id_prefix: "ID-",
             footer_text: "Knowledge Engineering and Development by",
@@ -1006,7 +988,6 @@
           "Desarrollo Mobile": "Développement Mobile",
           "Desarrollo Web": "Développement Web",
           "Devoluciones y Reclamaciones": "Retours et Réclamations",
-          "Discovery": "Découverte",
           "Diseño UI": "Design UI",
           "Documentación Colaborativa": "Documentation Collaborative",
           "Email Marketing": "Email Marketing",
@@ -1454,7 +1435,6 @@
           "Desarrollo Mobile": "移动开发",
           "Desarrollo Web": "Web 开发",
           "Devoluciones y Reclamaciones": "退货和投诉",
-          "Discovery": "发现",
           "Diseño UI": "UI 设计",
           "Documentación Colaborativa": "协作文档",
           "Email Marketing": "电子邮件营销",
@@ -1678,7 +1658,6 @@
           "Desarrollo Mobile": "モバイル開発",
           "Desarrollo Web": "Web開発",
           "Devoluciones y Reclamaciones": "返品とクレーム",
-          "Discovery": "ディスカバリー",
           "Diseño UI": "UIデザイン",
           "Documentación Colaborativa": "共同ドキュメント",
           "Email Marketing": "メールマーケティング",
@@ -2011,12 +1990,6 @@
                                 <i data-lucide="file-text" style="width:16px;height:16px;margin-right:6px;"></i>
                                 ${translations[currentLang].btn_open_skill}
                             </button>
-                            ${skill.workflow_content ? `
-                                <button onclick="openSkill(${skill.id}, 'workflow')" class="btn-open btn-workflow" title="Flujo Operativo N8N / Python">
-                                    <i data-lucide="zap" style="width:16px;height:16px;margin-right:6px;color:#fbbf24;"></i>
-                                    ${translations[currentLang].btn_open_workflow}
-                                </button>
-                            ` : ''}
                         </div>
                     </div>
                 `;
@@ -2078,10 +2051,8 @@
         const modalTitle = document.getElementById('modalTitle');
         const modalBody = document.getElementById('modalBody');
 
-        const isWorkflow = type === 'workflow';
-        const rawContent = isWorkflow ? skill.workflow_content : skill.content;
-        
-        modalTitle.innerText = isWorkflow ? `${skill.name} - Workflow` : skill.name;
+        const rawContent = skill.content;
+        modalTitle.innerText = skill.name;
         
         // Convertimos Markdown a HTML usando marked.js
         modalBody.innerHTML = marked.parse(rawContent || translations[currentLang].no_content);

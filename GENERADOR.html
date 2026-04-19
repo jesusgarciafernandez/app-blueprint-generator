@@ -1104,8 +1104,29 @@
                 <p style="font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary);" data-i18n="discovery_protocol_hint">Te recomendamos rellenar este documento antes de empezar para obtener mejores resultados.</p>
                 <a id="discoveryLink" download href="REPOSITORIO/00. Sistema/Protocolos/ANTIGRAVITY_DISCOVERY_PROTOCOLO.md" target="_blank" style="font-size: 0.9rem; font-weight: 800; color: var(--accent-1); text-decoration: none; display: inline-flex; align-items: center; gap: 0.6rem; transition: all 0.2s ease;">
                     <i data-lucide="file-text" style="width: 20px; height: 20px;"></i>
-                    <span data-i18n="discovery_protocol_link">Descarga el Protocolo de Descubrimiento</span>
+                    <span data-i18n="discovery_protocol_link"><span data-i18n="discovery_protocol_link">Descarga el Protocolo de Descubrimiento</span></span>
                 </a>
+            </div>
+
+            <div class="field-group">
+                <label class="field-label" for="aiEngine" data-i18n="label_ai_engine">Motor Inteligencia Artificial (Destino)</label>
+                <select id="aiEngine">
+                    <option value="Antigravity" data-i18n="opt_ai_antigravity" selected>Ecosistema Central (Desglose en Carpetas)</option>
+                    <option value="Claude">Claude (Web / Projects / XML)</option>
+                    <option value="Cursor">Cursor AI (.cursorrules)</option>
+                    <option value="Windsurf">Windsurf (.windsurfrules)</option>
+                    <option value="Agnostico">Agnóstico / Genérico</option>
+                </select>
+            </div>
+
+            <div class="field-group">
+                <label class="field-label" for="aiComplexity" data-i18n="label_ai_complexity">Nivel de Inteligencia (Arquitectura Cognitiva)</label>
+                <span class="field-hint" data-i18n="desc_ai_complexity">Controla cuánta memoria y reglas de agentes se inyectan en tu proyecto. Afecta drásticamente al consumo de tokens.</span>
+                <select id="aiComplexity">
+                    <option value="classic" data-i18n="opt_complex_classic" selected>1. Ecosistema Clásico (Webs, Apps tradicionales, CRMs. Mantiene el prompt limpio)</option>
+                    <option value="copilot" data-i18n="opt_complex_copilot">2. Asistente Único (Incluye uso básico de tools y prevenciones de alucinación)</option>
+                    <option value="autonomous_mas" data-i18n="opt_complex_mas">3. Sistema Multi-Agente Autónomo (Incluye Memoria Episódica, Comunicación entre agentes y Límites estrictos)</option>
+                </select>
             </div>
 
             <div class="field-group">
@@ -1126,7 +1147,7 @@
                     <option value="Web App" data-i18n="opt_web_app">Web App (se abre en navegador)</option>
                     <option value="Mobile App" data-i18n="opt_mobile_app">Mobile App (para teléfonos)</option>
                     <option value="Desktop App" data-i18n="opt_desktop_app">Desktop App (para ordenador)</option>
-                    <option value="Ecosistema Antigravity" data-i18n="opt_ecosystem">Ecosistema Antigravity (Herramienta interna)</option>
+                    <option value="Ecosistema Interno" data-i18n="opt_ecosystem">Ecosistema Central (Herramienta interna)</option>
                     <option value="API / Backend" data-i18n="opt_api">API / Backend (servicio sin interfaz)</option>
                     <option value="Otro" data-i18n="opt_other">Otro (especificar...)</option>
                 </select>
@@ -1235,6 +1256,18 @@
                 <div class="chips-container" id="integrations" onclick="document.getElementById('integrationInput').focus()">
                     <input class="chip-input" id="integrationInput" data-i18n-placeholder="placeholder_integrations" placeholder="Ej: Stripe, Google Maps, WhatsApp..." onkeydown="addChip(event, 'integrations', 'integrationInput')">
                 </div>
+            </div>
+
+            <div class="field-group">
+                <label class="field-label" data-i18n="label_nfrs">Requisitos No Funcionales (NFRs)</label>
+                <span class="field-hint" data-i18n="hint_nfrs">Opcional. Ej: Altamente seguro, que cargue muy rápido, cumplir norma X, etc.</span>
+                <textarea id="nfrInput" data-i18n-placeholder="placeholder_nfrs" placeholder="Define las líneas rojas, el rendimiento o la seguridad esperada..."></textarea>
+            </div>
+
+            <div class="field-group" style="padding: 1.5rem; background: var(--bg-deep); border-radius: 12px; border: 1px solid var(--glass-border);">
+                <label class="field-label" data-i18n="label_schema">Esquema de Bases de Datos (Opcional)</label>
+                <span class="field-hint" data-i18n="hint_schema">Si ya tienes una tabla o JSON estructurado de datos, pégalo aquí para que la IA lo utilice de base.</span>
+                <textarea id="schemaInput" data-i18n-placeholder="placeholder_schema" placeholder="Pega aquí tu CREATE TABLE, Prisma schema o un JSON con estructuras..." style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; min-height: 150px;"></textarea>
             </div>
 
             <div class="btn-row">
@@ -1379,6 +1412,24 @@
     // ═══════════ i18n DICTIONARY ═══════════
     const translations = {
         es: {
+            label_ai_engine: "Motor Inteligencia Artificial (Destino)",
+            label_nfrs: "Requisitos No Funcionales (NFRs)",
+            hint_nfrs: "Opcional. Ej: Altamente seguro, que cargue muy rápido, cumplir norma X, etc.",
+            placeholder_nfrs: "Define las líneas rojas, el rendimiento o la seguridad esperada...",
+            label_schema: "Esquema de Bases de Datos (Opcional)",
+            hint_schema: "Si ya tienes una tabla o JSON estructurado de datos, pégalo aquí para que la IA lo utilice de base.",
+            placeholder_schema: "Pega aquí tu CREATE TABLE, Prisma schema o un JSON con estructuras...",
+            label_visual_reference: "Referencia visual / Notas de diseño",
+            hint_visual_ref: "Menciona alguna web o App que te guste como referencia...",
+            placeholder_visual_ref: "Ej: Me gustaría un acabado tipo vidrio, o algo similar a...",
+
+            opt_ai_antigravity: "Ecosistema Central (Desglose en Carpetas)",
+            label_ai_complexity: "Nivel de Inteligencia (Arquitectura Cognitiva)",
+            desc_ai_complexity: "Controla cuánta memoria y reglas de agentes se inyectan en tu proyecto.",
+            opt_complex_classic: "1. Ecosistema Clásico (Ideal para webs/apps estándar. Prompt limpio)",
+            opt_complex_copilot: "2. Asistente Único (Incluye uso de tools y prevención de alucinación)",
+            opt_complex_mas: "3. Sistema Multi-Agente Autónomo (Memoria Episódica y Comunicación MAS)",
+
             discovery_protocol_link: "Descarga el Protocolo de Descubrimiento",
             discovery_protocol_hint: "Te recomendamos rellenar este documento antes de empezar para obtener mejores resultados.",
             header_subtitle: "v1.2.0 — by Jesús García Fernández",
@@ -1447,7 +1498,7 @@
             opt_mobile_app: "Mobile App (para teléfonos)",
             opt_desktop_app: "Desktop App (para ordenador)",
             opt_api: "API / Backend (servicio sin interfaz)",
-            opt_ecosystem: "Ecosistema Antigravity (Herramienta interna)",
+            opt_ecosystem: "Ecosistema Central (Herramienta interna)",
             opt_other: "Otro (especificar...)",
             opt_users_public: "Clientes / Público general",
             opt_users_internal: "Empleados / Equipo interno",
@@ -1479,7 +1530,7 @@
             generating_hint: "Analizando skills, componiendo documentos y empaquetando el ZIP",
             no_skills_found: "No se encontraron skills relevantes.",
             footer_text: "Diseñado y desarrollado por",
-            footer_ecosystem: "Ecosistema Antigravity",
+            footer_ecosystem: "Ecosistema Central",
             alert_name_required: "Por favor, dale un nombre a tu aplicación.",
             alert_desc_required: "Por favor, describe tu idea.",
             alert_type_required: "Por favor, especifica el tipo de aplicación.",
@@ -1519,6 +1570,24 @@
             }
         },
         en: {
+            label_ai_engine: "Artificial Intelligence Engine (Target)",
+            label_nfrs: "Non-Functional Requirements (NFRs)",
+            hint_nfrs: "Optional. Ex: Highly secure, fast loading, X standard compliance, etc.",
+            placeholder_nfrs: "Define red lines, performance or expected security...",
+            label_schema: "Database Schema (Optional)",
+            hint_schema: "If you already have a table or structured JSON, paste it here for the AI to use as a base.",
+            placeholder_schema: "Paste your CREATE TABLE, Prisma schema or JSON structure here...",
+            label_visual_reference: "Visual Reference / Design Notes",
+            hint_visual_ref: "Mention a website or App you like as a reference...",
+            placeholder_visual_ref: "Ex: I would like a glassmorphism finish, or something similar to...",
+
+            opt_ai_antigravity: "Core Ecosystem (Folder Breakdown)",
+            label_ai_complexity: "Project Intelligence Level",
+            desc_ai_complexity: "Controls how much memory and agent rules are injected into your project.",
+            opt_complex_classic: "1. Classic Ecosystem (Ideal for standard apps. Clean prompt)",
+            opt_complex_copilot: "2. Single Assistant (Includes tool usage and hallucination prevention)",
+            opt_complex_mas: "3. Autonomous Multi-Agent System (Episodic Memory & MAS Comms)",
+
             discovery_protocol_link: "Download the Discovery Protocol",
             discovery_protocol_hint: "We recommend filling out this document before starting to obtain better results.",
             header_subtitle: "v1.2.0 — by Jesús García Fernández",
@@ -1587,7 +1656,7 @@
             opt_mobile_app: "Mobile App (for phones)",
             opt_desktop_app: "Desktop App (for computer)",
             opt_api: "API / Backend (headless service)",
-            opt_ecosystem: "Antigravity Ecosystem (Internal Tool)",
+            opt_ecosystem: "Core Ecosystem (Internal Tool)",
             opt_other: "Other (specify...)",
             opt_users_public: "Customers / General public",
             opt_users_internal: "Employees / Internal team",
@@ -1619,7 +1688,7 @@
             generating_hint: "Analyzing skills, composing documents and packaging the ZIP",
             no_skills_found: "No relevant skills found.",
             footer_text: "Designed and developed by",
-            footer_ecosystem: "Antigravity Ecosystem",
+            footer_ecosystem: "Core Ecosystem",
             alert_name_required: "Please give your application a name.",
             alert_desc_required: "Please describe your idea.",
             alert_type_required: "Please specify the application type.",
@@ -1795,6 +1864,24 @@
           "WhatsApp y Telegram": "WhatsApp & Telegram"
             }},
         fr: {
+            label_ai_engine: "Moteur d'Intelligence Artificielle (Cible)",
+            label_nfrs: "Exigences non fonctionnelles (NFR)",
+            hint_nfrs: "Facultatif. Ex : Hautement sécurisé, chargement rapide, conformité X, etc.",
+            placeholder_nfrs: "Définissez les lignes rouges, les performances ou la sécurité attendue...",
+            label_schema: "Schéma de base de données (Facultatif)",
+            hint_schema: "Si vous avez déjà un tableau ou un JSON structuré, collez-le ici pour que l'IA l'utilise comme base.",
+            placeholder_schema: "Collez votre CREATE TABLE, schéma Prisma ou structure JSON ici...",
+            label_visual_reference: "Référence visuelle / Notes de conception",
+            hint_visual_ref: "Mentionnez un site web ou une application que vous aimez comme référence...",
+            placeholder_visual_ref: "Ex : J'aimerais une finition de type verre, ou quelque chose de similaire à...",
+
+            opt_ai_antigravity: "Écosystème Central (Structure de Dossiers)",
+            label_ai_complexity: "Niveau d'Intelligence du Projet",
+            desc_ai_complexity: "Contrôle la quantité de mémoire et les règles des agents injectées dans votre projet.",
+            opt_complex_classic: "1. Écosystème Classique (Idéal pour des apps standards. Prompt propre)",
+            opt_complex_copilot: "2. Assistant Unique (Inclut l'usage d'outils et la prévention d'hallucinations)",
+            opt_complex_mas: "3. Système Multi-Agent Autonome (Mémoire Épisodique & Comms MAS)",
+
             discovery_protocol_link: "Télécharger le Protocole de Découverte",
             discovery_protocol_hint: "Nous vous recommandons de remplir ce document avant de commencer pour obtenir de meilleurs résultats.",
             header_subtitle: "v1.2.0 — par Jesús García Fernández",
@@ -1830,7 +1917,7 @@
             opt_mobile_app: "Mobile App (pour téléphones)",
             opt_desktop_app: "Desktop App (ordinateur)",
             opt_api: "API / Backend (service sans interface)",
-            opt_ecosystem: "Écosystème Antigravity (Outil interne)",
+            opt_ecosystem: "Écosystème Central (Outil interne)",
             opt_other: "Autre (préciser...)",
             step2_title: "👥 Pour qui est-ce ?",
             step2_subtitle: "Connaître l'utilisateur final nous aide à choisir les bons outils.",
@@ -1894,7 +1981,7 @@
             generating_hint: "Analyse des skills et emballage du ZIP",
             no_skills_found: "Aucun skill pertinent trouvé.",
             footer_text: "Conçu et développé par",
-            footer_ecosystem: "Écosystème Antigravity",
+            footer_ecosystem: "Écosystème Central",
             alert_name_required: "Veuillez donner un nom à votre application.",
             alert_desc_required: "Veuillez décrire votre idée.",
             alert_type_required: "Veuillez préciser le type d'application.",
@@ -2070,6 +2157,24 @@
           "WhatsApp y Telegram": "WhatsApp et Telegram"
             }},
         de: {
+            label_ai_engine: "KI-Engine (Ziel)",
+            label_nfrs: "Nicht-funktionale Anforderungen (NFRs)",
+            hint_nfrs: "Optional. Z.B. Hochsicher, schnelle Ladezeiten, X-Norm-Erfüllung usw.",
+            placeholder_nfrs: "Definieren Sie rote Linien, Leistung oder erwartete Sicherheit...",
+            label_schema: "Datenbankschema (Optional)",
+            hint_schema: "Wenn Sie bereits eine Tabelle oder ein strukturiertes JSON haben, fügen Sie es hier ein, damit die KI es als Basis verwenden kann.",
+            placeholder_schema: "Fügen Sie hier Ihren CREATE TABLE, Ihr Prisma-Schema oder Ihre JSON-Struktur ein...",
+            label_visual_reference: "Visuelle Referenz / Design-Notizen",
+            hint_visual_ref: "Nennen Sie eine Website oder App, die Ihnen als Referenz gefällt...",
+            placeholder_visual_ref: "Z.B. Ich hätte gerne ein Glasmorphismus-Finish oder etwas Ähnliches wie...",
+
+            opt_ai_antigravity: "Kern-Ökosystem (Ordnerstruktur)",
+            label_ai_complexity: "Projekt-Intelligenzlevel",
+            desc_ai_complexity: "Steuert, wie viel Speicher und Agentenregeln in Ihr Projekt injiziert werden.",
+            opt_complex_classic: "1. Klassisches Ökosystem (Ideal für Standard-Apps. Sauberer Prompt)",
+            opt_complex_copilot: "2. Einzelner Assistent (Inklusive Tool-Nutzung und Halluzinationsprävention)",
+            opt_complex_mas: "3. Autonomes Multi-Agenten-System (Episodisches Gedächtnis & MAS-Komms)",
+
             discovery_protocol_link: "Download Entdeckungsprotokoll",
             discovery_protocol_hint: "Wir empfehlen, dieses Dokument vor dem Start auszufüllen, um bessere Ergebnisse zu erzielen.",
             header_subtitle: "v1.2.0 — von Jesús García Fernández",
@@ -2105,7 +2210,7 @@
             opt_mobile_app: "Mobile App (für Telefone)",
             opt_desktop_app: "Desktop App (für Computer)",
             opt_api: "API / Backend (Dienst ohne Interface)",
-            opt_ecosystem: "Antigravity Ökosystem (Internes Tool)",
+            opt_ecosystem: "Kern-Ökosystem (Internes Tool)",
             opt_other: "Andere (bitte angeben...)",
             step2_title: "👥 Für wen ist es?",
             step2_subtitle: "Ihre Zielgruppe zu kennen hilft uns, die richtigen Tools zu wählen.",
@@ -2169,7 +2274,7 @@
             generating_hint: "Analysiere Skills und erstelle ZIP-Archiv",
             no_skills_found: "Keine relevanten Skills gefunden.",
             footer_text: "Entworfen und entwickelt von",
-            footer_ecosystem: "Antigravity Ökosystem",
+            footer_ecosystem: "Kern-Ökosystem",
             alert_name_required: "Bitte geben Sie Ihrer Anwendung einen Namen.",
             alert_desc_required: "Bitte beschreiben Sie Ihre Idee.",
             alert_type_required: "Bitte geben Sie die Art der Anwendung an.",
@@ -2345,6 +2450,24 @@
           "WhatsApp y Telegram": "WhatsApp & Telegram"
             }},
         zh: {
+            label_ai_engine: "人工智能引擎 (目标)",
+            label_nfrs: "非功能性需求 (NFR)",
+            hint_nfrs: "可选。例如：高度安全、加载极快、符合X标准等。",
+            placeholder_nfrs: "定义红线、性能或预期安全性...",
+            label_schema: "数据库架构 (可选)",
+            hint_schema: "如果您已有表格或结构化的JSON数据，请在此处粘贴，以便AI以此为基础。",
+            placeholder_schema: "在此粘贴您的 CREATE TABLE、Prisma 架构或 JSON 结构...",
+            label_visual_reference: "视觉参考 / 设计笔记",
+            hint_visual_ref: "提到您喜欢的网站或应用程序作为参考...",
+            placeholder_visual_ref: "例如：我想要玻璃拟态效果，或类似于...",
+
+            opt_ai_antigravity: "核心生态系统（基于文件夹的结构）",
+            label_ai_complexity: "项目智能层级",
+            desc_ai_complexity: "控制为您的项目注入多少内存机制和代理规则。",
+            opt_complex_classic: "1. 经典生态系统 (适用于标准应用。Prompt简洁)",
+            opt_complex_copilot: "2. 单一助手 (包括工具使用及防幻觉机制)",
+            opt_complex_mas: "3. 自主多智能体系统 (情景记忆和MAS通信)",
+
             discovery_protocol_link: "下载发现协议",
             discovery_protocol_hint: "我们建议在开始前填写此文档，以获得更好的效果。",
             header_subtitle: "v1.2.0 — 由 Jesús García Fernández 设计",
@@ -2413,7 +2536,7 @@
             opt_mobile_app: "移动应用（手机版）",
             opt_desktop_app: "桌面应用（电脑版）",
             opt_api: "API / 后端（无界面服务）",
-            opt_ecosystem: "Antigravity 生态系统（内部工具）",
+            opt_ecosystem: "核心生态系统（内部工具）",
             opt_other: "其他（请注明...）",
             opt_users_public: "客户 / 普通公众",
             opt_users_internal: "员工 / 内部团队",
@@ -2445,7 +2568,7 @@
             generating_hint: "分析技能、编写文档并打包ZIP",
             no_skills_found: "未找到相关的技能。",
             footer_text: "设计与开发",
-            footer_ecosystem: "Antigravity 生态系统",
+            footer_ecosystem: "核心生态系统",
             alert_name_required: "请给您的应用起个名字。",
             alert_desc_required: "请描述您的想法。",
             alert_type_required: "请指定应用程序类型。",
@@ -2621,6 +2744,24 @@
           "WhatsApp y Telegram": "WhatsApp和Telegram"
             }},
         ja: {
+            label_ai_engine: "人工知能エンジン (ターゲット)",
+            label_nfrs: "非機能要件 (NFR)",
+            hint_nfrs: "オプション。例：高セキュリティ、高速ロード、X規格準拠など",
+            placeholder_nfrs: "レッドライン、パフォーマンス、または期待されるセキュリティを定義します...",
+            label_schema: "データベーススキーマ (オプション)",
+            hint_schema: "すでにテーブルや構造化されたJSONがある場合は、ここに貼り付けてAIがベースとして使用できるようにしてください。",
+            placeholder_schema: "CREATE TABLE、Prismaスキーマ、またはJSON構造をここに貼り付けてください...",
+            label_visual_reference: "ビジュアルリファレンス / デザインノート",
+            hint_visual_ref: "参考として好きなウェブサイトやアプリを挙げてください...",
+            placeholder_visual_ref: "例：グラスモーフィズムのような仕上がり、または〜に似たものにしたい...",
+
+            opt_ai_antigravity: "コアエコシステム（フォルダ分割）",
+            label_ai_complexity: "プロジェクトの知能レベル",
+            desc_ai_complexity: "プロジェクトに注入されるメモリやエージェントルールの量を制御します。",
+            opt_complex_classic: "1. クラシックエコシステム（標準的なアプリに最適。クリーンなプロンプト）",
+            opt_complex_copilot: "2. シングルアシスタント（ツール利用とハルシネーション防止を含む）",
+            opt_complex_mas: "3. 自律型マルチエージェントシステム（エピソード記憶とMAS通信）",
+
             discovery_protocol_link: "ディスカバリー・プロトコルをダウンロード",
             discovery_protocol_hint: "より良い結果を得るために、開始前にこのドキュメントに記入することをお勧めします。",
             header_subtitle: "v1.2.0 — Jesús García Fernández による",
@@ -2689,7 +2830,7 @@
             opt_mobile_app: "モバイルアプリ（スマホ用）",
             opt_desktop_app: "デスクトップアプリ（PC用）",
             opt_api: "API / バックエンド（インターフェースなし）",
-            opt_ecosystem: "Antigravity エコシステム（内部ツール）",
+            opt_ecosystem: "コアエコシステム（内部ツール）",
             opt_other: "その他（指定してください...）",
             opt_users_public: "顧客 / 一般公開",
             opt_users_internal: "従業員 / 内部チーム",
@@ -2721,7 +2862,7 @@
             generating_hint: "スキルを分析し、ドキュメントを作成し、ZIPにパッケージ化しています",
             no_skills_found: "関連するスキルは見つかりませんでした。",
             footer_text: "デザインおよび開発",
-            footer_ecosystem: "Antigravity エコシステム",
+            footer_ecosystem: "コアエコシステム",
             alert_name_required: "アプリケーションに名前を付けてください。",
             alert_desc_required: "アイデアを説明してください。",
             alert_type_required: "アプリケーションの種類を指定してください。",
@@ -2929,7 +3070,7 @@
         const discoveryLink = document.getElementById('discoveryLink');
         if (discoveryLink) {
             const suffix = lang === 'es' ? '' : '_' + lang.toUpperCase();
-            discoveryLink.href = `REPOSITORIO/00. Sistema/Protocolos/ANTIGRAVITY_DISCOVERY_PROTOCOLO${suffix}.md`;
+            discoveryLink.href = `REPOSITORIO/00. Sistema/Protocolos/DISCOVERY_PROTOCOL${suffix}.md`;
         }
     }
 
@@ -3066,6 +3207,8 @@
         const allFeatures = [...selectedFeatures, ...customFeatures];
 
         return {
+            ai_engine: document.getElementById('aiEngine').value,
+            ai_complexity: document.getElementById('aiComplexity').value,
             app_name: document.getElementById('appName').value.trim(),
             app_desc: document.getElementById('appDesc').value.trim(),
             app_type: document.getElementById('appType').value === 'Otro' ? 
@@ -3076,6 +3219,8 @@
             language: document.getElementById('language').value,
             features: allFeatures,
             integrations: getChips('integrations'),
+            nfrs: document.getElementById('nfrInput') ? document.getElementById('nfrInput').value.trim() : '',
+            data_schema: document.getElementById('schemaInput') ? document.getElementById('schemaInput').value.trim() : '',
             visual_style: document.querySelector('.style-option.active')?.dataset.value || 'Moderno y limpio',
             primary_color: document.getElementById('primaryColor').value,
             secondary_color: document.getElementById('secondaryColor').value,

@@ -1,5 +1,5 @@
 @echo off
-TITLE Antigravity Skill Watcher - Windows
+TITLE App Blueprint Generator Watcher - Windows
 COLOR 0B
 
 echo ============================================================

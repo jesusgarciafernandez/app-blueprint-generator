@@ -1,10 +1,10 @@
 ---
 title: Definición de OKRs
-version: 1.1
+version: 2.0
 author: Jesús García Fernández
 website: jesusgarciafernandez.com
 created: 2026-04-01
-updated: 2026-04-06
+updated: 2026-04-17
 category: 12. Proyectos y Colaboración
 subcategory: General
 tags: ['okr', 'objectives', 'key-results', 'focus', 'alignment', 'strategy-execution', 'performance-management', 'growth']
@@ -17,7 +17,14 @@ notice: >
   Prohibida su venta, redistribución comercial o modificación
   sin autorización expresa del autor.
 id: 360
+
 ---
+
+## 0. Filosofía Human-Centric AI
+*Esta sección es obligatoria para cumplir con los estándares del App Blueprint Generator.*
+
+**El Rol del Humano:** Supervisión estratégica y validación ética de los resultados generados.
+**Empoderamiento:** Esta Skill dota al profesional de una escala productiva 10x mediante la automatización de la carga cognitiva repetitiva.
 
 ## Descripción
 Habilidad estratégica y operativa para diseñar e implementar el marco de trabajo OKR (Objectives and Key Results), permitiendo a las organizaciones establecer metas ambiciosas y medibles que alineen el esfuerzo de todos los equipos hacia una dirección común. Los OKRs no son tareas, sino resultados de negocio. Bajo el enfoque "Ops", se sistematiza mediante la creación de ciclos trimestrales de revisión, la transparencia radical en el progreso y la integración con herramientas de visualización de datos para evitar que los objetivos se conviertan en documentos estáticos "olvidados en el drive".
